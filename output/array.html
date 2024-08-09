@@ -1,0 +1,588 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Arrays | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Arrays</h1>
+<p>
+We have already discussed how one can define and initialize arrays and access
+individual cells of an array. In this chapter we introduce some advanced
+techniques related to handling of arrays.
+</p><h2 align="left">Passing arrays to functions</h2>
+<p>
+We have seen how individual values (variables and pointers) can be passed
+to functions. Now let us see how we can pass an entire array to a function.
+</p><p>
+Suppose an array is defined as:
+</p><pre><code>   #define MAXSIZE 100
+   int myarr[MAXSIZE];
+</code></pre>
+<p>
+In order to pass the array <tt>myarr</tt> to a function <tt>foonction</tt> one may
+define the function as:
+</p><pre><code>   int foonction ( int A[MAXSIZE] , int size )
+   {
+      ...
+   }
+</code></pre>
+<p>
+This function takes two arguments, the first is an array of size
+<tt>MAXSIZE</tt>, and the second an integer argument named <tt>size</tt>.
+Here this second argument is meant for passing the <i>actual</i> size of
+the array. Your array can hold 100 integers. However, at a certain point
+of time you may be using only 32 locations (0 through 31) of the array.
+The other unused locations also hold some values. If they are not initialized,
+they contain unpredictable values. You do not want these garbage values to
+be interpreted by your function as important ones. So you specify the
+actual size to be 32. The function call should go like this:
+</p><pre><code>   foonction(myarr,32);
+</code></pre>
+<p>
+Inside the function the array location <tt>myarr[i]</tt> can be accessed
+(read or written) as <tt>A[i]</tt>. It is very important to note that:
+</p><center>
+<table cellpadding="10" cellspacing="0" border="0">
+<tbody><tr><td><p><b>When you pass an array to a function, all changes you make in
+the array locations are visible from outside.</b>
+</p></td></tr></tbody></table>
+</center>
+<p>
+In this example setting <tt>A[5]</tt> to 20 inside the function also changes
+<tt>myarr[5]</tt> to 20. This apparently contradicts the pass-by-value call
+mechanism of C. But the actual scenario is not so. When you pass an array,
+the entire array is <u>not</u> copied element-by-element. What is copied is
+the <u>address</u> of the first (I mean, the zeroth) location of the array. That
+is indeed a pointer. This dual meaning of an array will be dealt with at length
+later in this chapter.
+</p><p>
+You don't have to specify the length of the array in the function declaration.
+This is again because the array is not copied element-wise. Only the starting
+address of the array is passed. The function call does not allocate memory
+for the elements of the array. Therefore, it does not matter how big the array
+is. However, it is necessary to mention that the argument that is passed is an
+array and not an element of the constituent data type. The following declaration
+is adequate and admissible:
+</p><pre><code>   int foonction ( int A[] , int size )
+   {
+      ...
+   }
+</code></pre>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/reverse.html" target="_blank">Animation example : passing arrays to functions</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/reverse/" target="_blank">Interactive animation : passing arrays to functions</a></h3>
+</td></tr></tbody></table>
+</p><h2 align="left">Strings</h2>
+<p>
+In C a <i>string</i> is defined to be a <u>null-terminated character array</u>. The
+null character (<tt>'\0'</tt>) is used to indicate the end of the string. Like
+any other arrays, C does not impose range checking of array indices for strings. Declaration
+of an array allocates a fixed space for it. You need not use the entire space.
+Instead you can store your data in the initial portion of the array.
+It is, therefore, necessary to put a boundary of the <i>actual data</i>. This is the
+reason why we passed the <tt>size</tt> parameter to <tt>foonction</tt> above.
+Strings handle it differently, namely by putting an explicit marker at the
+end of the actual data. Here is an example of a string:
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0" id="nobd">
+<tbody><tr><td align="center">I</td><td align="center">I</td><td align="center">T</td><td align="center">&nbsp;</td><td align="center">K</td><td align="center">h</td><td align="center">a</td><td align="center">r</td><td align="center">a</td><td align="center">g</td><td align="center">p</td><td align="center">u</td><td align="center">r</td><td align="center">,</td><td align="center">&nbsp;
+</td><td align="center">7</td><td align="center">2</td><td align="center">1</td><td align="center">3</td><td align="center">0</td><td align="center">2</td><td align="center">\0</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;
+</td></tr><tr>
+<td id="nobd" align="center">0</td><td id="nobd" align="center">1</td><td id="nobd" align="center">2</td><td id="nobd" align="center">3</td><td id="nobd" align="center">4</td><td id="nobd" align="center">5</td><td id="nobd" align="center">6</td><td id="nobd" align="center">7</td><td id="nobd" align="center">8</td><td id="nobd" align="center">9
+</td><td id="nobd" align="center">10</td><td id="nobd" align="center">11</td><td id="nobd" align="center">12</td><td id="nobd" align="center">13</td><td id="nobd" align="center">14</td><td id="nobd" align="center">15</td><td id="nobd" align="center">16</td><td id="nobd" align="center">17</td><td id="nobd" align="center">18</td><td id="nobd" align="center">19
+</td><td id="nobd" align="center">20</td><td id="nobd" align="center">21</td><td id="nobd" align="center">22</td><td id="nobd" align="center">23</td><td id="nobd" align="center">24</td><td id="nobd" align="center">25</td><td id="nobd" align="center">26</td><td id="nobd" align="center">27</td><td id="nobd" align="center">28</td><td id="nobd" align="center">29
+</td></tr></tbody></table>
+</center>
+<p>
+Here we use an array of size 30. The string
+<tt>"IIT&nbsp;Kharagpur,&nbsp;721302"</tt> is stored
+in the first 21 locations. This is followed by the null character. A total of 22
+characters is needed to represent this string of length 21. Whatever follows after
+this null character is irrelevant for defining the string. If we set the
+element at location 6 to <tt>'\0'</tt>, the array looks like:
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0" id="nobd">
+<tbody><tr><td align="center">I</td><td align="center">I</td><td align="center">T</td><td align="center">&nbsp;</td><td align="center">K</td><td align="center">h</td><td align="center">\0</td><td align="center">r</td><td align="center">a</td><td align="center">g</td><td align="center">p</td><td align="center">u</td><td align="center">r</td><td align="center">,</td><td align="center">&nbsp;
+</td><td align="center">7</td><td align="center">2</td><td align="center">1</td><td align="center">3</td><td align="center">0</td><td align="center">2</td><td align="center">\0</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;</td><td align="center">&nbsp;
+</td></tr><tr>
+<td id="nobd" align="center">0</td><td id="nobd" align="center">1</td><td id="nobd" align="center">2</td><td id="nobd" align="center">3</td><td id="nobd" align="center">4</td><td id="nobd" align="center">5</td><td id="nobd" align="center">6</td><td id="nobd" align="center">7</td><td id="nobd" align="center">8</td><td id="nobd" align="center">9
+</td><td id="nobd" align="center">10</td><td id="nobd" align="center">11</td><td id="nobd" align="center">12</td><td id="nobd" align="center">13</td><td id="nobd" align="center">14</td><td id="nobd" align="center">15</td><td id="nobd" align="center">16</td><td id="nobd" align="center">17</td><td id="nobd" align="center">18</td><td id="nobd" align="center">19
+</td><td id="nobd" align="center">20</td><td id="nobd" align="center">21</td><td id="nobd" align="center">22</td><td id="nobd" align="center">23</td><td id="nobd" align="center">24</td><td id="nobd" align="center">25</td><td id="nobd" align="center">26</td><td id="nobd" align="center">27</td><td id="nobd" align="center">28</td><td id="nobd" align="center">29
+</td></tr></tbody></table>
+</center>
+<p>
+Considered as a string this stands for "IIT&nbsp;Kh".
+</p><p>
+Recall that C allows you to read from and write to the locations at indices
+30,31,<tt>...</tt> of this array. These are memory locations not allocated to the
+array, since its size is 30. Writing beyond the allocated space is expected
+to corrupt memory or even raise fatal run-time errors (Segmentation faults).
+In particular, if you do not put the null character at the end of the string,
+C keeps on searching for it and may go out of the legal boundary and create
+troubles.
+</p><p>
+C offers some built-in functions for working with strings. They assume (null-terminated)
+strings as input and create (null-terminated) strings. You do not have to append
+the null character explicitly. For example, the statement
+</p><pre><code>   strcpy(A,"IIT Kharagpur");
+</code></pre>
+copies the string <tt>"IIT Kharagpur"</tt> to the character array <tt>A</tt> and
+also appends the required null character at the end of it.
+<p>
+In order to use these string functions you should <tt>#include &lt;string.h&gt;</tt>.
+No additional libraries need be linked during compilation time. The math
+library was quite different. Well, mathematics and mathematicians are
+traditionally known to be different from the rest of the lot!
+</p><dl>
+<dt><tt>int strlen (const char s[]);</tt>
+</dt><dd>Returns the length (the number of characters before the first null
+character) of the string <tt>s</tt>.
+</dd><dt><tt>int strcmp (const char s[], const char t[]);</tt>
+</dt><dd>Compares strings <tt>s</tt> and <tt>t</tt>. Returns 0 if the
+two strings are identical, a negative value if <tt>s</tt> is lexicographically
+smaller than <tt>t</tt> (i.e., if <tt>s</tt> comes before <tt>t</tt> in the
+standard dictionary order), and a positive value if <tt>s</tt> is
+lexicographically larger than <tt>t</tt>.
+</dd><dt><tt>int strncmp (const char s[], const char t[], size_t n);</tt>
+</dt><dd>Compares the prefixes of strings <tt>s</tt> and <tt>t</tt> of
+length <tt>n</tt>. Returns 0, a negative value or a positive value
+according as whether the prefix of <tt>s</tt> is equal to, lexicographically
+smaller than or lexicographically larger than the prefix of <tt>t</tt>.
+If a string (<tt>s</tt> or <tt>t</tt>) is already of length
+<tt>l&nbsp;&lt;&nbsp;n</tt>, then the first <tt>l</tt> characters of the string
+(i.e., the entire string) is considered for the comparison. The decision
+of <tt>strncmp</tt> is based on the relative placement of the prefixes
+according to dictionary rules. For example, the string <tt>"IIT"</tt>
+comes before <tt>"MIT"</tt>, <tt>"UIUC"</tt> and <tt>"IITian"</tt>, but comes
+after <tt>"IIIT"</tt>, <tt>"BITS"</tt> and <tt>"I"</tt> in the standard
+dictionary order. Note that string comparison is done in a case-sensitive
+manner. <tt>'A'</tt> has the ASCII value (65) less than that for <tt>'a'</tt>
+(95) and so <tt>'A'</tt> comes before <tt>'a'</tt> in the lexicographic order.
+It is more correct to say that comparison is done with respect to ASCII
+values, whereas ASCII values are assigned to characters based broadly on
+the dictionary order. Case-sensitivity is inherent in ASCII. You have
+to live with it.
+</dd><dt><tt>char *strcpy (char s[], const char t[]);</tt>
+</dt><dd>Copies the string <tt>t</tt> to the string <tt>s</tt>.
+</dd><dt><tt>char *strncpy (char s[], const char t[] , size_t n);</tt>
+</dt><dd>Copies the prefix of <tt>t</tt> of size <tt>n</tt> to <tt>s</tt>.
+Again if <tt>t</tt> is of size <tt>l&nbsp;&lt;&nbsp;n</tt>, then only
+<tt>l</tt> characters are copied to <tt>s</tt>. In all these cases
+a trailing null character is also copied to <tt>s</tt>.
+</dd><dt><tt>char *strcat (char s[], const char t[]);</tt>
+</dt><dd>Appends the string <tt>t</tt> and then the null character at the
+end of <tt>s</tt>. The string <tt>s</tt> (a pointer, see below) is
+returned.
+</dd><dt><tt>char *strncat (char s[], const char t[], size_t n);</tt>
+</dt><dd>Appends the first <tt>n</tt> characters of <tt>t</tt> and then
+the null character at the end of <tt>s</tt>. If <tt>t</tt> is of
+length <tt>l&nbsp;&lt;&nbsp;n</tt>, then only <tt>l</tt> characters
+of <tt>t</tt> are appended to <tt>s</tt>. The string <tt>s</tt> is
+returned.
+</dd><dt><tt>int *strchr (const char s[], int c);</tt>
+</dt><dd>Returns the pointer to the first occurrence of the integer <tt>c</tt>
+(treated as a character under the ASCII encoding). If the character
+<tt>c</tt> does not occur in <tt>s</tt>, the NULL pointer is returned.
+</dd><dt><tt>int *strrchr (const char s[], int c);</tt>
+</dt><dd>Returns the pointer to the last occurrence of the integer <tt>c</tt>
+(treated as a character under the ASCII encoding). If the character
+<tt>c</tt> does not occur in <tt>s</tt>, the NULL pointer is returned.
+</dd></dl>
+<h2 align="left">Arrays and pointers</h2>
+<p>
+The <i>double entendre</i> of arrays constitutes a confusing and yet
+beautiful feature of C. An array is an array, if it is viewed so. One
+can access elements by the usual square bracket notation (like
+<tt>A[i]</tt>). In addition, an array <tt>A</tt> is also a pointer.
+You can assign pointers of similar types to <tt>A</tt> and do pointer
+arithmetic in order to navigate through the elements of the array.
+</p><p>
+Consider an array of integers and an <tt>int</tt> pointer:
+</p><pre><code>   #define MAXSIZE 10
+   int A[MAXSIZE], *p;
+</code></pre>
+<p>
+The following are legal assignments for the pointer <tt>p</tt>:
+</p><pre><code>   p = A;          /* Let p point to the 0-th location of the array A */
+   p = &amp;A[0];      /* Let p point to the 0-th location of the array A */
+   p = &amp;A[1];      /* Let p point to the 1-st location of the array A */
+   p = &amp;A[i];      /* Let p point to the i-th location of the array A */
+</code></pre>
+<p>
+Whenever <tt>p</tt> is assigned the value <tt>&amp;A[i]</tt>, the value
+<tt>*p</tt> refers to the array element <tt>A[i]</tt>, and so also does
+<tt>p[0]</tt>.
+</p><p>
+Pointers can be incremented and decremented by integral values. After
+the assignment <tt>p = &amp;A[i];</tt> the increment <tt>p++</tt>
+(or <tt>++p</tt>) lets <tt>p</tt> one element down the array, whereas
+the decrement <tt>p--</tt> (or <tt>--p</tt>) lets <tt>p</tt> move
+by one element up the array. (Here "up" means one index less, and
+"down" means one index more.) Similarly, incrementing or decrementing
+<tt>p</tt> by an integer value <tt>n</tt> lets <tt>p</tt> move forward
+or backward in the array by <tt>n</tt> locations. Consider the following
+sequence of pointer arithmetic:
+</p><pre><code>   p = A;          /* Let p point to the 0-th location of the array A */
+   p++;            /* Now p points to the 1-st location of A */
+   p = p + 6;      /* Now p points to the 7-th location of A */
+   p += 2;         /* Now p points to the 9-th location of A */
+   --p;            /* Now p points to the 8-th location of A */
+   p -= 5;         /* Now p points to the 3-rd location of A */
+   p -= 5;         /* Now p points to the (-2)-nd location of A */
+</code></pre>
+<p>
+Oops! What is a negative location in an array? Like always, C is pretty
+liberal in not securing its array boundaries. As you may jump ahead of the
+position with the largest legal index, you are also allowed to jump
+before the opening index (0). Though C allows you to do so,
+your run-time memory management system may be
+unhappy with your unhealthy intrusion and may cause your program to
+have a premature termination (with the error message "Segmentation fault").
+It is the programmer's duty to insure that his/her pointers do not roam
+around in prohibited areas.
+</p><p>
+Here is an example of a function that computes the sum of the elements
+of an array. The naive method for doing so is:
+</p><pre><code>   int fooddition1 ( int A[] , int size )
+   {
+      int i;
+      int sum = 0;
+
+      for (i=0; i&lt;size; ++i) sum += A[i];
+      return (sum);
+   }
+</code></pre>
+<p>
+The second method uses pointers:
+</p><pre><code>   int fooddition2 ( int A[] , int size )
+   {
+      int i, *p;
+      int sum = 0;
+
+      p = A;         /* Let p point to the 0-th location of A */
+      for (i=0; i&lt;size; ++i) {
+         sum += *p;  /* Add to sum the element pointed to by p */
+         ++p;        /* Let p point to the next location in A */
+      }
+      return (sum);
+   }
+</code></pre>
+<p>
+Here is a third method that uses pointers in a subtler way:
+</p><pre><code>   int fooddition3 ( int A[] , int size )
+   {
+      int i, *p;
+      int sum = 0;
+
+      p = A;
+      for (i=0; i&lt;size; ++i) sum += *(p + i);
+      return (sum);
+   }
+</code></pre>
+<p>
+Some key points need be highlighted now.
+</p><ul>
+<li>Pointers are addresses in memory. If that is so,
+it apparently does not matter whether it is a pointer to an <tt>int</tt>
+or a <tt>char</tt> or a <tt>double</tt> etc. But the pointer arithmetic
+brings out the difference. Different data types require different amounts
+of space. For example, an <tt>int</tt> typically requires 4 bytes,
+a <tt>char</tt> only one byte, a <tt>double</tt> eight bytes, and so on.
+Now when you talk about the pointer <tt>p+i</tt>, the actual memory address
+depends on how much (in bytes) one needs to advance <tt>p</tt> in order
+to generate the <tt>i</tt>-th address. The amount of advance
+is dependent on the data type that the pointer points
+to. For <tt>int</tt> pointers, <tt>p+i</tt> refers to <tt>4i</tt>
+bytes ahead in memory. For <tt>char</tt> pointers, this is just <tt>i</tt>
+bytes ahead of <tt>p</tt>. Finally, for <tt>double</tt> pointers,
+<tt>p+i</tt> is <tt>8i</tt> bytes ahead of <tt>p</tt>. The notation
+<tt>p+i</tt> is an abstraction that hides the details of organization
+of data in the memory. You don't have to remember how much space each
+data type requires. C will automatically advance your pointers by
+appropriate amounts.
+</li><li>Arrays and pointers are almost the same, but not identical. You
+can assign addresses to pointers. But you are not allowed to do the same on
+arrays. An array can only be declared, but cannot be assigned. Only the
+elements of an array can be assigned values. For example, if we declare:
+<pre><code>   int A[MAXSIZE];
+</code></pre>
+the following are <u>not</u> legal assignments:
+<pre><code>   A = &amp;(A[2]);
+   ++A;
+</code></pre>
+<p>
+However, statements like
+</p><pre><code>   p = A + i;
+   sum += *(A + i);
+</code></pre>
+<p>
+are permitted, because they do not involve assignment of <tt>A</tt>.
+</p></li><li>In a function declaration (or prototype) where an array need be
+passed, we can pass a pointer instead. We have mentioned earlier that
+passing arrays to a function does not copy the array element-by-element.
+It only passes the address of the (0-th entry of the) array. We can
+substitute that by an explicit pointer. Here is how we can rewrite the
+<tt>fooddition</tt> routine.
+<pre><code>   int fooddition4 ( int *A , int size )
+   {
+      int i = 0, sum = 0;
+      while (i &lt; size) {
+         sum += *A;
+         ++A;
+         ++i;
+      }
+      return (sum);
+   }
+
+   int main ()
+   {
+      int A[5] = {3, 5, 7, 11, 13};
+      int s;
+
+      /* Compute the sum of all five elements of A */
+      s = fooddition4(A,5);
+
+      /* Compute the sum of the first through third elements of A */
+      s = fooddition4(&amp;A[1],3);
+   }
+</code></pre>
+<p>
+The formal parameter <tt>A</tt> in <tt>fooddition4</tt> is a pointer.
+It can be incremented (like <tt>++A;</tt>). On the other hand,
+<tt>A</tt> refers to an array in <tt>main</tt> and so an increment
+like <tt>++A;</tt> is not allowed in <tt>main</tt>.
+</p></li></ul>
+<h2 align="left">Multi-dimensional arrays</h2>
+<p>
+One-dimensional arrays are quite able to represent many natural collections.
+There are some other natural collections that may better be conceptualized
+as 2-dimensional data. The first example is a matrix. What else can be a
+more natural 2-dimensional data other than a matrix whose entries are
+natural numbers? So think of the following 4x5 matrix:
+</p><pre><code>   1   1   1   1   1
+   2   3   4   5   6
+   4   9  16  25  36
+   8  27  64 125 216
+</code></pre>
+<p>
+We can write the entries in the row-major order and represent the resulting
+flattened data as a one-dimensional array:
+</p><pre><code>   1   1   1   1   1   2   3   4   5   6   4   9  16  25  36   8  27  64 125 216
+</code></pre>
+<p>
+As long as the column dimension of the matrix is known, the original matrix
+can be recovered easily from this 1-D array. More precisely, consider an m-by-n
+matrix (a matrix with m rows and n columns). It contains a total of mn
+elements. Let us number the rows <tt>0,1,...,m-1</tt> from top to bottom
+and the columns <tt>0,1,...,n-1</tt> from left to right. The entry at position
+<tt>(i,j)</tt> then maps to the <tt>(ni+j)</tt>-th entry of the one-dimensional
+array. On the other hand, the <tt>k</tt>-th entry of the one-dimensional array
+corresponds to the <tt>(i,j)</tt>-th element of the matrix, where
+<tt>i&nbsp;=&nbsp;k&nbsp;/&nbsp;n</tt> and
+<tt>j&nbsp;=&nbsp;k&nbsp;%&nbsp;n</tt>.
+</p><p>
+One-dimensional arrays suffice. Still, it is convenient and intuitive
+to visualize matrices as two-dimensional arrays. C provides constructs
+to define and work with such arrays. Of course, the memory of a computer
+is typically treated as a one-dimensional list of memory cells. Any
+two-dimensional structure has to be flattened using a strategy like that
+mentioned above. C handles this for you. In other words, the abstraction
+relieves you from the task of doing the index arithmetic explicitly. You
+refer to the <tt>(i,j)</tt>-th element as the <tt>(i,j)</tt>-th element.
+C translates it into the appropriate address in the one-dimensional memory.
+</p><p>
+2-dimensional arrays can be defined like one-dimensional arrays, but
+with two square-bracketed dimensions. For example, the declaration
+</p><pre><code>   int matrix[20][10];
+</code></pre>
+<p>
+allocates memory for a 20x10 array of <tt>int</tt> variables. The first
+index (20) indicates the number of rows allocated, whereas the second
+indicates the number of columns allocated. Here is another example:
+</p><pre><code>   #define MAXROW 50
+   #define MAXCOL 50
+   float M[MAXROW][MAXCOL];
+</code></pre>
+<p>
+Elements of a 2-D array can be initialized to constant values using nested
+curly braces:
+</p><pre><code>   int mat[4][5] =
+      {
+         {   1,   1,   1,   1,   1 },      /* The zeroth row */
+         {   2,   3,   4,   5,   6 },      /* The first row */
+         {   4,   9,  16,  15,  25 },      /* The second row */
+         {   8,  27,  64, 125, 216 }       /* The third row */
+      };
+</code></pre>
+<p>
+Rows of a 2-D array of characters can be initialized to constant strings.
+</p><pre><code>   char address[4][100] = {
+      "Department of Foobarnautic Engineering",
+      "Indian Institute of Technology",
+      "Kharagpur 721302",
+      "India"
+   };
+</code></pre>
+<p>
+For a 2-D array <tt>A</tt> the <tt>(i,j)</tt>-th element is treated as a
+variable and can be accessed by the name <tt>A[i][j]</tt>. Both the row
+numbering and the column numbering start from 0. For example, the (1,3)-th
+element of <tt>mat</tt> is accessed as <tt>mat[1][3]</tt> and, if initialized
+as above, stores the <tt>int</tt> value 5.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/transpose.html" target="_blank">Animation example : in-place transpose of a matrix</a></h3>
+</td></tr></tbody></table>
+</p><p>
+2-D arrays can be passed to functions using a syntax similar to the declaration
+of 2-D arrays:
+</p><pre><code>   #define ROWDIM 10
+   #define COLDIM 12
+
+   int fooray ( int A[ROWDIM][COLDIM], int r , int c )
+   {
+      ...
+   }
+</code></pre>
+<p>
+Here the actual row and column dimensions of the used part of the array
+<tt>A</tt> are passed via the parameters <tt>r</tt> and <tt>c</tt>. It is
+not mandatory to specify the row dimension <tt>ROWDIM</tt>. But the
+column dimension <tt>COLDIM</tt> must be specified, since 2-D to 1-D
+mapping in memory requires the column dimension. Thus the declaration
+</p><pre><code>   int fooray ( int A[][COLDIM], int r , int c )
+   {
+      ...
+   }
+</code></pre>
+<p>
+is allowed, whereas the declarations
+</p><pre><code>   int fooray ( int A[][], int r , int c )
+   {
+      ...
+   }
+</code></pre>
+<p>
+and
+</p><pre><code>   int fooray ( int A[ROWDIM][], int r , int c )
+   {
+      ...
+   }
+
+</code></pre>
+<p>
+are <u>not</u> allowed.
+</p><p>
+Like 1-D arrays, 2-D arrays are not copied element-by-element to
+functions. A pointer is only passed. This implies that changes made to
+the array elements inside the function are visible outside the function.
+</p><p>
+Indeed 2-D arrays are pointers too. However, these pointers are rather
+distinct in nature from those pointers that represent 1-D arrays. The
+situation is quite clumsy and confusing.
+</p><pre><code>   #define MAXROW 4
+   #define MAXCOL 5
+
+   int barsum ( int A[][MAXCOL] , int r , int c )
+   {
+      int i, j, s;
+      int (*p)[MAXCOL];
+
+      s = 0;
+      p = A;
+      for (i=0; i&lt;r; ++i) for (j=0; j&lt;c; ++j) s += p[i][j];
+      return s;
+   }
+</code></pre>
+<p>
+The array <tt>A[][MAXCOL]</tt> can be assigned to the pointer <tt>p</tt>
+that should be declared as:
+</p><pre><code>   int (*p)[MAXCOL];
+</code></pre>
+<p>
+This declaration means that <tt>p</tt> is a <i>pointer to an array of
+<tt>MAXCOL</tt> integers</i>.
+The parentheses surrounding <tt>*p</tt> are absolutely necessary for this.
+The declaration
+</p><pre><code>   int *p[MAXCOL];
+</code></pre>
+<p>
+won't work in this context. The reason is that the array indicator
+<tt>[]</tt> has higher precedence than the pointer indicator <tt>*</tt>.
+Therefore, the last declaration is equivalent to
+</p><pre><code>   int *(p[MAXCOL]);
+</code></pre>
+<p>
+and means that <tt>p</tt> is an <i>array of <tt>MAXCOL</tt>
+<tt>int</tt> pointers</i>. This does not match the type of <tt>A</tt>.
+In addition, this does not match the dimension of <tt>A</tt>.
+</p><p>
+There are four ways in which a 2-D array may be declared.
+</p><pre><code>   #define MAXROW 4
+   #define MAXCOL 5
+
+   int A[MAXROW][MAXCOL];   /* A is a statically allocated array */
+   int (*B)[MAXCOL];        /* B is a pointer to an array of MAXCOL integers */
+   int *C[MAXROW];          /* C is an array of MAXROW int pointers */
+   int **D;                 /* D is a pointer to an int pointer */
+</code></pre>
+<p>
+All these are essentially different in terms of memory management. Except
+the first array <tt>A</tt>, the three other arrays support dynamic memory allocation.
+When properly allocated memory, each of these can be used to represent a
+MAXROW-by-MAXCOL array. Moreover, in all the four cases the <tt>(i,j)</tt>-th
+entry of the array is accessed as <tt><i>Array_name</i>[i][j]</tt>.
+The first two (<tt>A</tt> and <tt>B</tt>) are pointers to arrays,
+whereas the last two (<tt>C</tt> and <tt>D</tt>) are arrays of pointers.
+The following figure elaborates this difference.
+</p><center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/2-D.gif" alt="two-dimensional arrays">
+<br><br>
+Figure: Two-dimensional arrays
+</center>
+<p>
+We will discuss more about two-dimensional arrays in the chapter on
+dynamic memory allocation.
+</p>
+  <div class="navigator">
+    <a href="function.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Functions and recursion</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="exer2.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Exercise set II</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

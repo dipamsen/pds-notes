@@ -1,0 +1,588 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Input/Output | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+<h1 align="center">Input/Output</h1>
+<p>
+This is yet another imperative feature of C. Reading values from the user
+and printing values to the terminal impart a sequential flavor to the
+program. If you print a variable and then do some computation, you get
+some output. Instead, if you do the computations first and then print
+the same variable, you may get a different output. It is very essential
+that you understand the precise flow of execution of a C program. Well,
+so far you have encountered only flat sequences of statements executed
+one-by-one from top to bottom. Things start getting complicated as you
+encounter jump instructions (conditionals, loops and function calls).
+For <i>effective computation</i> you need these jump instructions.
+Imperative programming may be a complete mess, unless you understand
+the control flow thoroughly.
+
+</p><h2 align="left">Standard input/output</h2>
+<p>
+This is the direct method of communicating with the user, namely, reading
+from and writing to the terminal. Here are the basic primitives for doing
+these.
+</p><dl compact="">
+<dt><b>scanf</b></dt><dd>Read from the terminal.
+</dd><dt><b>printf</b></dt><dd>Write to the terminal.
+</dd></dl>
+
+<h3 align="left">Scanning values</h3>
+<p>
+The usage procedure for <tt>scanf</tt> is as follows:
+</p><pre>   scanf(<i>control string</i>, &amp;var1, &amp;var2, ...);
+</pre>
+<p>
+The primitive <tt>scanf</tt> waits for the user to enter a value
+by the keyboard. After the user writes a value and hits the enter button,
+the value goes to the memory location allocated to the variable specified.
+So <tt>scanf</tt> is another way of assigning values to variables.
+</p><p>
+The <i>control string</i> specifies the data type that is to be
+read from the terminal. Here is a list of the most used formats:
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><td align="center"><tt>%d</tt></td><td>Read an integer in decimal.
+</td></tr><tr><td align="center"><tt>%o</tt></td><td>Read an integer in octal.
+</td></tr><tr><td align="center"><tt>%x,%X</tt></td><td>Read an integer in hexadecimal.
+</td></tr><tr><td align="center"><tt>%i</tt></td><td><p>Read an integer in decimal/octal/hex.
+If the integer starts with 0x or 0X, treat it as a hexadecimal integer, else
+if it starts with 0, treat it as an octal integer, otherwise treat it as
+a decimal integer.
+</p></td></tr><tr><td align="center"><tt>%u</tt></td><td>Read an unsigned integer in decimal.
+</td></tr><tr><td align="center"><tt>%hd,%hi,%ho,%hu,%hx,%hX</tt></td><td>Read a <tt>short</tt> integer.
+</td></tr><tr><td align="center"><tt>%ld,%li,%lo,%lu,%lx,%lX</tt></td><td>Read a <tt>long</tt> integer.
+</td></tr><tr><td align="center"><tt>%Ld,%Li,%Lo,%Lu,%Lx,%LX</tt></td><td><p>Read a <tt>long long</tt> integer.
+This is not an ANSI C feature, but works well in Linux. Replacing <tt>L</tt>
+by <tt>ll</tt> (i.e., using <tt>%lld</tt>, <tt>%lli</tt>, etc.) continues to
+work in Linux and may be better ported to other architectures. Some compilers
+also support <tt>%q</tt> (quad).
+</p></td></tr><tr><td align="center"><tt>%f</tt></td><td>Read a <tt>float</tt>.
+</td></tr><tr><td align="center"><tt>%e</tt></td><td>Read a <tt>float</tt> in the scientific (exponential) notation.
+</td></tr><tr><td align="center"><tt>%lf,%le</tt></td><td>Read a <tt>double</tt>.
+</td></tr><tr><td align="center"><tt>%Lf,%Le</tt></td><td>Read a <tt>long double</tt>.
+</td></tr><tr><td align="center"><tt>%c</tt></td><td>Read a single character.
+</td></tr><tr><td align="center"><tt>%s</tt></td><td>Read a string of characters.
+</td></tr></tbody></table>
+</center>
+<p>
+<b>Example</b>
+</p><pre><code>   int a;
+   unsigned long b;
+   float x, y;
+   char c, s[64];
+
+   scanf("%d",&amp;a);   /* Read the integer a in decimal */
+   scanf("%x",&amp;b);   /* Read the integer b in hexadecimal */
+   scanf("%f",&amp;x);   /* Read the floating point number x in decimal notation */
+   scanf("%e",&amp;y);   /* Read the floating point number y in the scientific notation */
+   scanf(" %c",&amp;c);  /* Read the character c */
+   scanf(" %s",s);   /* Read a string and store in s */
+                     /* For reading strings the ampersand (&amp;) is not needed */
+</code></pre>
+<p>
+Suppose that the user enters the following values:
+</p><pre><code>   123 123 -123.456 1.23e-6 a Hey! I am your instructor.
+</code></pre>
+<p>
+Most of the readings go as expected. <tt>a</tt> receives the decimal value
+123, <tt>b</tt> receives 0x123 (which is 291 in decimal), <tt>x</tt> and
+<tt>y</tt> respectively receive <tt>-</tt>123.456&nbsp;=&nbsp;<tt>-</tt>1.23456e2 and
+1.23e<tt>-</tt>6&nbsp;=&nbsp;0.00000123. Also <tt>c</tt> obtains the value
+<tt>'a'</tt> (whose ASCII value is 97).
+</p><p>
+However, a problem comes with the string <tt>s</tt>: it
+receives the value "Hey!" only. The rest of the input is lost!
+The situation is actually worse: the rest is not lost. The computer
+remembers this part and supplies this to the next <tt>scanf</tt>,
+if any is executed. Why does it occur? The reason is: <tt>scanf</tt>
+stops reading as soon as it encounters a white character (space, tab,
+new line, etc.). You have to do something more complicated in order to
+read strings with spaces. Note also that the scanning of <tt>c</tt>
+requires a space before the <tt>%c</tt>. This is for consuming
+the space following the value of <tt>y</tt> given by the user. The
+same applies to the reading of <tt>s</tt>. Reading characters and strings
+is often too painful in C. Here are the basic rules:
+</p><ul>
+<li><tt>scanf</tt> stops reading as soon as it encounters a white character.
+The trailing white character remains in the input stream.
+</li><li>Leading white characters are ignored, when numbers are read.
+</li><li>White characters are characters and so are not ignored, when
+characters and strings are read.
+</li></ul>
+<p>
+You can read more than one variables in a single <tt>scanf</tt>. The
+six <tt>scanf</tt>'s for the last example can be combined as:
+</p><pre><code>   scanf("%d %x %f %e %c %s", &amp;a, &amp;b, &amp;x, &amp;y, &amp;c, s);
+</code></pre>
+Spaces are ignored before numbers. So the statement
+<pre><code>   scanf("%d%x%f%e %c %s", &amp;a, &amp;b, &amp;x, &amp;y, &amp;c, s);
+</code></pre>
+<p>
+has the same effect. You may use other separators instead of space.
+For example, the following statement
+</p><pre><code>   scanf("%d,%x,%f,%e,%c,%s", &amp;a, &amp;b, &amp;x, &amp;y, &amp;c, s);
+</code></pre>
+<p>
+requires you to enter the input values as:
+</p><pre><code>   123,123,-123.456,1.23e-6,a,Hey! I am your instructor.
+</code></pre>
+<p>
+In all these examples, the string <tt>s</tt> is assigned the value
+"Hey!". Use the <tt>fgets</tt> primitive (see below) to repair this.
+</p><p>
+It is also a queer thing to use <tt>&amp;</tt> in every argument except
+strings. This is because <tt>scanf</tt> is a function. In C, every
+function call is of the type <i>call-by-value</i>. In order to see
+the desired effects (assignments of the arguments by the values given
+by the user), we need to pass addresses of the variables. A string (character
+array) is, however, already an address (a pointer), so we don't require
+an extra <tt>&amp;</tt>. All these concepts will gradually be clear, as you
+understand more and more of the idiosyncracies of C. For the time being
+just rehearse and memorize the following two lines:
+</p><pre><code>   You need ampersands for all things,
+   Unless you are scanning strings.
+</code></pre>
+
+<h3 align="left">Printing values</h3>
+<p>
+Printing is remarkably neater than scanning. No ampersands. And
+<tt>printf</tt> prints precisely what you ask it to do. The basic
+syntax is very similar to <tt>scanf</tt>.
+</p><pre>   printf(<i>control string</i>, arg1, arg2, ...);
+</pre>
+<p>
+This directive causes the program to print the values of the arguments
+<tt>arg1, arg2, ...</tt> to the terminal following the format specified in
+the <i>control string</i>. The control string may contain (almost) any
+sequence of characters with special escape sequences (starting with percents)
+that determine how to print the arguments. The argumnets, on the other hand,
+specify what to print. Here is a list of the basic escape sequences:
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><td align="center"><tt>%d,%i</tt></td><td>Print an integer in decimal.
+</td></tr><tr><td align="center"><tt>%o</tt></td><td>Print an integer in octal.
+</td></tr><tr><td align="center"><tt>%x</tt></td><td>Print an integer in hexadecimal. Use the digits <tt>0,1,...,9,a,b,c,d,e,f</tt>.
+</td></tr><tr><td align="center"><tt>%X</tt></td><td>Same as <tt>%x</tt> except that the digits <tt>0,1,...,9,A,B,C,D,E,F</tt> are used.
+</td></tr><tr><td align="center"><tt>%u</tt></td><td>Print an unsigned integer in decimal.
+</td></tr><tr><td align="center"><tt>%hd,%hi,%ho,%hu,%hx,%hX</tt></td><td>Print a <tt>short</tt> integer.
+</td></tr><tr><td align="center"><tt>%ld,%li,%lo,%lu,%lx,%lX</tt></td><td>Print a <tt>long</tt> integer.
+</td></tr><tr><td align="center"><tt>%Ld,%Li,%Lo,%Lu,%Lx,%LX</tt></td><td><p>Print a <tt>long long</tt> integer.
+(Not in ANSI C. <tt>ll</tt> may be used in place of <tt>L</tt>. Some compilers
+support <tt>%q</tt>.)
+</p></td></tr><tr><td align="center"><tt>%f</tt></td><td>Print a <tt>float</tt> in decimal.
+</td></tr><tr><td align="center"><tt>%e</tt></td><td>Print a <tt>float</tt> in the scientific (exponential) notation.
+</td></tr><tr><td align="center"><tt>%E</tt></td><td>Same as <tt>%e</tt> except that <tt>E</tt> is used to denote the exponent.
+</td></tr><tr><td align="center"><tt>%a</tt></td><td><p>Print a <tt>float</tt> in hexadecimal. Digits <tt>0,1,...,9,a,b,c,d,e,f</tt>
+are used and the exponent indicator is <tt>p</tt>.
+</p></td></tr><tr><td align="center"><tt>%A</tt></td><td>Same as <tt>%a</tt> except that <tt>A,B,C,D,E,F</tt> and <tt>P</tt> are used.
+</td></tr><tr><td align="center"><tt>%lf,%le,%lE,%la,%lA</tt></td><td>Print a <tt>double</tt>.
+</td></tr><tr><td align="center"><tt>%Lf,%Le,%LE,%La,%LA</tt></td><td>Print a <tt>long double</tt>.
+</td></tr><tr><td align="center"><tt>%c</tt></td><td>Print a single character.
+</td></tr><tr><td align="center"><tt>%s</tt></td><td>Print a string of characters.
+</td></tr><tr><td align="center"><tt>%%</tt></td><td>Print a literal <tt>%</tt>.
+</td></tr><tr><td align="center"><tt>\"</tt></td><td>Print a literal double quote <tt>"</tt>.
+</td></tr></tbody></table>
+</center>
+<p>
+<b>Example:</b>
+Suppose you want to print the scanned values from the notorious <tt>scanf</tt>
+example.
+</p><pre><code>   int a;
+   unsigned long b;
+   float x, y;
+   char c, s[64];
+
+   scanf("%d %x %f %e %c %s", &amp;a, &amp;b, &amp;x, &amp;y, &amp;c, s);
+
+   printf("a = %d = 0x%x\n", a, a);
+   printf("b = %d = 0x%x\n", b, b);
+   printf("x = %f = %e\n", x, x);
+   printf("y = %f = %e\n", y, y);
+   printf("c = '%c' = %d\n", c, c);
+   printf("s = %s\n", s);
+</code></pre>
+<p>
+If you supply the inputs
+</p><pre><code>   123 123 -123.456 1.23e-6 a Hey! I am your instructor.
+</code></pre>
+<p>
+the <tt>printf</tt> statements print the following lines:
+</p><pre><code>   a = 123 = 0x7b
+   b = 291 = 0x123
+   x = -123.456001 = -1.234560e+02
+   y = 0.000001 = 1.230000e-06
+   c = 'a' = 97
+   s = Hey!
+</code></pre>
+<p>
+Once again you may combine several <tt>printf</tt>'s in a single statement.
+For example, the same output is produced by the following:
+</p><pre><code>   printf("a = %d = 0x%x\nb = %d = 0x%x\n", a, a, b, b);
+   printf("x = %f = %e\ny = %f = %e\n", x, x, y, y);
+   printf("c = '%c' = %d\ns = %s\n", c, c, s);
+</code></pre>
+<p>
+Here look at the dual meaning of characters. When viewed as a character,
+it looks like <tt>a</tt>; when viewed as an integer, it looks like 97.
+</p><p>
+During <tt>printf</tt> no values are assigned. So <tt>printf</tt> can
+legally handle printing values of expressions. Thus an argument of
+<tt>printf</tt> can be any valid expression. For example, the following
+snippet
+</p><pre><code>   int a = -3, b = 5;
+
+   printf("expression1 = %d, and ", a / (a + b));
+   printf("expression2 = %f.\n", (float)a / (float)(a + b));
+   printf("That's all!\n");
+</code></pre>
+prints
+<pre><code>   expression1 = -1, and expression2 = -1.500000.
+   That's all!
+</code></pre>
+<p>
+There is a funny thing about <tt>printf</tt>. It indeed returns a value,
+namely, the number of characters printed. Here is an example:
+</p><pre><code>   int a = -3, b = 5;
+   int n;
+
+   n = printf("expression1 = %d, and ", a / (a + b));
+   n += printf("expression2 = %f.\n", (float)a / (float)(a + b));
+   n += printf("That's all!\n");
+   printf("Total number of characters printed before this line = %d\n", n);
+</code></pre>
+<p>
+The output is
+</p><pre><code>   expression1 = -1, and expression2 = -1.500000.
+   That's all!
+   Total number of characters printed before this line = 59
+</code></pre>
+<p>
+How come? You can see only 57 printed characters. Yep! You forgot to count
+the new-line characters at the end of the first two lines.
+</p>
+<h2 align="left">File input/output</h2>
+<p>
+So far you have seen examples of I/O from/to the terminal. This is a
+special case of what is called file I/O. You can read from or write to
+any file using built-in functions that have call syntaxes very similar
+to the standard I/O calls.
+</p><p>
+In order to use a file you must first open a <i>file pointer</i> or
+a <i>file descriptor</i>. The <tt>fopen</tt> call can be used for that.
+Here are the three basic ways of opening a file descriptor.
+</p><pre><code>   FILE *ifp, *ofp1, *ofp2;       /* Declare FILE pointers */
+
+   ifp = fopen("foo.in","r");     /* Open the file "foo.in" in read mode */
+   ofp1 = fopen("bar1.out","w");  /* Open the file "bar1.out" in write mode */
+   ofp2 = fopen("bar2.out","a");  /* Open the file "bar2.out" in append mode */
+</code></pre>
+<p>
+Once the file pointers are opened, they can be used for reading from or
+writing to the named files. For the last example, the file "foo.in" is opened
+in the "read" mode, i.e., you can read from the file "foo.in". The file
+"bar1.out", on the other hand, is opened in the "write" mode. The file,
+if existent, is rewritten, else a new file in the name "bar1.out" is
+opened. You can write whatever you like to this file. Finally,
+the file "bar2.out" is opened in the append mode. You can write to the
+file "bar2.out". However, writing starts at the end. This means that
+if a file with the name "bar2.out" already exists, then its content
+is left unaltered, but now you get the facility to write to this file
+starting from the end of the file. If "bar2.out" didn't exist, one
+new file is created with this name and you can now start writing to it.
+</p><p>
+Reading from and writing to a file can be effected only via the FILE pointers
+opened. The <tt>fopen</tt> call simply associates a file name and an access
+mode with a FILE pointer.
+</p><p>
+If <tt>ifp</tt> is a FILE pointer opened in the read mode, you can read
+from it using the directive:
+</p><pre>   fscanf(ifp, <i>control string</i>, &amp;var1, &amp;var2, ...);
+</pre>
+<p>
+Here <i>control string</i> and the arguments are to be used exactly in the
+same way as explained in connection with <tt>scanf</tt>.
+</p><p>
+Similarly, if <tt>ofp</tt> is a FILE pointer opened in the write or append
+mode, one can use the following call for writing to the file:
+</p><pre>   fprintf(ofp, <i>control string</i>, expr1, expr2, ...);
+</pre>
+<p>
+Like <tt>printf</tt>, the <i>control string</i> specifies how to print
+and the arguments <tt>expr1, expr2, ...</tt> indicate what to print.
+</p><p>
+When your program starts execution, three FILE pointers are opened
+by default. The standard input <tt>stdin</tt> is opened in the read mode
+for scanning values from the terminal. The standard output <tt>stdout</tt>
+and standard error <tt>stderr</tt> descriptors are opened in the append
+mode. Both are meant for writing to the terminal. With special shell
+commands one can separate out the two output streams. In Unix-like platforms
+almost everything under the sun is treated as a file. Hard disk files look
+like files, but the terminal is also a file and can be read from and written
+to. In fact, the call
+</p><pre>   scanf(<i>control string</i>, &amp;var1, &amp;var2, ...);
+</pre>
+<p>
+is equivalent to the call
+</p><pre>   fscanf(stdin, <i>control string</i>, &amp;var1, &amp;var2, ...);
+</pre>
+<p>
+Similarly, the call
+</p><pre>   printf(<i>control string</i>, expr1, expr2, ...);
+</pre>
+<p>
+is equivalent to the call
+</p><pre>   fprintf(stdout, <i>control string</i>, expr1, expr2, ...);
+</pre>
+<p>
+There are a lot of other things that you can do using FILE pointers.
+We won't go into the details here. We only mention a new call to do
+something useful: reading a string with spaces. The call goes like this:
+</p><pre><code>   fgets(str, n, ifp);
+</code></pre>
+<p>
+Here <tt>str</tt> is a character array, <tt>n</tt> a positive integer,
+and <tt>ifp</tt> a FILE pointer opened in the read mode. The call reads
+an entire line from the FILE pointer <tt>ifp</tt> and stores the line
+with a trailing NULL character (<tt>'\0'</tt>) in the string <tt>str</tt>.
+If the line in the input file is bigger than n characters, then only
+n-1 characters are read and stored in <tt>str</tt> together with the
+trailing NULL character. The array <tt>str</tt> should be large enough
+to accommodate n characters. Using a smaller array may corrupt memory
+and/or raise segmenation faults.
+</p><p>
+But what about reading an entire line from the terminal, as our original
+problem was? You still wonder how! That's damn easy:
+</p><pre><code>   fgets(str, n, stdin);
+</code></pre>
+Period! Nay, semi-colon;
+<p>
+Once you are through working with a FILE pointer <tt>fp</tt> and do no
+longer require it, you may explicitly close the pointer using the call:
+</p><pre><code>   fclose(fp);
+</code></pre>
+<p>
+When your program terminates, all opened pointers (including the standard
+ones) are closed. Doing it explicitly is a matter of good programming
+etiquette and is on esoteric situations needed for your survival. Every
+system imposes a restriction on the maximum number of FILE pointers that
+can be opened simultaneously. This upper bound is compiler-dependent
+and is usually not very high. If this value is 16, and you need to access
+25 files, and if we assume you do not need to access all these 25 files
+simultaneously, it is advantageous to close unused FILE pointers. These
+closed descriptors may be reassigned in a subsequent <tt>fopen</tt>
+call.
+</p><h2 align="left">String input/output</h2>
+Now I/O from/to a string. The concepts are similar. Use the <tt>sscanf</tt>
+and <tt>sprintf</tt> calls.
+<pre>   sscanf(str, <i>control string</i>, &amp;var1, &amp;var2, ...);
+   sprintf(str, <i>control string</i>, expr1, expr2, ...);
+</pre>
+<p>
+<b>Example:</b> Here is a simple <tt>sscanf</tt> example:
+</p><pre><code>   char str[] = "53 -123.456 @";
+   int a;
+   float b;
+   char c;
+
+   sscanf(str,"%d %f %c", &amp;a, &amp;b, &amp;c);
+   printf("a = %d\nb = %f\nc = %d\n", a, b, c);
+</code></pre>
+<p>
+This snippet generates the output:
+</p><pre><code>   a = 53
+   b = -123.456001
+   c = 64
+</code></pre>
+<p>
+<b>Example:</b> Here is a simple <tt>sprintf</tt> example:
+</p><pre><code>   char str[128];
+
+   sprintf(str, "%lu %e\n", 521lu &lt;&lt; 9 , 521.0 * 512.0);
+   fprintf(stdout, "%s", str);
+</code></pre>
+<p>
+The output is
+</p><pre><code>   266752 2.667520e+05
+</code></pre>
+<p>
+<b>Example:</b> Now here is a deeply illustrating example:
+</p><pre><code>   int a = -3, b = 5;
+   char str[128], *cptr;
+
+   cptr = str;
+   cptr += sprintf(cptr,"expression1 = %d, and ", a / (a + b));
+   cptr += sprintf(cptr,"expression2 = %f.\n", (float)a / (float)(a + b));
+   cptr += sprintf(cptr,"That's all!\n");
+   printf("%s", str);
+</code></pre>
+<p>
+You get the output:
+</p><pre><code>   expression1 = -1, and expression2 = -1.500000.
+   That's all!
+</code></pre>
+<p>
+Don't ask us to explain now what this code does. Let us wait till you
+mature as a C programmer in order to understand, assimilate and eventually
+appreciate the big idiosyncracies of C, its pointer arithmetic, its arrays,
+bla bla bla. There is no hurry indeed.
+</p><p>
+Oh, didn't I mention that like <tt>printf</tt>, both <tt>fprintf</tt>
+and <tt>sprintf</tt> return the number of characters printed? Furthermore,
+each of <tt>scanf</tt>, <tt>fscanf</tt> and <tt>sscanf</tt> returns an
+integer value. Read your system's manual if you have to know what this
+return value stands for.
+</p><h2 align="left">Formatted input/output</h2>
+<p>
+You can control the format of printed output using special directives.
+Using these extra directives helps you, for example, to generate nicely aligned
+lines. All you have to do is to insert a number between the <tt>%</tt>
+and the subsequent type specifier (<tt>d,x,f,s,</tt> etc.). The following
+table summarizes some of these options. Here <i>n</i> and <i>m</i>
+are assumed to be <i>positive</i> integer values.
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Format</th><th>Description
+</th></tr><tr><td align="center"><tt>%<i>n</i>d,%<i>n</i>i,<br>%<i>n</i>u,%<i>n</i>ld,<br>%<i>n</i>Ld</tt>, etc.</td><td><p>Print an integer in the decimal
+notation using at least <i>n</i> characters. If the decimal representation
+of the integer is of length <i>l&nbsp;&lt;&nbsp;n</i> (including the sign for negative integers),
+then <i>n&nbsp;-&nbsp;l&nbsp;</i> spaces are printed and then the integer is printed. If
+<i>l&nbsp;&gt;=&nbsp;n</i>, then this directive is similar to the simple <tt>%d</tt>.
+</p></td></tr><tr><td align="center"><tt>%<i>-n</i>d,%<i>-n</i>i,<br>%<i>-n</i>u</tt>, etc.</td><td><p>This is similar to <tt>%<i>n</i>d</tt>
+except that the extra spaces, if any, are printed after the integer.
+In short, <tt>%<i>n</i>d</tt> yields right-justified output, whereas
+<tt>%<i>-n</i>d</tt> yields left-justified output.
+</p></td></tr><tr><td align="center"><tt>%<i>n</i>o,%-<i>n</i>o</tt></td><td>Same as <tt>%<i>n</i>d</tt> and
+<tt>%<i>-n</i>d</tt>, except that the integer is printed in octal.
+</td></tr><tr><td align="center"><tt>%<i>n</i>x,%-<i>n</i>x,<br>%<i>n</i>X,%-<i>n</i>X</tt></td><td>Same as <tt>%<i>n</i>d</tt> and
+<tt>%<i>-n</i>d</tt>, except that the integer is printed in hexadecimal.
+</td></tr><tr><td align="center"><tt>%<i>n.m</i>f,%<i>n.m</i>lf,<br>%<i>n.m</i>Lf</tt></td><td><p>Print a right-justified real number
+(in the decimal notation) with a total of <i>n</i> characters (including
+the decimal pointer and the sign) and with <i>m</i> characters to the
+right of the decimal point. If the float value cannot be printed in the
+recommended space, then <tt>%<i>n.m</i>f</tt> prints as <tt>%f</tt> does.
+</p></td></tr><tr><td align="center"><tt>%<i>-n.m</i>f,%<i>-n.m</i>lf,<br>%<i>-n.m</i>Lf</tt></td><td><p>Same as <tt>%<i>n.m</i>f</tt>, except that
+the printing is left-justified.
+</p></td></tr><tr><td align="center"><tt>%<i>n</i>s</tt></td><td><p>Print a right-justified string
+using a total of <i>n</i> characters. If the original string is bigger
+than or equal to the recommended number <i>n</i>, then <tt>%<i>n</i>s</tt> prints
+as does <tt>%s</tt>.
+</p></td></tr><tr><td align="center"><tt>%<i>-n</i>s</tt></td><td><p>This is the same as <tt>%<i>n</i>s</tt>
+except that the output is left-justified, i.e., extra spaces, if any,
+are printed after the string.
+</p></td></tr></tbody></table>
+</center>
+<p>
+<b>Example:</b>
+For the following formatted print statements
+</p><pre><code>   printf("{%2d} {%3d} {%4d} {%-2d} {%-3d} {%-4d}\n",
+          123, 234, 345, 456, 567, 678);
+   printf("{%2x} {%3x} {%4x} {%-2x} {%-3x} {%-4x}\n",
+          123, 234, 345, 456, 567, 678);
+   printf("{%2s} {%3s} {%4s} {%-2s} {%-3s} {%-4s}\n",
+          "abc", "bcd", "cde", "def", "efg", "fgh");
+   printf("{%4.2f} {%5.2f} {%6.2f} {%-5.2f} {%-6.2f} {%-7.2f}\n",
+          1.2345, 2.3456, 3.4567, -4.5678, -5.6789, -6.7890);
+</code></pre>
+<p>
+the output looks like:
+</p><pre><code>   {123} {234} { 345} {456} {567} {678 }
+   {7b} { ea} { 159} {1c8} {237} {2a6 }
+   {abc} {bcd} { cde} {def} {efg} {fgh }
+   {1.23} { 2.35} {  3.46} {-4.57} {-5.68 } {-6.79  }
+</code></pre>
+<p>
+<b>Example:</b> <a href="https://cse.iitkgp.ac.in/pds/notes/prog/io1.c" id="noul" target="_blank">io1.c</a>
+</p><p><b>The program</b>
+</p>
+<pre><code>#include &lt;stdio.h&gt;
+
+main ()
+{
+   char name1[64] = "Abhijit Das",
+        name2[64] = "Chittaranjan Mandal",
+        name3[64] = "Sandeep Sen";
+   char dept1[4] = "CSE", dept2[4] = "SIT", dept3[4] = "CSE";
+   int room1 = 123, room2 = 6, room3 = 301;
+   float height1 = 1.7781, height2 = 1.7399, height3 = 1.7412;
+   int lucky1[2] = { 561, 1729 },
+       lucky2[2] = { 28, 496 },
+       lucky3[2] = { -1073741789, 104729};
+
+   printf("   %10s %20s  %s", "Name", "Department", "Room No");
+   printf("  Height        Lucky numbers\n");
+   printf("  +-------------------------------------------------------------------------+\n");
+   printf("  | %-20s", name1);
+   printf("%7s   ",dept1);
+   printf("    %-2d",room1);
+   printf("%9.2f",height1);
+   printf("   %11d and %-7d|", lucky1[0], lucky1[1]);
+   printf("\n");
+   printf("  | %-20s", name2);
+   printf("%7s   ",dept2);
+   printf("     %-2d",room2);
+   printf("%9.2f",height2);
+   printf("   %11d and %-7d|", lucky2[0], lucky2[1]);
+   printf("\n");
+   printf("  | %-20s", name3);
+   printf("%7s   ",dept3);
+   printf("    %-3d",room3);
+   printf("%9.2f",height3);
+   printf("   %11d and %-7d|", lucky3[0], lucky3[1]);
+   printf("\n");
+   printf("  +-------------------------------------------------------------------------+\n");
+}
+</code></pre>
+
+<p><b>The output</b>
+</p>
+<pre><code>         Name           Department  Room No  Height        Lucky numbers
+  +-------------------------------------------------------------------------+
+  | Abhijit Das             CSE       123     1.78           561 and 1729   |
+  | Chittaranjan Mandal     SIT        6      1.74            28 and 496    |
+  | Sandeep Sen             CSE       301     1.74   -1073741789 and 104729 |
+  +-------------------------------------------------------------------------+
+</code></pre>
+
+
+
+  <div class="navigator">
+    <a href="assign.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Assignments</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="branch.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Conditions and branching</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

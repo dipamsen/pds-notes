@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise set III | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Exercise set III</h1>
+<p><b>Note:</b>
+<i>Students are encouraged to solve as many problems from this set as possible.
+Some of these will be solved during the lectures, if time permits. We have
+made attempts to classify the problems based on the difficulty level of
+solving them. An unmarked exercise is of low to moderate difficulty. Harder
+problems are marked by H, H<sup>2</sup> and H<sup>3</sup> meaning "just hard",
+"quite hard" and "very hard" respectively. Exercises marked by M have
+mathematical flavor (as opposed to computational). One requires elementary
+knowledge of number theory or algebra or geometry or combinatorics in order
+to solve these mathematical exercises.</i>
+
+</p><ol>
+<li>Consider the data type <tt>complex</tt> discussed in the notes.
+Write a function that takes an array of complex numbers as input and
+sorts the array with respect to the absolute values of the elements
+of the array.
+
+</li><li>Write a function that calls the arithmetic routines on the
+<tt>complex</tt> data type in order to compute the two complex square
+roots of a quadratic equation with complex coefficients.
+
+</li><li>Define a structure to represent an (ordered) pair of integers.
+For two pairs (a,b) and (c,d) we say (a,b)&nbsp;&lt;&nbsp;(c,d) if and
+only if either a&nbsp;&lt;&nbsp;c or a&nbsp;=&nbsp;c and b&nbsp;&lt;&nbsp;d.
+Write a function that sorts an array of integer pairs with respect to this
+ordering (called <i>lexicographic ordering</i>).
+
+</li><li>A rational number is defined by a pair of integers (a,b) with
+b&nbsp;&gt;&nbsp;0 and is interpreted to stand for a/b. A rational number
+a/b is said to be in the reduced form if gcd(a,b)=1.
+<ol type="a">
+<li>Define a structure to represent a rational number.
+</li><li>Write a function that returns the rational number 0/1. This function
+can be used to initialize a rational number variable.
+</li><li>Write a function that, given a rational number, returns its reduced form.
+</li><li>Write a function that, upon input of two rational numbers, returns the
+sum of the two input numbers in the reduced form.
+</li><li>Repeat the previous part for subtraction, multiplication and division
+of rational numbers.
+</li></ol>
+
+</li><li>Consider the following subset of complex numbers:
+<pre><code>   Q(i) = { x + iy | x and y are rational numbers and i = sqrt(-1) }.
+</code></pre>
+<ol type="a">
+<li>Define a structure to represent an element of Q(i). Use the
+<tt>rational</tt> structure of the previous exercise for this
+definition.
+</li><li>By invoking the arithmetic routines on rational numbers implemented
+in the previous exercise, implement the arithmetic (addition, subtraction,
+multiplication and inverse) in Q(i).
+</li></ol>
+
+</li><li>Define a structure representing a book and having the following
+fields: Name, list of authors, publisher, year of publication and
+ISBN number. Write functions to do the following tasks on an array of
+books:
+<ol type="a">
+<li>Find all books published in a given year.
+</li><li>Find all books published between two given years.
+</li><li>Find all books from a given publisher.
+</li><li>Find all books from a given author.
+</li><li>Sort the books by their ISBN numbers.
+</li><li>Sort the books by their names.
+</li><li>Sort the books by their first authors.
+</li></ol>
+
+</li><li>Consider the following set of real numbers:
+<pre><code>   A = { a + b sqrt(2) | a,b are integers }.
+</code></pre>
+<ol type="a">
+<li>Define a structure to represent an element of A.
+</li><li>Write a function that, upon input of two elements of A, returns the
+sum of the input elements.
+</li><li>Repeat the last part for subtraction and multiplication of elements of A.
+</li><li>It is known that the element a + b sqrt(2) has an inverse in the set
+A if and only if a<sup>2</sup>&nbsp;-&nbsp;2b<sup>2</sup>&nbsp;=&nbsp;1 or -1.
+Write a function that, given an invertible element of A, returns the inverse
+of the element. If the input to the function is not invertible, the function
+should return 0 after prompting an error message.
+</li></ol>
+
+</li><li>Consider the following set of complex numbers:
+<pre><code>   B = { a + b sqrt(-2) | a,b are integers }.
+</code></pre>
+<ol type="a">
+<li>Define a structure to represent an element of B.
+</li><li>Write a function that, upon input of two elements of B, returns the
+sum of the input elements.
+</li><li>Repeat the last part for subtraction and multiplication of elements of B.
+</li><li>[M] It is known that the element a + b sqrt(-2) has an inverse in the set
+B if and only if a<sup>2</sup>&nbsp;+&nbsp;2b<sup>2</sup>&nbsp;=&nbsp;1.
+Prove that the only invertible elements of B are 1 and -1.
+</li></ol>
+
+</li><li>Consider the following set of real numbers:
+<pre><code>   C = { a + by | a,b are integers }.
+</code></pre>
+<p>
+where y = [1 + sqrt(5)] / 2.
+</p><ol type="a">
+<li>Define a structure to represent an element of C.
+</li><li>Write a function that, upon input of two elements of C, returns the
+sum of the input elements.
+</li><li>Repeat the last part for subtraction and multiplication of elements of C.
+</li><li>It is known that the element a + by has an inverse in the set
+C if and only if a<sup>2</sup>&nbsp;+&nbsp;ab&nbsp;-&nbsp;b<sup>2</sup>&nbsp;=&nbsp;1 or -1.
+Write a function that, given an invertible element of C, returns the inverse
+of the element. If the input to the function is not invertible, the function
+should return 0 after prompting an error message.
+</li></ol>
+
+</li><li>[HM] Consider the following set of real numbers:
+<pre>   D = { a + bw + cw<sup>2</sup> | a,b,c are integers }.
+</pre>
+<p>
+where w is the real cube root of 2.
+</p><ol type="a">
+<li>Define a structure to represent an element of D.
+</li><li>Write a function that, upon input of two elements of D, returns
+the sum of the input elements.
+</li><li>Repeat the last part for subtraction and multiplication of elements of D.
+</li><li>[H<sup>2</sup>M] Define the <i>norm</i> of an element
+t&nbsp;=&nbsp;a&nbsp;+&nbsp;bw&nbsp;+&nbsp;cw<sup>2</sup> of D as
+<pre>   N(t) = (a + bw + cw<sup>2</sup>)(a + bw' + cw'<sup>2</sup>)(a + bw'' + cw''<sup>2</sup>),
+</pre>
+<p>
+where <tt>w',w''</tt> are the two complex cube roots of 2. It is known that
+t is invertible in D if and only if N(t) is 1 or -1. Write a function that,
+upon input of an element t of D, determines whether t is invertible in D.
+</p></li></ol>
+
+<p><b>Note:</b> In modern algebra, the sets A,B,C,D of the above exercises
+are examples of <i>number rings</i>. These rings constitute some central
+objects of study in <i>algebraic number theory</i>.
+
+</p></li><li>A circle in the X-Y plane is specified by three real numbers
+a,b,c. The real numbers may be interpreted in two possible ways. The first
+possibility is that (a,b) represents the center and c the radius of the
+circle. In the second representation, we refer to the equation of the
+circle as:
+<pre>   X<sup>2</sup> + Y<sup>2</sup> + aX + bY + c = 0.
+</pre>
+So a structure holding three double variables together with a flag
+indicating the particular interpretation suffices to store a circle.
+<ol type="a">
+<li>Write a function that converts a circle structure from the first
+to the second representation.
+</li><li>Write a function that converts a circle structure from the second
+to the first representation.
+</li><li>Write a function that, upon input a circle and two real numbers
+x,y, checks whether the point (x,y) lies inside, on or outside the
+circle. Note that the input circle may be of any of the two representations.
+</li><li>Write a function that, upon input two circles each with any representation,
+determines whether the circles touch, intersect or do not intersect.
+</li><li>Write a function that, upon input a circle in any representation,
+returns the side of a square that has the same area as the input circle.
+</li></ol>
+
+</li><li>A rectangle in the X-Y plane can be specified by eight real numbers
+representing the coordinates of its four corners. Define a structure to
+represent a rectangle using eight double variables. Notice that here we
+do not assume the sides of a rectangle to be necessarily parallel to the
+X and Y axes. Notice also that by a rectangle we mean only the boundary
+(not including the region inside).
+<ol type="a">
+<li>Write a function that, upon input a structure of the above kind,
+determines whether the structure represents a valid rectangle.
+</li><li>Write a function that, upon input a valid rectangle, determines
+the area of the rectangle.
+</li><li>[HM] Write a function that, upon input a valid rectangle and two real
+numbers x,y, determines whether the point (x,y) lies inside, on or
+outside the rectangle.
+</li><li>[H<sup>2</sup>M] Write a function that, upon input two valid rectangles,
+determines whether the two rectangles touch, intersect or do not
+intersect.
+</li></ol>
+
+</li><li>In a <i>doubly linked list</i>, each node is given two pointers,
+the first pointing to the next element in the list and the second
+to the previous element in the list. The next pointer of the last
+node and the previous pointer of the first node should be NULL.
+<ol type="a">
+<li>Draw a doubly linked list on four nodes.
+</li><li>Define a structure with self-referencing pointers to represent a
+node in a doubly linked list.
+</li></ol>
+
+</li><li>Use a sequence of memory allocation calls in order to create
+a linked list of one hundred complex numbers, where for each
+k=1,2,<tt>...</tt>,100 the k-th number in the list is
+<tt>k<sup>2</sup>&nbsp;+&nbsp;i(-1)<sup>k</sup>k<sup>2</sup></tt>.
+
+</li><li>Create a doubly linked list of the 100 complex numbers of the
+previous exercise.
+
+</li><li>In a <i>ternary tree</i> each node has three children (each possibly
+empty).
+<ol type="a">
+<li>Draw a ternary tree having the following nodes:
+<pre><code>   Node       Children
+    a           b,c,d
+    b           e,-,f
+    c           -,-,g
+    d           -,-,-
+    e           -,h,-
+    f           -,-,-
+    g           -,-,-
+    h           -,-,-
+</code></pre>
+<p>Here <tt>-</tt> (dash) denotes an empty child.
+</p></li><li>Define a structure data type with self-referencing pointers to
+represent a node in a ternary tree.
+</li></ol>
+
+</li><li>Use a sequence of memory allocation calls to create the
+ternary tree of the last exercise.
+
+</li><li>
+Consider the following type definition:
+<pre><code>   typedef char *compactString;
+</code></pre>
+<p>
+The idea is to dynamically store (null-terminated) character strings
+in <tt>compactString</tt> arrays so that each array is allocated the
+exact amount of memory necessary to store a string. For example,
+the string "AbCdEf" is of length 6 and requires 7 characters (including
+the trailing null character) for storage. So a <tt>compactString</tt>
+storing this string should be allocated exactly 7 bytes of memory.
+Implement functions for doing the following tasks on <tt>compactString</tt>
+arrays.
+</p><pre>   /* Initialize a <tt>compactString</tt> to the empty string. */
+   compactString initEmpty ();
+
+   /* Reverse the compactString s and store in the compactString t */
+   void reverse ( compactString t , compactString s ) ;
+
+   /* Append the character c to the compactString s */
+   void append ( compactString s , char c ) ;
+
+   /* Insert the character c at the beginning of the compactString s */
+   void prepend ( compactString s , char c ) ;
+
+   /* Delete and return the last character of the compactString s */
+   char delEnd ( compactString s ) ;
+
+   /* Delete and return the first character of the compactString s */
+   char delStart ( compactString s ) ;
+
+   /* Save to the compactString t the prefix of the compactString s of length n */
+   void prefix ( compactString t , compactString s , unsigned int n ) ;
+
+   /* Save to the compactString t the suffix of the compactString s of length n */
+   void suffix ( compactString t , compactString s , unsigned int n ) ;
+
+   /* Concatenate the compactString's s1 and s2 and store in the compactString t */
+   void concatenate ( compactString t , compactString s1 , compactString s2 ) ;
+</pre>
+<p>
+You should use dynamic memory management in order to ensure compact
+representations of strings. Notice also that in the above prototypes, you
+should allow the target string t to be the same as an input argument.
+For example, a prefix of <tt>s</tt> may be stored in <tt>s</tt> itself.
+You should <tt>free</tt> unused allocated memory.
+
+</p></li><li>
+Memory allocation and reallocation on <tt>compactString</tt>'s of the last
+exercise need be carried out even when the size of the string changes by
+1. In order to reduce this overhead, let us plan to dynamically maintain
+the size allocated to each array to be a power of 2. Whenever a string
+requires n bytes for storage, we actually allocate 2<sup>t</sup> bytes, where
+<tt>2<sup>t-1</sup>&nbsp;&lt;&nbsp;n&nbsp;&lt;=&nbsp;2<sup>t</sup></tt>.
+In that case many operations require no reallocation of memory. However,
+we need to maintain the actual amount of memory allocated to a string.
+Define the following data type:
+<pre><code>   typedef struct {
+      char *data;
+      int allocSize;
+   } semiCompactString;
+</code></pre>
+<p>
+Rewrite the functions of the previous exercise for
+<tt>semiCompactString</tt>'s.
+
+</p></li><li>
+A (univariate) polynomial is specified by an array of its coefficients.
+Since one cannot check during program execution the size of a static
+or dynamic array, one should additionally maintain the degree of a
+polynomial.
+<ol type="a">
+<li>Define a structure to represent a polynomial with integer coefficients.
+The coefficient array is to be maintained dynamically so that the exact
+amount of memory needed to store the coefficient array is only allocated.
+</li><li>Write a function that, given a polynomial p (in this representation)
+and an integer a, returns the value p(a).
+</li><li>Write functions to implement arithmetic routines (addition, subtraction
+and multiplication) on polynomials. Each routine should be stingy enough
+to (re)allocate to the output polynomial only the space just required
+to store the coefficient array.
+</li></ol>
+
+</li><li>You are given a network of sensor nodes deployed in a battlefield.
+Each node is specified by its id (an integer) and its location of
+deployment (two integer or floating point numbers indicating the X and Y
+coordinates of the node with respect to some fixed reference point).
+A sensor node can communicate with another provided that they are physically
+located within 100&nbsp;meters of one another. In that case, the two
+nodes are called neighbors.
+<p>
+You are given a text file whose first line stores the number n of nodes in
+the sensor network. In lines 2 through n+1 individual nodes are specified
+by three numbers (id and coordinates). For simplicity, assume that the
+node ids are 0,1,2,<tt>...</tt>,n-1. Read the data from the file and
+store in a dynamic two-dimensional array the list of neighbors of each
+node. The i-th row should store all the neighbors of node i in sorted
+order (of id) and should be allocated exactly the amount of memory needed
+to accommodate this list of neighbors.
+
+</p></li><li>A matrix is said to be sparse if each row of it contains only
+few non-zero entries. Such sparse matrices occur in many situations.
+For example, a complicated machine may have one million components,
+but each component interacts with at most one hundred other components.
+So the interaction matrix, though million-by-million in size, has
+at most one hundred non-zero entries in each row and may be rightfully
+dubbed sparse.
+<p>
+In order to store a sparse matrix, it suffices to store for each row
+only the column indices where non-zero entries occur and also the
+corresponding entries. This reduces the space overhead associate with
+the storage. For the example in the last paragraph, a complete
+million-by-million array requires space for storing one trillion
+(10<sup>12</sup>) entries, whereas a sparse representation is capable
+of storing the same matrix in a space for only one hundred million
+index-entry pairs.
+</p><ol type="a">
+<li>Define a suitable dynamic two-dimensional array type to represent
+a sparse matrix.
+</li><li>Write a function that computes the transpose of a sparse matrix
+(under this representation).
+</li><li>Write a function that adds two sparse matrices.
+</li><li>Write a function that multiplies two sparse matrices.
+</li></ol>
+<p>
+Note that the transpose A<sup>t</sup> of a sparse matrix A is not necessarily
+sparse. Some rows of A<sup>t</sup> may be quite dense. However, if the
+non-zero elements of A occur at randomly chosen columns, then A<sup>t</sup>
+is also sparse with high probability.
+</p><p>
+The product of two sparse matrices is expected to be much less sparse
+than the arguments.
+
+</p></li><li>
+We generally deal with complex numbers  of the form a + ib, where a and b
+are floating point numbers. However, in the special case when both a and b
+are integers, it may be desirable to store a and b as integers.
+<p>
+Define a structure holding the real and imaginary parts of a complex
+number together with a flag. Depending on the value of the flag, the
+two parts of the complex number are to be interpreted. If the flag has the
+zero value, the parts are treated as floating point numbers. For any
+non-zero value of the flag, the parts are treated as integers. Your
+structure should contain a <i>union</i> for the storage of the two parts.
+</p><p>
+Write a routine to initialize a complex number to the zero
+value. The initialization routine should also accept a value for the flag
+as an argument and set the real and imaginary parts in the union
+accordingly.
+</p><p>
+Write the arithmetic routines on these complex numbers. Each argument in
+each such routine may be of any type (pair of floating point numbers
+or of integers). Your program should output an integer pair as the output
+complex number if both the input arguments are integer pairs. If one or
+both of the input arguments is/are floating point pair(s), the output should
+also be a floating point pair.
+
+</p></li><li>
+Write a program to solve the following problem.
+You are given a text file. Your problem is to adjust the spaces in
+each line in such a way that the resulting text is justified (both at the
+left and at the right). Here is our proposal of an algorithm that you should
+use in order to perform text justification.
+<ul>
+<li>First read the input file and store the lines in a two-dimensional
+character array with each line stored in a single row of the array.
+</li><li>The text is assumed to be divided into paragraphs. Two consecutive
+paragraphs are separated by a blank line.
+</li><li>The last line in a paragraph is not to be justified. Also a blank line
+is not to be justified.
+</li><li>Finally suppose that you have a non-blank line which is not the
+last line of a paragraph. If the length of this line is already larger
+than the target width, then do not perform any processing of this line.
+Otherwise, increase the sizes of the inter-word gaps so that the resulting
+line has a width equal to the target width.
+Assume that <tt>len</tt> denotes the initial length of the line and that the
+line initially contains <tt>nsp</tt> number of inter-word spaces. You have to
+add a total of
+<pre><code>   extra = target_width - len
+</code></pre>
+<p>
+number of additional spaces to the line. In order that the insertion leads
+to (aesthetically) good-looking paragraphs, it is necessary to distribute
+the <tt>extra</tt> new spaces more or less uniformly among the <tt>nsp</tt>
+inter-word gaps. Let
+</p><pre><code>   q = extra / nsp (integer division).
+</code></pre>
+<p>
+First insert q additional spaces in <i>each</i> of the <tt>nsp</tt> gaps.
+If <tt>extra</tt> is not an integral multiple of <tt>nsp</tt>, this still
+leaves us with
+</p><pre><code>   r = extra - q * nsp
+</code></pre>
+<p>
+spaces to be inserted. If the line has an odd number in the current paragraph,
+add another single space in each of the first <tt>r</tt> gaps. On the
+other hand, if the line has an even number in the current paragraph,
+add a single space in each of the last <tt>r</tt> gaps.
+</p></li></ul>
+
+</li></ol>
+
+
+  <div class="navigator">
+    <a href="dynamic.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Pointers and dynamic memory management</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="ADT.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Abstract data types</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

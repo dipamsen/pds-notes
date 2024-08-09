@@ -1,0 +1,1366 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Variables and simple data types | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+<h1 align="center">Variables and simple data types</h1>
+<p>
+The first abstraction a high-level language (like C) offers is a way
+of structuring data. A machine's memory is a flat list of memory cells, each
+of a fixed size. The abstraction mechanism gives special interpretation
+to collections of cells. Think of a collection of blank papers glued
+(or stapled) together. A piece of blank paper is a piece of paper, after
+all. However, when you see the neatly bound object, you leap up in joy
+and assert, "Oh, that's my note book!" This is abstraction. Papers remain
+papers and their significance in a note book is in no way diminished.
+A special meaning of the collection is a thing that is rendered by the
+abstraction. There is another point here -- usage convenience. You would
+love to take class notes in a note book instead of in loose sheets.
+A note book is abstract in yet another sense. You call it a note book
+irrespective of the size and color of the papers, of whether there are
+built-in lines on the papers, of what material is used to manufacture
+the papers, etc.
+</p><p>
+The basic unit for storage of digital data is called a <b>bit</b>. It is
+an object that can assume one of the two possible values "0" and "1".
+Depending on how one is going to implement a bit, the values "0" and "1"
+are defined. If a capacitor stands for a bit, you may call its state
+"0" if the charge stored in it is less than 0.5 Volt, else you call its
+state "1". For a switch, "1" may mean "on" and "0" then means "off".
+Let us leave these implementation details to material scientists and
+VLSI designers. For us it is sufficient to assume that a computer comes
+with a memory having a huge number of built-in bits.
+</p><p>
+A single bit is too small a unit to be adequately useful. A collection
+of bits is what a practical unit for a computer's operation is.
+A <b>byte</b> (also called an <b>octet</b>) is a collection of eight
+bits. Bigger units are also often used. In many of today's computers
+data are transfered and processed in chunks of 32 bits (4 bytes). Such
+an operational unit is often called a <b>word</b>. Machines supporting
+64-bit words are also coming up and are expected to replace 32-bit
+machines in near future.
+</p><h2 align="left">Basic data types</h2>
+<p>
+Bytes (in fact, bits too) are abstractions. Still, they are pretty raw.
+We need to assign special meanings to collections of bits in order that
+we can use those collections to solve our problems. For example, a
+matrix inversion routine deals with matrices each of whose elements
+is a real (or rational or complex) number. We then somehow have to map
+memory contents to numbers, to matrices, to pairs of real numbers
+(complex numbers), and so on. Luckily enough, a programmer does not
+have to do this mapping himself/herself. The C compiler already provides
+the abstractions you require. It is the headache of the compiler how
+it would map your abstract entities to memory cells in your machine.
+You, in your turn, must understand the abstraction level which is
+provided to you for writing programs in C.
+</p><p>
+For the time being, we will look at the basic data types supported
+by C. We will later see how these individual data types can be glued
+together to form more structured data types. Back to our note book
+example. A paper is already an abstraction, it's not any collection
+of electrons, protons and neutrons. So let us first understand what
+a paper is and what we can do with a piece of paper. We will later
+investigate how we can manufacture note books from papers, and racks
+from note books, and book-shelfs from racks, drawers, locks, keys
+and covers.
+</p>
+<h3 align="left">Integer data types</h3>
+<p>
+Integers are whole numbers that can assume both positive and negative
+values, i.e., elements of the set:
+</p><pre><code>   { ..., -3, -2, -1, -, 1, 2, 3, ... }
+</code></pre>
+<p>
+This set is infinite, both the ellipses extending <i>ad infinitum</i>. C's
+built-in integer data types do not assume all possible integral values, but
+values between a minimum bound and a maximum bound. This is a pragmatic
+and historical definition of integers in C. The reason for these bounds
+is that C uses a fixed amount of memory for each individual integer.
+If that size is 32 bits, then only 2<sup>32</sup> integers can be
+represented, since each bit has only two possible states.
+</p><center>
+<table cellpadding="2" cellspacing="0" border="0">
+<tbody><tr><th>Integer data type</th><th>Bit size</th><th>Minimum value</th><th>Maximum value
+</th></tr><tr><td><tt>char</tt></td><td align="center">8</td><td>-2<sup>7</sup>=-128</td><td>2<sup>7</sup>-1=127
+</td></tr><tr><td><tt>short&nbsp;int</tt></td><td align="center">16</td><td>-2<sup>15</sup>=-32768</td><td>2<sup>15</sup>-1=32767
+</td></tr><tr><td><tt>int</tt></td><td align="center">32</td><td>-2<sup>31</sup>=-2147483648</td><td>2<sup>31</sup>-1=2147483647
+</td></tr><tr><td><tt>long&nbsp;int</tt></td><td align="center">32</td><td>-2<sup>31</sup>=-2147483648</td><td>2<sup>31</sup>-1=2147483647
+</td></tr><tr><td><tt>long&nbsp;long&nbsp;int</tt></td><td align="center">64</td><td>-2<sup>63</sup>=-9223372036854775808</td><td>2<sup>63</sup>-1=9223372036854775807
+</td></tr><tr><td><tt>unsigned&nbsp;char</tt></td><td align="center">8</td><td>0</td><td>2<sup>8</sup>-1=255
+</td></tr><tr><td><tt>unsigned&nbsp;short&nbsp;int</tt></td><td align="center">16</td><td>0</td><td>2<sup>16</sup>-1=65535
+</td></tr><tr><td><tt>unsigned&nbsp;int</tt></td><td align="center">32</td><td>0</td><td>2<sup>32</sup>-1=4294967295
+</td></tr><tr><td><tt>unsigned&nbsp;long&nbsp;int</tt></td><td align="center">32</td><td>0</td><td>2<sup>32</sup>-1=4294967295
+</td></tr><tr><td><tt>unsigned&nbsp;long&nbsp;long&nbsp;int</tt></td><td align="center">64</td><td>0</td><td>2<sup>64</sup>-1=18446744073709551615
+</td></tr></tbody></table>
+</center>
+<h4 align="left">Notes</h4>
+<ul>
+<li>The term <tt>int</tt> may be omitted in the long and short versions.
+For example, <tt>long int</tt> can also be written as <tt>long</tt>,
+<tt>unsigned long long int</tt> also as <tt>unsigned long long</tt>.
+</li><li>ANSI C prescribes the exact size of <tt>int</tt> (and <tt>unsigned
+int</tt>) to be either 16 bytes or 32 bytes, that is, an <tt>int</tt> is either
+a <tt>short int</tt> or a <tt>long int</tt>. Implementers decide which
+size they should select. Most modern compilers of today support
+32-bit <tt>int</tt>.
+</li><li>The <tt>long long</tt> data type and its <tt>unsigned</tt> variant
+are not part of ANSI C specification. However, many compilers (including
+gcc) support these data types.
+</li></ul>
+<h3 align="left">Float data types</h3>
+<p>
+Like integers, C provides representations of real numbers and those
+representations are finite. Depending on the size of the representation,
+C's real numbers have got different names.
+</p><center>
+<table cellpadding="2" cellspacing="0" border="0">
+<tbody><tr><th>Real&nbsp;data&nbsp;type</th><th>Bit&nbsp;size
+</th></tr><tr><td>float</td><td align="center">32
+</td></tr><tr><td>double</td><td align="center">64
+</td></tr><tr><td>long&nbsp;double</td><td align="center">128
+</td></tr></tbody></table>
+</center>
+
+<h3 align="left">Character data types</h3>
+<p>
+We need a way to express our thoughts in writing. This has been traditionally
+achieved by using an alphabet of symbols with each symbol representing
+a sound or a word or some punctuation or special mark. The computer also
+needs to communicate its findings to the user in the form of something
+written. Since the outputs are meant for human readers, it is advisable
+that the computer somehow translates its bit-wise world to a human-readable
+script. The Roman script (mistakenly also called the English script)
+is a natural candidate for the representation. The Roman alphabet consists
+of the lower-case letters (a to z), the upper case letters (A to Z),
+the numerals (0 through 9) and some punctuation symbols (period, comma,
+quotes etc.). In addition, computer developers planned for inclusion
+of some more control symbols (hash, caret, underscore etc.). Each such symbol
+is called a <b>character</b>.
+</p><p>
+In order to promote interoperability between different computers, some
+standard encoding scheme is adopted for the computer character set.
+This encoding is known as <b>ASCII</b> (abbreviation for <b>American
+Standard Code for Information Interchange</b>).
+In this scheme each character is assigned a unique integer value
+between 32 and 127. Since eight-bit units (bytes) are very common in
+a computer's internal data representation, the code of a character
+is represented by an 8-bit unit. Since an 8-bit unit can hold a total
+of 2<sup>8</sup>=256 values and the computer character set is much
+smaller than that, some values of this 8-bit unit do not correspond
+to visible characters. These values are often used for representing
+invisible control characters (like line feed, alarm, tab etc.) and
+extended Roman letters (inflected letters like ä, é,
+ç). Some values are reserved for possible future use. The
+ASCII encoding of the printable characters is summarized in the
+following table.
+</p><center>
+<table cellpadding="2" cellspacing="0" border="0">
+<tbody><tr><th>Decimal</th><th>Hex</th><th>Binary</th><th>Character</th><th>&nbsp;&nbsp;&nbsp;
+</th><th>Decimal</th><th>Hex</th><th>Binary</th><th>Character
+</th></tr><tr><td align="center">32</td><td align="center">20</td><td>00100000</td><td align="center">SPACE
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">80</td><td align="center">50</td><td>01010000</td><td align="center">P
+</td></tr><tr><td align="center">33</td><td align="center">21</td><td>00100001</td><td align="center">!
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">81</td><td align="center">51</td><td>01010001</td><td align="center">Q
+</td></tr><tr><td align="center">34</td><td align="center">22</td><td>00100010</td><td align="center">"
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">82</td><td align="center">52</td><td>01010010</td><td align="center">R
+</td></tr><tr><td align="center">35</td><td align="center">23</td><td>00100011</td><td align="center">#
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">83</td><td align="center">53</td><td>01010011</td><td align="center">S
+</td></tr><tr><td align="center">36</td><td align="center">24</td><td>00100100</td><td align="center">$
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">84</td><td align="center">54</td><td>01010100</td><td align="center">T
+</td></tr><tr><td align="center">37</td><td align="center">25</td><td>00100101</td><td align="center">%
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">85</td><td align="center">55</td><td>01010101</td><td align="center">U
+</td></tr><tr><td align="center">38</td><td align="center">26</td><td>00100110</td><td align="center">&amp;
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">86</td><td align="center">56</td><td>01010110</td><td align="center">V
+</td></tr><tr><td align="center">39</td><td align="center">27</td><td>00100111</td><td align="center">'
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">87</td><td align="center">57</td><td>01010111</td><td align="center">W
+</td></tr><tr><td align="center">40</td><td align="center">28</td><td>00101000</td><td align="center">(
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">88</td><td align="center">58</td><td>01011000</td><td align="center">X
+</td></tr><tr><td align="center">41</td><td align="center">29</td><td>00101001</td><td align="center">)
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">89</td><td align="center">59</td><td>01011001</td><td align="center">Y
+</td></tr><tr><td align="center">42</td><td align="center">2a</td><td>00101010</td><td align="center">*
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">90</td><td align="center">5a</td><td>01011010</td><td align="center">Z
+</td></tr><tr><td align="center">43</td><td align="center">2b</td><td>00101011</td><td align="center">+
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">91</td><td align="center">5b</td><td>01011011</td><td align="center">[
+</td></tr><tr><td align="center">44</td><td align="center">2c</td><td>00101100</td><td align="center">,
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">92</td><td align="center">5c</td><td>01011100</td><td align="center">\
+</td></tr><tr><td align="center">45</td><td align="center">2d</td><td>00101101</td><td align="center">-
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">93</td><td align="center">5d</td><td>01011101</td><td align="center">]
+</td></tr><tr><td align="center">46</td><td align="center">2e</td><td>00101110</td><td align="center">.
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">94</td><td align="center">5e</td><td>01011110</td><td align="center">^
+</td></tr><tr><td align="center">47</td><td align="center">2f</td><td>00101111</td><td align="center">/
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">95</td><td align="center">5f</td><td>01011111</td><td align="center">_
+</td></tr><tr><td align="center">48</td><td align="center">30</td><td>00110000</td><td align="center">0
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">96</td><td align="center">60</td><td>01100000</td><td align="center">`
+</td></tr><tr><td align="center">49</td><td align="center">31</td><td>00110001</td><td align="center">1
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">97</td><td align="center">61</td><td>01100001</td><td align="center">a
+</td></tr><tr><td align="center">50</td><td align="center">32</td><td>00110010</td><td align="center">2
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">98</td><td align="center">62</td><td>01100010</td><td align="center">b
+</td></tr><tr><td align="center">51</td><td align="center">33</td><td>00110011</td><td align="center">3
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">99</td><td align="center">63</td><td>01100011</td><td align="center">c
+</td></tr><tr><td align="center">52</td><td align="center">34</td><td>00110100</td><td align="center">4
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">100</td><td align="center">64</td><td>01100100</td><td align="center">d
+</td></tr><tr><td align="center">53</td><td align="center">35</td><td>00110101</td><td align="center">5
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">101</td><td align="center">65</td><td>01100101</td><td align="center">e
+</td></tr><tr><td align="center">54</td><td align="center">36</td><td>00110110</td><td align="center">6
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">102</td><td align="center">66</td><td>01100110</td><td align="center">f
+</td></tr><tr><td align="center">55</td><td align="center">37</td><td>00110111</td><td align="center">7
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">103</td><td align="center">67</td><td>01100111</td><td align="center">g
+</td></tr><tr><td align="center">56</td><td align="center">38</td><td>00111000</td><td align="center">8
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">104</td><td align="center">68</td><td>01101000</td><td align="center">h
+</td></tr><tr><td align="center">57</td><td align="center">39</td><td>00111001</td><td align="center">9
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">105</td><td align="center">69</td><td>01101001</td><td align="center">i
+</td></tr><tr><td align="center">58</td><td align="center">3a</td><td>00111010</td><td align="center">:
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">106</td><td align="center">6a</td><td>01101010</td><td align="center">j
+</td></tr><tr><td align="center">59</td><td align="center">3b</td><td>00111011</td><td align="center">;
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">107</td><td align="center">6b</td><td>01101011</td><td align="center">k
+</td></tr><tr><td align="center">60</td><td align="center">3c</td><td>00111100</td><td align="center">&lt;
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">108</td><td align="center">6c</td><td>01101100</td><td align="center">l
+</td></tr><tr><td align="center">61</td><td align="center">3d</td><td>00111101</td><td align="center">=
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">109</td><td align="center">6d</td><td>01101101</td><td align="center">m
+</td></tr><tr><td align="center">62</td><td align="center">3e</td><td>00111110</td><td align="center">&gt;
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">110</td><td align="center">6e</td><td>01101110</td><td align="center">n
+</td></tr><tr><td align="center">63</td><td align="center">3f</td><td>00111111</td><td align="center">?
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">111</td><td align="center">6f</td><td>01101111</td><td align="center">o
+</td></tr><tr><td align="center">64</td><td align="center">40</td><td>01000000</td><td align="center">@
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">112</td><td align="center">70</td><td>01110000</td><td align="center">p
+</td></tr><tr><td align="center">65</td><td align="center">41</td><td>01000001</td><td align="center">A
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">113</td><td align="center">71</td><td>01110001</td><td align="center">q
+</td></tr><tr><td align="center">66</td><td align="center">42</td><td>01000010</td><td align="center">B
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">114</td><td align="center">72</td><td>01110010</td><td align="center">r
+</td></tr><tr><td align="center">67</td><td align="center">43</td><td>01000011</td><td align="center">C
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">115</td><td align="center">73</td><td>01110011</td><td align="center">s
+</td></tr><tr><td align="center">68</td><td align="center">44</td><td>01000100</td><td align="center">D
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">116</td><td align="center">74</td><td>01110100</td><td align="center">t
+</td></tr><tr><td align="center">69</td><td align="center">45</td><td>01000101</td><td align="center">E
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">117</td><td align="center">75</td><td>01110101</td><td align="center">u
+</td></tr><tr><td align="center">70</td><td align="center">46</td><td>01000110</td><td align="center">F
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">118</td><td align="center">76</td><td>01110110</td><td align="center">v
+</td></tr><tr><td align="center">71</td><td align="center">47</td><td>01000111</td><td align="center">G
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">119</td><td align="center">77</td><td>01110111</td><td align="center">w
+</td></tr><tr><td align="center">72</td><td align="center">48</td><td>01001000</td><td align="center">H
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">120</td><td align="center">78</td><td>01111000</td><td align="center">x
+</td></tr><tr><td align="center">73</td><td align="center">49</td><td>01001001</td><td align="center">I
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">121</td><td align="center">79</td><td>01111001</td><td align="center">y
+</td></tr><tr><td align="center">74</td><td align="center">4a</td><td>01001010</td><td align="center">J
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">122</td><td align="center">7a</td><td>01111010</td><td align="center">z
+</td></tr><tr><td align="center">75</td><td align="center">4b</td><td>01001011</td><td align="center">K
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">123</td><td align="center">7b</td><td>01111011</td><td align="center">{
+</td></tr><tr><td align="center">76</td><td align="center">4c</td><td>01001100</td><td align="center">L
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">124</td><td align="center">7c</td><td>01111100</td><td align="center">|
+</td></tr><tr><td align="center">77</td><td align="center">4d</td><td>01001101</td><td align="center">M
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">125</td><td align="center">7d</td><td>01111101</td><td align="center">}
+</td></tr><tr><td align="center">78</td><td align="center">4e</td><td>01001110</td><td align="center">N
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">126</td><td align="center">7e</td><td>01111110</td><td align="center">~
+</td></tr><tr><td align="center">79</td><td align="center">4f</td><td>01001111</td><td align="center">O
+</td><td>&nbsp;&nbsp;&nbsp;
+</td><td align="center">127</td><td align="center">7f</td><td>01111111</td><td align="center">DELETE
+</td></tr></tbody></table>
+<div align="center">Table : The ASCII values of the printable characters</div>
+</center>
+<p>
+C data types are necessary to represent characters. As told earlier,
+an eight-bit value suffices. The following two built-in data types
+are used for characters.
+</p><pre><code>   char
+   unsigned char
+</code></pre>
+<p>
+Well, I mentioned earlier that these are integer data types. I continue
+to say so. These are both integer and character data types. If you want
+to interpret a <tt>char</tt> value as a character, you see the character
+it represents. If you want to view it as an integer, you see the ASCII
+value of that character. For example, the upper case A has an ASCII
+value of 65. An eight-bit value representing the character A automatically
+represents the integer 65, because to the computer A is recognized by
+its ASCII code, not by its shape, geometry or sound!
+
+</p><h3 align="left">Pointer data types</h3>
+<p>
+Pointers are addresses in memory. In order that the user can directly
+manipulate memory addresses, C provides an abstraction of addresses.
+The memory location where a data item resides can be accessed by a
+pointer to that particular data type. C uses the special character
+<tt>*</tt> to declare pointer data types. A pointer to a <tt>double</tt>
+data is of data type <tt>double&nbsp;*</tt>. A pointer to an
+<tt>unsigned&nbsp;long&nbsp;int</tt> data is of type
+<tt>unsigned&nbsp;long&nbsp;int&nbsp;*</tt>. A character pointer has the
+data type <tt>char&nbsp;*</tt>. We will study pointers more elaborately
+later in this course.
+</p>
+<h2 align="left">Constants</h2>
+<p>
+Having defined data types is not sufficient. We need to work with specific
+instances of data of different types. Thus we are not much interested in
+defining an abstract class of objects called integers. We need specific
+instances like 2, or -496, or +1234567890. We should not feel
+extravagantly elated just after being able to define an abstract entity
+called a house. We need one to live in.
+</p><p>
+Specific instances of data may be constants, i.e., values that do not change
+during the execution of programs. For example, the mathematical pi remains
+constant throughout every program, and expectedly throughout our life-time
+too. Similarly, when we wrote <tt>1.0/n</tt> to compute reciprocals,
+we used the constant <tt>1.0</tt>.
+</p><p>
+Constants are written much in the same way as they are written conventionally.
+</p>
+<h3 align="left">Integer constants</h3>
+<p>
+An integer constant is a non-empty sequence of decimal numbers
+preceded optionally by a sign (+ or -). However, the common practice of
+using commas to separate groups of three (or five) digits is not allowed
+in C. Nor are spaces or any character other than numerals allowed. Here
+are some valid integer constants:
+</p><pre><code>   332
+   -3002
+   +15
+   -00001020304
+</code></pre>
+<p>
+And here are some examples that C compilers do not accept:
+</p><pre><code>   3 332
+   2,334
+   - 456
+   2-34
+   12ab56cd
+</code></pre>
+<p>
+You can also express an integer in base 16, i.e., an integer in the
+<b>hexadecimal</b> (abbreviated <b> hex</b>) notation. In that case
+you must write either <tt>0x</tt> or <tt>0X</tt> before the integer.
+Hexadecimal representation requires 16 digits 0,1,<tt>...</tt>,15.
+In order to resolve ambiguities the digits 10,11,12,13,14,15 are
+respectively denoted by <tt>a,b,c,d,e,f</tt> (or by <tt>A,B,C,D,E,F</tt>).
+Here are some valid hexadecimal integer constants:
+</p><pre><code>   0x12ab56cd
+   -0X123456
+   0xABCD1234
+   +0XaBCd12
+</code></pre>
+Since different integer data types use different amounts of memory and
+represent different ranges of integers, it is often convenient to declare
+the intended data type explicitly. The following suffixes can be used
+for that:
+<center>
+<table cellspacing="0" cellpadding="2" border="0">
+<tbody><tr><th>Suffix</th><th>Data type
+</th></tr><tr><td align="center"><tt>L</tt> (or <tt>l</tt>)</td><td align="center"><tt>long</tt>
+</td></tr><tr><td align="center"><tt>LL</tt> (or <tt>ll</tt>)</td><td align="center"><tt>long long</tt>
+</td></tr><tr><td align="center"><tt>U</tt> (or <tt>u</tt>)</td><td align="center"><tt>unsigned</tt>
+</td></tr><tr><td align="center"><tt>UL</tt> (or <tt>ul</tt>)</td><td align="center"><tt>unsigned long</tt>
+</td></tr><tr><td align="center"><tt>ULL</tt> (or <tt>ull</tt>)</td><td align="center"><tt>unsigned long long</tt>
+</td></tr></tbody></table>
+</center>
+<p>
+Here are some specific examples:
+</p><pre><code>   4000000000UL
+   123U
+   -0x7FFFFFFFl
+   0x123456789abcdef0ULL
+</code></pre>
+<h3 align="left">Real constants</h3>
+<p>
+Real constants can be specified by the usual notation comprising
+an optional sign, a decimal point and a sequence of digits. Like
+integers no other characters are allowed. Here are some specific
+examples:
+</p><pre><code>   1.23456
+   1.
+   .1
+   -0.12345
+   +.4560
+</code></pre>
+<p>And here are some non-examples (invalid real constants):
+</p><pre><code>   .
+   - 1.23
+   1 234.56
+   1,234.56
+   1.234.56
+</code></pre>
+Real numbers are sometimes written in the <i>scientific notation</i>
+(like 3.45x10<sup>67</sup>). The following expressions are valid for
+writing a real number in this fashion:
+<pre><code>   3.45e67
+   +3.45e67
+   -3.45e-67
+   .00345e-32
+   1e-15
+</code></pre>
+You can also use <tt>E</tt> in place of <tt>e</tt> in this notation.
+<h3 align="left">Character constants</h3>
+<p>
+Character constants are single printable symbols enclosed within
+single quotes. Here are some examples:
+</p><pre><code>   'A'
+   '7'
+   '@'
+   ' '
+</code></pre>
+<p>
+There are some special characters that require you to write more
+than one printable characters within the quotes. Here is a list of
+some of them:
+</p><center>
+<table cellpadding="2" cellspacing="0" border="0">
+<tbody><tr><th>Constant</th><th>Character</th><th>ASCII value
+</th></tr><tr><td align="center"><tt>'\0'</tt></td><td align="center">Null</td><td align="center">0
+</td></tr><tr><td align="center"><tt>'\b'</tt></td><td align="center">Backspace</td><td align="center">8
+</td></tr><tr><td align="center"><tt>'\t'</tt></td><td align="center">Tab</td><td align="center">9
+</td></tr><tr><td align="center"><tt>'\n'</tt></td><td align="center">New line</td><td align="center">13
+</td></tr><tr><td align="center"><tt>'\''</tt></td><td align="center">Quote</td><td align="center">39
+</td></tr><tr><td align="center"><tt>'\\'</tt></td><td align="center">Backslash</td><td align="center">92
+</td></tr></tbody></table>
+</center>
+<p>
+Since characters are identified with integers in the range -127 to 128 (or in
+the range 0 to 255), you can use integer constants in the prescribed range
+to denote characters. The particular sequence <tt>'\xuv'</tt> (synonymous
+with <tt>0xuv</tt>) lets you write a character in the hex notation. (Here
+<tt>u</tt> and <tt>v</tt> are two hex digits.) For example, <tt>'\x2b'</tt>
+is the integer 43 in decimal notation and stands for the character '+'.
+
+</p><h3 align="left">Pointer constants</h3>
+<p>
+Well, there are no pointer constants actually. It is dangerous to work
+with constant addresses. You may anyway use an integer as a
+constant address. But doing that lets the compiler issue you a warning
+message. Finally, when you run the program and try to access memory
+at a constant address, you are highly likely to encounter a frustrating
+mishap known as "Segmentation fault". That's a deadly enemy. Try to
+avoid it as and when you can!
+</p><p>
+Incidentally, there is a pointer constant that is used widely. This is
+called <tt>NULL</tt>. A <tt>NULL</tt> pointer points to nowhere.
+</p>
+<h2 align="left">Variables</h2>
+<p>
+Constants are not always sufficient to reflect reality. Though I am a
+constant human being and your constant PDS teacher, I am not a constant
+teacher for you or this classroom. Your or V1's teacher changes with
+time, though at any particular instant it assumes a constant value.
+A variable data is used to portray this scenario.
+</p><p>
+A variable is specified by a name given to a collection of memory
+locations. Named variables are useful from two considerations:
+</p><ul>
+<li><u>Variables bind particular areas in the memory.</u> You can
+access an area by a name and not by its explicit address. This abstraction
+simplifies a programmer's life dramatically.
+(If you want to tell a story to your friend about your pet, you would
+like to use its name instead of holding the constant object all the
+time in front of your friend's bored eyes.)
+</li><li><u>Names promote parameterized computation.</u> You change the
+value of a variable and obtain a different output. For example, the
+polynomial 2a<sup>2</sup>+3a-4 evaluates to different values, as you
+plug in different values for the variable a. Of course, the particular
+name a is symbolic here and can be replaced by any other name (b,c etc.),
+but the formal naming of the parameter allows you to write (and work
+with) the function symbolically.
+</li></ul>
+
+<h3 align="left">Naming conventions</h3>
+<p>
+C does not allow any sequence of characters as the name of a variable.
+This kind of practice is not uncommon while naming human beings too.
+However, C's naming conventions are somewhat different from human
+conventions. To C, a legal name is any name prescribed by its rules.
+There is no question of aesthetics or meaning or sweet-sounding-ness.
+</p><p>
+You would probably not name your (would-be) baby as "123abc". C also does
+not allow this name. However, C allows the name "abc123". One usually
+does not see a human being with this name. But then, have you heard of
+"Louis XVI"?
+</p><p>
+Well, you may rack your brain for naming your baby. Here are C's
+straightforward rules.
+</p><ul>
+<li>Any sequence of alphabetic characters (lower-case a to z and
+upper-case A to Z) and numerals (0 through 9) and underscore (_)
+can be a valid name, provided that:
+<ul>
+<li>The name does not start with a numeral.
+</li><li>The name does not coincide with one of C's <i>reserved words</i>
+(like <tt>double</tt>, <tt>unsigned</tt>, <tt>for</tt>). These words
+have special meanings to the compilers and so are not allowed for your
+variables.
+</li><li>The name does not coincide with the same name of another entity
+(declared in the same scope).
+</li><li>The name does not contain any character other than those mentioned
+above.
+</li></ul>
+</li><li>C's naming scheme is <b>case-sensitive</b>, i.e., <tt>teacher</tt>,
+<tt>Teacher</tt>, <tt>TEACHER</tt>, <tt>TeAcHeR</tt> are all different names.
+</li><li>C does not impose any restriction on what name goes to what type
+of data. The name <tt>fraction</tt> can be given to an <tt>int</tt>
+variable and the name <tt>submerged</tt> can be given to a <tt>float</tt>
+variable.
+</li><li>There is no restriction on the minimum length (number of characters)
+of a name, as long as the name is not the empty string.
+</li><li>Some compilers impose a restriction on the maximum length of a
+name. Names bigger than this length are truncated to the maximum allowed
+leftmost part. This may lead to unwelcome collisions in different names.
+However, this upper limit is usually quite large, much larger than
+common names that we give to variables.
+</li></ul>
+In C, names are given to other entities also, like functions, constants.
+In every case the above naming conventions must be adhered to.
+<h3 align="left">Declaring variables</h3>
+<p>
+For declaring one or more variables of a given data type do the following:
+</p><ul>
+<li>First write the data type of the variable.
+</li><li>Then put a space (or any other white character).
+</li><li>Then write your comma-separated list of variable names.
+</li><li>At the end put a semi-colon.
+</li></ul>
+<p>
+Here are some specific examples:
+</p><pre><code>   int m, n, armadillo;
+   int platypus;
+   float hi, goodMorning;
+   unsigned char _u_the_charcoal;
+</code></pre>
+<p>
+You may also declare pointers simultaneously with other variables. All you
+have to do is to put an asterisk (*) before the name of each pointer.
+</p><pre><code>   long int counter, *pointer, *p, c;
+   float *fptr, fval;
+   double decker;
+   double *standard;
+</code></pre>
+<p>
+Here <tt>counter</tt> and <tt>c</tt> are variables of type <tt>long int</tt>,
+whereas <tt>pointer</tt> and <tt>p</tt> are pointers to data of type
+<tt>long int</tt>. Similarly, <tt>decker</tt> is a <tt>double</tt>
+variable, whereas <tt>standard</tt> is a pointer to a <tt>double</tt>
+data.
+</p><h3 align="left">Initializing variables</h3>
+<p>
+Once you declare a variable, the compiler allocates the requisite amount
+of memory to be accessed by the name of the variable. C does not make
+any attempt to fill that memory with any particular value. You have to
+do it explicitly. An uninitialized memory may contain any value (but
+it must contain some value) that may depend on several funny
+things like how long the computer slept after the previous
+shutdown, how much you have browsed the web before running your program,
+or may be even how much dust has accumulated on the case of your
+computer.
+</p><p>
+We will discuss in the next chapter how variables can be assigned
+specific values. For the time being, let us investigate the possibility
+that a variable can be initialized to a <i>constant</i> value at the time
+of its declaration. For achieving that you should put an equality
+sign immediately after the name followed by a constant value before
+closing the declaration by a comma or semicolon.
+</p><pre><code>   int dint = 0, hint, mint = -32;
+   char *Romeo, *Juliet = NULL;
+   float gloat = 2e-3, throat = 3.1623, coat;
+</code></pre>
+<p>
+Here the variable <tt>dint</tt> is initialized to 0, <tt>mint</tt> to
+-32, whereas <tt>hint</tt> is not initialized. The <tt>char</tt>
+pointer Romeo is not initialized, whereas Juliet is initialized to the
+<tt>NULL</tt> pointer.
+</p><p>
+Notice that uninitialized (and unassigned) variables may cause enough
+sufferings to a programmer. Take sufficient care!
+</p><h3 align="left">Names of constants</h3>
+<p>
+So far we have used immediate constants that are defined and used
+in place. In order to reuse the same immediate constant at a different
+point in the program, the value must again be explicitly specified.
+</p><p>
+C provides facilities to name constant values (like variables).
+Here we discuss two ways of doing it.
+</p><blockquote>
+<h4 align="left">Constant variables</h4>
+<p>
+Variables defined as above are read/write variables, i.e., one can
+both read their contents and store values in them. Constant
+variables are read-only variables and can be declared by adding the
+reserved word <tt>const</tt> before the data type.
+</p><pre><code>   const double pi = 3.1415926535;
+   const unsigned short int perfect1 = 6, perfect2 = 28, perfect3 = 496;
+</code></pre>
+<p>
+These declarations allocate space and initialize the variables
+like variable variables, but don't allow the user to alter the
+value of <tt>PI</tt>, <tt>perfect1</tt> etc. at a later time
+during the execution of the program.
+</p><h4 align="left"><tt>#define</tt>'d constants</h4>
+<p>
+These are not variables. These are called macros. If you <tt>#define</tt>
+a value against a name and use that name elsewhere in your program, the
+name is literally substituted by the C preprocessor, before your code
+is compiled. Macros do not reside in the memory, but are expanded well
+before any allocation attempt is initiated.
+</p><pre><code>   #define PI 3.1415926535
+   #define PERFECT1 6
+   #define PERFECT2 28
+   #define PERFECT3 496
+</code></pre>
+<p>
+Look at the differences with previous declarations. First, only one macro
+can be defined in a single line. Second, you do not need the semicolon or
+the equality sign for defining a macro.
+</p><p>
+Parameterized macros can also be defined, but unless you fully understand
+what a macro means and how parameters are handled in macros, don't use
+them. Just a wise tip, I believe! You can live without them.
+</p></blockquote>
+
+<h2 align="left">Typecasting</h2>
+<p>
+An integer can naturally be identified with a real number. The converse
+is not immediate. However, we can adopt some convention regarding
+conversion of a real number to an integer. Two obvious candidates are
+truncation and rounding. C opts for truncation.
+</p><p>
+In order to convert a value <tt>&lt;val&gt;</tt> of any type to a value of
+<tt>&lt;another_type&gt;</tt> use the following directive:
+</p><pre><code>   (&lt;another_type&gt;)&lt;val&gt;
+</code></pre>
+<p>Here <tt>&lt;val&gt;</tt> may be a constant or a value stored in a named
+variable. In the examples below we assume that piTo4 is a <tt>double</tt>
+variable that stores the value 97.4090910340.
+</p><center>
+<table cellpadding="2" cellspacing="0" border="0">
+<tbody><tr><th>Typecasting command</th><th>Output value
+</th></tr><tr><td><tt>(int)9.8696044011</tt></td><td>The truncated integer 9
+</td></tr><tr><td><tt>(int)-9.8696044011</tt></td><td>The truncated integer -9
+</td></tr><tr><td><tt>(float)9</tt></td><td>The floating-point value 9.000000
+</td></tr><tr><td><tt>(int)piTo4</tt></td><td>The integer 97
+</td></tr><tr><td><tt>(char)piTo4</tt></td><td>The integer 97, or equivalently
+                                the character 'a'
+</td></tr><tr><td><tt>(int *)piTo4</tt></td><td>An integer pointer that points
+                                 to the memory location 97.
+</td></tr><tr><td><tt>(double)piTo4</tt></td><td>The same value stored in <tt>piTo4</tt>
+</td></tr></tbody></table>
+</center>
+<p>
+Typecasting also applies to expressions and values returned by functions.
+</p><h2 align="left">Representation of numbers in memory</h2>
+
+
+<h3 align="left">Binary representation</h3>
+<p>
+Computer's world is binary. Each computation involves manipulating a series
+of bits each realized by some mechanism that can have two possible states
+denoted "0" and "1". If that is the case, integers, characters, floating
+point numbers need also be represented by bits. Here is how this
+representation can be performed.
+</p><p>
+For us, on the other hand, it is customary to have 10 digits in our two
+hands and consequently 10 digits in a number system. The decimal system
+is natural. Not really, it is just the convention. From our childhood we
+have been taught to use base ten representations to such an extent that
+it is difficult to conceive of alternatives, in fact to even think that
+any natural number greater than 1 can be a legal base for number
+representation. (There also exists an "exponentially big" <i>unary
+representation</i> of numbers that uses only one digit better called
+a "symbol" now.)
+</p><blockquote>
+<h4 align="left">Binary expansion of integers</h4>
+<p>
+Let's first take the case of non-negative integers. In order to convert
+such an integer n from the decimal representation to the binary
+representation, one keeps on dividing n by 2 and remembering the
+intermediate remainders obtained. When n becomes 0, we have to write
+the remainders in the reverse sequence as they are generated. That's
+the original n in binary.
+</p><center>
+<table cellpadding="2" cellspacing="0" border="0" id="nobd">
+<tbody><tr><th id="nobd">&nbsp;</th><th id="nobd">n</th><th id="nobd">Remainder
+</th></tr><tr><td id="nobd">&nbsp;</td><td align="center">57</td><td align="center">&nbsp;
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">28</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">14</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">7</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">3</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">1</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">0</td><td align="center">1
+</td></tr><tr><td id="nobd">&nbsp;</td><td colspan="2" id="nobd">57 = (111001)<sub>2</sub>
+</td></tr></tbody></table>
+</center>
+<p>
+For computers, we usually also specify a size t of the binary representation.
+For example, suppose we want to represent 57 as an <tt>unsigned char</tt>,
+i.e., as an 8-bit value. The above algorithm works fine, but we have to
+</p><ul>
+<li>either insert the requisite number of leading zero bits,
+</li><li>or repeat the "divide by 2" step exactly t times without ever looking
+at whether the quotient has become 0.
+</li></ul>
+<center>
+<table cellpadding="2" cellspacing="0" border="0" id="nobd">
+<tbody><tr><th id="nobd">&nbsp;</th><th id="nobd">n</th><th id="nobd">Remainder
+</th></tr><tr><td id="nobd">&nbsp;</td><td align="center">57</td><td align="center">&nbsp;
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">28</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">14</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">7</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">3</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">1</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">0</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">0</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">0</td><td align="center">0
+</td></tr><tr><td id="nobd">&nbsp;</td><td colspan="2" id="nobd">57 = (00111001)<sub>2</sub>
+</td></tr></tbody></table>
+</center>
+<p>
+What if the given n is too big to fit in a t-bit place? Now also you can
+"divide by 2" exactly t times and read the t remainders backward. That
+will give you the least significant t bits of n. The remaining more
+significant bits will simply be ignored.
+</p><center>
+<table cellpadding="2" cellspacing="0" border="0" id="nobd">
+<tbody><tr><th id="nobd">&nbsp;</th><th id="nobd">n</th><th id="nobd">Remainder
+</th></tr><tr><td id="nobd">&nbsp;</td><td align="center">657</td><td align="center">&nbsp;
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">328</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">164</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">82</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">41</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">20</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">10</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">5</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide by 2</td><td align="center">2</td><td align="center">1
+</td></tr><tr><td id="nobd">&nbsp;</td><td colspan="2" id="nobd">657 = (<tt>...</tt>10010001)<sub>2</sub>
+</td></tr></tbody></table>
+</center>
+<h4 align="left">Signed magnitude representation of integers</h4>
+<p>
+Now we add provision for sign. Here is how this is conventionally done.
+In a t-bit signed representation of n:
+</p><ul>
+<li>The most significant (leftmost) bit is reserved for the sign. "0" means
+positive, "1" means negative.
+</li><li>The remaining t-1 bits store the (t-1)-bit representation of the
+magnitude (absolute value) of n (i.e., of |n|).
+</li></ul>
+<p><b>Example:</b>
+The 7-bit binary representation of 57 is (0111001)<sub>2</sub>.
+</p><ul>
+<li>The 8-bit signed magnitude representation of 57 is (00111001)<sub>2</sub>.
+</li><li>The 8-bit signed magnitude representation of -57 is (10111001)<sub>2</sub>.
+</li></ul>
+<h4 align="left">Back to decimal</h4>
+<p>
+Given an integer in unsigned or signed representation, its magnitude and
+sign can be determined. For the sign, the most significant bit is
+consulted. For the magnitude, a sum of appropriate powers of 2 is
+calculated.
+</p><p>
+Let the magnitude be stored in <i>l</i> bits. The bits are numbered
+0,1,<tt>...</tt>,<i>l</i>-1 from right to left. The i-th position (from the
+right) corresponds to the power 2<sup>i</sup>. One simply adds
+the powers of 2 corresponding to those positions that hold 1 bits
+in the binary representation.
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th align="right">Signed integer</th><td align="center">0</td><td align="center">0</td><td align="center">1</td><td align="center">1</td><td align="center">1</td><td align="center">0</td><td align="center">0</td><td align="center">1
+</td></tr><tr><th align="right">Position</th><td align="center">Sign</td><td align="center">6</td><td align="center">5</td><td align="center">4</td><td align="center">3</td><td align="center">2</td><td align="center">1</td><td align="center">0
+</td></tr><tr><th align="right">Contribution</th><td align="center">+</td><td align="center">0</td><td align="center">2<sup>5</sup></td><td align="center">2<sup>4</sup></td><td align="center">2<sup>3</sup></td><td align="center">0</td><td align="center">0</td><td align="center">2<sup>0</sup>
+</td></tr></tbody></table>
++(2<sup>5</sup>+2<sup>4</sup>+2<sup>3</sup>+2<sup>0</sup>)&nbsp;=&nbsp;+(32+16+8+1)&nbsp;=&nbsp;+57
+</center>
+<center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th align="right">Signed integer</th><td align="center">1</td><td align="center">0</td><td align="center">0</td><td align="center">1</td><td align="center">0</td><td align="center">0</td><td align="center">0</td><td align="center">1
+</td></tr><tr><th align="right">Position</th><td align="center">Sign</td><td align="center">6</td><td align="center">5</td><td align="center">4</td><td align="center">3</td><td align="center">2</td><td align="center">1</td><td align="center">0
+</td></tr><tr><th align="right">Contribution</th><td align="center">-</td><td align="center">0</td><td align="center">0</td><td align="center">2<sup>4</sup></td><td align="center">0</td><td align="center">0</td><td align="center">0</td><td align="center">2<sup>0</sup>
+</td></tr></tbody></table>
+-(2<sup>4</sup>+2<sup>0</sup>)&nbsp;=&nbsp;-(16+1)&nbsp;=&nbsp;-17
+</center>
+<center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th align="right">Unsigned integer</th><td align="center">1</td><td align="center">0</td><td align="center">0</td><td align="center">1</td><td align="center">0</td><td align="center">0</td><td align="center">0</td><td align="center">1
+</td></tr><tr><th align="right">Position</th><td align="center">7</td><td align="center">6</td><td align="center">5</td><td align="center">4</td><td align="center">3</td><td align="center">2</td><td align="center">1</td><td align="center">0
+</td></tr><tr><th align="right">Contribution</th><td align="center">2<sup>7</sup></td><td align="center">0</td><td align="center">0</td><td align="center">2<sup>4</sup></td><td align="center">0</td><td align="center">0</td><td align="center">0</td><td align="center">2<sup>0</sup>
+</td></tr></tbody></table>
+2<sup>7</sup>+2<sup>4</sup>+2<sup>0</sup>&nbsp;=&nbsp;128+16+1&nbsp;=&nbsp;145
+</center>
+<p>
+<b>Notes:</b>
+</p><ul>
+<li>The t-bit unsigned representation can accommodate integers in the range
+0 to 2<sup>t</sup>-1.
+</li><li>The t-bit signed magnitude representation can accommodate integers in the range
+-(2<sup>t-1</sup>-1) to +(2<sup>t-1</sup>-1).
+</li><li>In the signed magnitude representation 0 has two renderings:
++0 = 0000<tt>...</tt>0 and -0=1000<tt>...</tt>0.
+</li></ul>
+</blockquote>
+
+<h3 align="left">1's complement representation</h3>
+<p>
+1's complement of a t-bit sequence (a<sub>t-1</sub>a<sub>t-2</sub><tt>...</tt>a<sub>0</sub>)<sub>2</sub>
+is the t-bit sequence (b<sub>t-1</sub>b<sub>t-2</sub><tt>...</tt>b<sub>0</sub>)<sub>2</sub>,
+where for each i we have b<sub>i</sub>&nbsp;=&nbsp;1&nbsp;-&nbsp;a<sub>i</sub>, i.e., b<sub>i</sub>
+is the bit-wise complement of a<sub>i</sub>. Here
+(b<sub>t-1</sub>b<sub>t-2</sub><tt>...</tt>b<sub>0</sub>)<sub>2</sub>=
+2<sup>t</sup>-1-(a<sub>t-1</sub>a<sub>t-2</sub><tt>...</tt>a<sub>0</sub>)<sub>2</sub>.
+</p><p>
+The t-bit 1's complement representation of an integer n is a
+t-bit signed representation with the following properties:
+</p><ul>
+<li>The most significant (leftmost) bit is the sign bit, 0 if n
+is positive, 1 if n is negative.
+</li><li>The remaining t-1 bits are used to stand for the absolute value |n|.
+<ul>
+<li>If n is positive, these t-1 bits hold the (t-1)-bit binary representation of |n|.
+</li><li>If n is negative, these t-1 bits hold the (t-1)-bit 1's complement of |n|.
+</li></ul>
+</li></ul>
+<p>
+<b>Example:</b> The 7-bit binary representation of 57 is (0111001)<sub>2</sub>.
+The 7-bit 1's complement of 57 is (1000110)<sub>2</sub>.
+</p><ul>
+<li>The 1's complement representation of +57 is (00111001)<sub>2</sub>.
+</li><li>The 1's complement representation of -57 is (11000110)<sub>2</sub>.
+</li></ul>
+<p><b>Notes:</b>
+</p><ul>
+<li>The t-bit 1's complement representation can accommodate integers
+in the range -(2<sup>t-1</sup>-1) to +(2<sup>t-1</sup>-1).
+</li><li>0 has two representations: +0&nbsp;=&nbsp;(0000<tt>...</tt>0)<sub>2</sub>
+and -0&nbsp;=&nbsp;(1111<tt>...</tt>1)<sub>2</sub>.
+</li></ul>
+
+<h3 align="left">2's complement representation</h3>
+<p>
+The t-bit 2's complement of a positive integer n is 1 plus the
+t-bit 1's complement of n. Thus one first complements each bit
+in the t-bit binary expansion of n, and then adds 1 to this
+complemented number. If n&nbsp;=&nbsp;(a<sub>t-1</sub>a<sub>t-2</sub><tt>...</tt>a<sub>0</sub>)<sub>2</sub>,
+then its t-bit 1's complement is (b<sub>t-1</sub>b<sub>t-2</sub><tt>...</tt>b<sub>0</sub>)<sub>2</sub>
+with each b<sub>i</sub>&nbsp;=&nbsp;1&nbsp;-&nbsp;a<sub>i</sub>, and therefore the 2's complement of n is
+n' = 1+(b<sub>t-1</sub>b<sub>t-2</sub><tt>...</tt>b<sub>0</sub>)<sub>2</sub>
+= 1+(2<sup>t</sup>-1)-n = 2<sup>t</sup>-n. In order that n<tt>'</tt> fits in t-bits
+we then require 0&lt;=n<tt>'</tt>&lt;=2<sup>t</sup>-1, i.e., 1&lt;=n&lt;=2<sup>t</sup>.
+</p><p>
+The t-bit 2's complement representation of an integer n is a
+t-bit signed representation with the following properties:
+</p><ul>
+<li>The most significant (leftmost) bit is the sign bit, 0 if n
+is positive, 1 if n is negative.
+</li><li>The remaining t-1 bits are used to stand for the absolute value |n|.
+<ul>
+<li>If n is positive, these t-1 bits hold the (t-1)-bit binary representation of |n|.
+</li><li>If n is negative, these t-1 bits hold the (t-1)-bit 2's complement of |n|.
+</li></ul>
+</li></ul>
+<p>
+<b>Example:</b> The 7-bit binary representation of 57 is (0111001)<sub>2</sub>.
+The 7-bit 1's complement of 57 is (1000110)<sub>2</sub>, so the 7-bit
+2's complement of 57 is (1000111)<sub>2</sub>.
+</p><ul>
+<li>The 2's complement representation of +57 is (00111001)<sub>2</sub>.
+</li><li>The 2's complement representation of -57 is (11000111)<sub>2</sub>.
+</li></ul>
+<p><b>Notes:</b>
+</p><ul>
+<li>The t-bit 2's complement representation can accommodate integers
+in the range -2<sup>t-1</sup> to +(2<sup>t-1</sup>-1).
+</li><li>0 has only one representation: (0000<tt>...</tt>0)<sub>2</sub>.
+</li><li>The 2's complement representation simplifies implementation of arithmetic (in hardware).
+</li></ul>
+
+<p><b>Example:</b>
+The different 8-bit representations of signed integers are summarized in the following table:
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Decimal</th><th>Signed<br>magnitude</th><th>1's<br>complement</th><th>2's<br>complement
+</th></tr><tr><td align="center">+127</td><td align="center">01111111</td><td align="center">01111111</td><td align="center">01111111
+</td></tr><tr><td align="center">+126</td><td align="center">01111110</td><td align="center">01111110</td><td align="center">01111110
+</td></tr><tr><td align="center">+125</td><td align="center">01111101</td><td align="center">01111101</td><td align="center">01111101
+</td></tr><tr><td align="center"><tt>...</tt></td><td align="center"><tt>...</tt></td><td align="center"><tt>...</tt></td><td align="center"><tt>...</tt>
+</td></tr><tr><td align="center">+3</td><td align="center">00000011</td><td align="center">00000011</td><td align="center">00000011
+</td></tr><tr><td align="center">+2</td><td align="center">00000010</td><td align="center">00000010</td><td align="center">00000010
+</td></tr><tr><td align="center">+1</td><td align="center">00000001</td><td align="center">00000001</td><td align="center">00000001
+</td></tr><tr><td align="center">0</td><td align="center">00000000<br>or<br>10000000</td><td align="center">00000000<br>or<br>11111111</td><td align="center">00000000
+</td></tr><tr><td align="center">-1</td><td align="center">10000001</td><td align="center">11111110</td><td align="center">11111111
+</td></tr><tr><td align="center">-2</td><td align="center">10000010</td><td align="center">11111101</td><td align="center">11111110
+</td></tr><tr><td align="center">-3</td><td align="center">10000011</td><td align="center">11111100</td><td align="center">11111101
+</td></tr><tr><td align="center"><tt>...</tt></td><td align="center"><tt>...</tt></td><td align="center"><tt>...</tt></td><td align="center"><tt>...</tt>
+</td></tr><tr><td align="center">-126</td><td align="center">01111110</td><td align="center">10000001</td><td align="center">10000010
+</td></tr><tr><td align="center">-127</td><td align="center">01111111</td><td align="center">10000000</td><td align="center">10000001
+</td></tr><tr><td align="center">-128</td><td align="center">No&nbsp;rep</td><td align="center">No&nbsp;rep</td><td align="center">10000000
+</td></tr></tbody></table>
+</center>
+
+<h3 align="left">Hexadecimal and octal representations</h3>
+<p>
+Similar to binary (base 2) representation, one can have representations of
+integers in any base B&gt;=2. In computer science two popular bases
+are 16 and 8. The representation of an integer in base 16 is called
+the <b>hexadecimal representation</b>, whereas that in base 8 is called
+the <b>octal representation</b> of the integer.
+</p><p>
+For any base B, the base B representation of n can be obtained
+by successively dividing n by B until the quotient becomes zero. One
+then writes the remainders in the reverse sequence as they are
+generated. Since division by B leaves remainders in the range
+0,1,<tt>...</tt>,B-1, one requires these many digits for the
+base B representation. If B=8, the natural (octal) digits are
+0,1,<tt>...</tt>,7. For B=16, we have a problem; we now require
+16 digits 0,1,<tt>...</tt>,15. Now it is difficult to distinguish,
+for example, between 13 as a digit and 13 as the digit 1 followed
+by the digit 3. We use the symbols a,b,c,d,e,f (also in upper
+case) to stand for the hexadecimal digits 10,11,12,13,14,15.
+</p><p>
+<b>Example:</b> Hexadecimal representation
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0" id="nobd">
+<tbody><tr><td id="nobd">&nbsp;</td><th id="nobd">n</th><th id="nobd">Remainder
+</th></tr><tr><td id="nobd" align="right">&nbsp;</td><td align="center">413657</td><td align="center">&nbsp;
+</td></tr><tr><td id="nobd" align="right">Divide by 16</td><td align="center">25853</td><td align="center">9
+</td></tr><tr><td id="nobd" align="right">Divide by 16</td><td align="center">1615</td><td align="center">13
+</td></tr><tr><td id="nobd" align="right">Divide by 16</td><td align="center">100</td><td align="center">15
+</td></tr><tr><td id="nobd" align="right">Divide by 16</td><td align="center">6</td><td align="center">4
+</td></tr><tr><td id="nobd" align="right">Divide by 16</td><td align="center">0</td><td align="center">6
+</td></tr><tr><td id="nobd" align="right">&nbsp;</td><td align="center" colspan="2" id="nobd">413657&nbsp;=&nbsp;0x64fd9
+</td></tr></tbody></table>
+</center>
+<p>
+<b>Example:</b> Octal representation
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0" id="nobd">
+<tbody><tr><td id="nobd">&nbsp;</td><th id="nobd">n</th><th id="nobd">Remainder
+</th></tr><tr><td id="nobd" align="right">&nbsp;</td><td align="center">413657</td><td align="center">&nbsp;
+</td></tr><tr><td id="nobd" align="right">Divide by 8</td><td align="center">51707</td><td align="center">1
+</td></tr><tr><td id="nobd" align="right">Divide by 8</td><td align="center">6463</td><td align="center">3
+</td></tr><tr><td id="nobd" align="right">Divide by 8</td><td align="center">807</td><td align="center">7
+</td></tr><tr><td id="nobd" align="right">Divide by 8</td><td align="center">100</td><td align="center">7
+</td></tr><tr><td id="nobd" align="right">Divide by 8</td><td align="center">12</td><td align="center">4
+</td></tr><tr><td id="nobd" align="right">Divide by 8</td><td align="center">1</td><td align="center">4
+</td></tr><tr><td id="nobd" align="right">Divide by 8</td><td align="center">0</td><td align="center">1
+</td></tr><tr><td id="nobd" align="right">&nbsp;</td><td align="center" colspan="2" id="nobd">413657&nbsp;=&nbsp;(1447731)<sub>8</sub>
+</td></tr></tbody></table>
+</center>
+<p>
+Since 16 and 8 are powers of two, the hexadecimal and octal
+representations of an integer can also be computed from its binary
+representation. For the hexadecimal representation, one generates
+groups of successive 4 bits starting from the right of the binary
+representation. One may have to add a requisite number of leading
+0 bits in order to make the leftmost group contain 4 bits.
+One 4 bit integer corresponds to an integer in the range
+0,1,<tt>...</tt>,15, i.e., to a hexadecimal digit.
+For the octal representation, grouping should be made three bits
+at a time.
+</p><p>
+<b>Example:</b>
+The binary representation of 413657 is (1100100111111011001)<sub>2</sub>.
+Arranging this bit-sequence in groups of 4 gives:
+</p><pre><code>   110 0100 1111 1101 1001
+</code></pre>
+Thus 413657&nbsp;=&nbsp;0x64fd9, as calculated above.
+<p>
+The grouping with three bits per group is:
+</p><pre><code>   1 100 100 111 111 011 001
+</code></pre>
+Thus 413657&nbsp;=&nbsp;(1447731)<sub>8</sub>.
+
+<h3 align="left">IEEE floating point standard</h3>
+<p>
+Now it's time for representing real numbers in binary. Let us first
+review our decimal intuition. Think of the real number:
+</p><pre>   n = 172.93 = 1.7293 x 10<sup>2</sup> = 0.17293 x 10<sup>3</sup>
+</pre>
+<p>
+By successive division by 2 we can represent the integer part
+172 of n in binary. For the fractional part 0.93 we use repeated
+multiplication by two in order to get the bits after the binary
+point. After each multiplication, the integer part of the product
+generates the next bit in the representation. We then replace the
+old fractional part by the fractional part of the product.
+</p><center>
+<table cellpadding="10" cellspacing="0" id="nobd">
+<tbody><tr>
+<td align="center" valign="middle" id="nobd">
+<table cellpadding="5" cellspacing="0" id="nobd">
+<tbody><tr><th id="nobd">&nbsp;</th><th id="nobd">&nbsp;&nbsp;Integral&nbsp;part&nbsp;&nbsp;</th><th id="nobd">&nbsp;&nbsp;Remainder&nbsp;&nbsp;
+</th></tr><tr><td id="nobd">&nbsp;</td><td align="center">172</td><td align="center">&nbsp;
+</td></tr><tr><td align="right" id="nobd">Divide&nbsp;by&nbsp;2</td><td align="center">86</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide&nbsp;by&nbsp;2</td><td align="center">43</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide&nbsp;by&nbsp;2</td><td align="center">21</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide&nbsp;by&nbsp;2</td><td align="center">10</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide&nbsp;by&nbsp;2</td><td align="center">5</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide&nbsp;by&nbsp;2</td><td align="center">2</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Divide&nbsp;by&nbsp;2</td><td align="center">1</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Divide&nbsp;by&nbsp;2</td><td align="center">0</td><td align="center">1
+</td></tr><tr><td id="nobd">&nbsp;</td><td colspan="2" id="nobd" align="center">172&nbsp;=&nbsp;(10101100)<sub>2</sub>
+</td></tr></tbody></table>
+</td><td id="nobd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td><td align="center" valign="middle" id="nobd">
+<table cellpadding="5" cellspacing="0" id="nobd">
+<tbody><tr><th id="nobd">&nbsp;</th><th id="nobd">&nbsp;&nbsp;Fractional&nbsp;part&nbsp;&nbsp;</th><th id="nobd">&nbsp;&nbsp;Integral&nbsp;part&nbsp;&nbsp;
+</th></tr><tr><td id="nobd">&nbsp;</td><td align="center">0.93</td><td align="center">&nbsp;
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.86</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.72</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.44</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.88</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.76</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.52</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.04</td><td align="center">1
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.08</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.16</td><td align="center">0
+</td></tr><tr><td align="right" id="nobd">Multiply&nbsp;by&nbsp;2</td><td align="center">0.32</td><td align="center">0
+</td></tr><tr><td id="nobd">&nbsp;</td><td colspan="2" id="nobd" align="center">0.93&nbsp;=&nbsp;(0.1110111000<tt>...</tt>)<sub>2</sub>
+</td></tr></tbody></table>
+</td></tr><tr><td align="center" id="nobd" colspan="3">172.93&nbsp;=&nbsp;(10101100.1110111000<tt>...</tt>)<sub>2</sub>&nbsp;=&nbsp;(1.01011001110111000<tt>...</tt>)<sub>2</sub>&nbsp;x&nbsp;2<sup>7</sup>&nbsp;=&nbsp;(0.101011001110111000<tt>...</tt>)<sub>2</sub>&nbsp;x&nbsp;2<sup>8</sup>
+</td></tr></tbody></table>
+</center>
+<p>
+It turns out that the decimal fraction 0.93 does not have a terminating binary
+expansion. So we have to approximate the binary expansion (after the binary
+point) by truncating the series after a predefined number of bits. Truncating
+after ten bits gives the approximate value of n to be:
+</p><pre>     (1.0101100111)<sub>2</sub> x 2<sup>7</sup>
+   = (2<sup>0</sup> + 2<sup>-2</sup> + 2<sup>-4</sup> + 2<sup>-5</sup> + 2<sup>-8</sup> + 2<sup>-9</sup> + 2<sup>-10</sup>) x 2<sup>7</sup>
+   = 2<sup>7</sup> + 2<sup>5</sup> + 2<sup>3</sup> + 2<sup>2</sup> + 2<sup>-1</sup> + 2<sup>-2</sup> + 2<sup>-3</sup>
+   = 128 + 32 + 8 + 4 + 0.5 + 0.25 + 0.125
+   = 172.875
+</pre>
+<p>
+This example illustrates how to store approximate representations of real numbers
+using a fixed amount of bits. If we write the expansion in the <b>normalized form</b>
+with only one 1 bit (and nothing else) to the left of the binary point, then it
+is sufficient to store only the fractional part (0101100111 in our example) and
+the exponent of 2 (7 in the example). This is precisely what is done by the
+<b>IEEE 754 floating-point format</b>. This is a 32-bit representation of signed
+floating point numbers. The 32 bits are used as follows:
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0" id="nobd">
+<tbody><tr><th id="nobd">&nbsp;31&nbsp;</th><th id="nobd">&nbsp;30&nbsp;</th><th id="nobd">&nbsp;29&nbsp;</th><th id="nobd">&nbsp;<tt>...</tt>&nbsp;</th><th id="nobd">&nbsp;24&nbsp;</th><th id="nobd">&nbsp;23&nbsp;
+    </th><th id="nobd">&nbsp;22&nbsp;</th><th id="nobd">&nbsp;21&nbsp;</th><th id="nobd">&nbsp;<tt>...</tt>&nbsp;</th><th id="nobd">&nbsp;1&nbsp;</th><th id="nobd">&nbsp;0&nbsp;
+</th></tr><tr><td align="center">S</td><td align="center">E<sub>7</sub></td><td align="center">E<sub>6</sub></td><td align="center"><tt>...</tt></td><td align="center">E<sub>1</sub></td><td align="center">E<sub>0</sub>
+    </td><td align="center">M<sub>22</sub></td><td align="center">M<sub>21</sub></td><td align="center"><tt>...</tt></td><td align="center">M<sub>1</sub></td><td align="center">M<sub>0</sub>
+</td></tr></tbody></table>
+</center>
+<p>
+The meanings of the different parts are as follows:
+</p><ul>
+<li>S is the <u>sign bit</u>, 0 represents positive, and 1 negative.
+</li><li>The eight bits E<sub>7</sub>E<sub>6</sub><tt>...</tt>E<sub>1</sub>E<sub>0</sub> represent the
+<u>exponent</u>. For usual numbers it is allowed to lie in the range 1 to 254.
+</li><li>The rightmost 23 bits M<sub>22</sub>M<sub>21</sub><tt>...</tt>M<sub>1</sub>M<sub>0</sub>
+represent the <u>mantissa</u> (also called <u>significand</u>). It is allowed to take any of the
+2<sup>23</sup> values between 0 and 2<sup>23</sup>-1.
+</li></ul>
+<blockquote>
+<h4 align="left">Normalized numbers</h4>
+<p>
+The normalized number that this 32-bit value stores is interpreted as:
+</p><pre>   (-1)<sup>S</sup> x (1.M<sub>22</sub>M<sub>21</sub><tt>...</tt>M<sub>1</sub>M<sub>0</sub>)<sub>2</sub> x 2<sup>[(E<sub>7</sub>E<sub>6</sub><tt>...</tt>E<sub>1</sub>E<sub>0</sub>)<sub>2</sub>-127]</sup>
+</pre>
+<p>
+The biggest real number that this representation stores corresponds to
+</p><pre><code>   0 11111110 1111111 11111111 11111111
+</code></pre>
+which is approximately 2<sup>128</sup>, i.e., 3.403&nbsp;x&nbsp;10<sup>38</sup>.
+The smallest positive value that this format can store corresponds to
+<pre><code>   0 00000001 0000000 00000000 00000000
+</code></pre>
+which is
+<pre>   1.00000000000000000000000 x 2<sup>-126</sup> = 2<sup>-126</sup>,
+</pre>
+i.e., nearly 1.175&nbsp;x&nbsp;10<sup>-38</sup>.
+<h4 align="left">Denormalized numbers</h4>
+<p>
+The IEEE standard also supports a <b>denormalized form</b>. Now all the exponent
+bits E<sub>7</sub>E<sub>6</sub><tt>...</tt>E<sub>1</sub>E<sub>0</sub> must be 0.
+The 32-bit value is now interpreted as the number:
+</p><pre>   (-1)<sup>S</sup> x (0.M<sub>22</sub>M<sub>21</sub><tt>...</tt>M<sub>1</sub>M<sub>0</sub>)<sub>2</sub> x 2<sup>-126</sup>
+</pre>
+<p>
+The maximum positive value that can be represented by the denormalized form
+corresponds to
+</p><pre><code>   0 00000000 1111111 11111111 11111111
+</code></pre>
+<p>
+which is
+</p><pre>   0.11111111111111111111111&nbsp;x&nbsp;2<sup>-126</sup> = 2<sup>-126</sup> - 2<sup>-149</sup>.
+</pre>
+<p>
+This is obtained by subtracting 1 from the least significant bit position of
+the smallest positive integer representable by a normalized number. Denormalized
+numbers therefore correspond to a <i>gradual underflow</i> from normalized
+numbers.
+</p><p>
+The minimum positive value that can be represented by the denormalized form
+corresponds to
+</p><pre><code>   0 00000000 0000000 00000000 00000001
+</code></pre>
+which is 2<sup>-149</sup>, i.e., nearly 1.401&nbsp;x&nbsp;10<sup>-45</sup>.
+<h4 align="left">Special numbers</h4>
+<p>
+Recall that the exponent bits were not allowed to take the value
+1111&nbsp;1111 (255 in decimal). This value corresponds to some
+special numbers. These numbers together with some other special
+ones are listed in the following table.
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th nowrap="">32-bit value</th><th>Interpretation
+</th></tr><tr><td nowrap="" align="left">0 1111 1111 0000000 00000000 00000000</td><td align="center">+Inf
+</td></tr><tr><td nowrap="" align="left">1 1111 1111 0000000 00000000 00000000</td><td align="center">-Inf
+</td></tr><tr><td nowrap="" align="left">0 1111 1111 Any nonzero 23-bit value</td><td align="center">NaN
+</td></tr><tr><td nowrap="" align="left">1 1111 1111 Any nonzero 23-bit value</td><td align="center">NaN
+</td></tr><tr><td nowrap="" align="left">0 0000 0000 0000000 00000000 00000000</td><td align="center">+0
+</td></tr><tr><td nowrap="" align="left">1 0000 0000 0000000 00000000 00000000</td><td align="center">-0
+</td></tr><tr><td nowrap="" align="left">0 0111 1111 0000000 00000000 00000000</td><td align="center">+1.0
+</td></tr><tr><td nowrap="" align="left">1 0111 1111 0000000 00000000 00000000</td><td align="center">-1.0
+</td></tr><tr><td nowrap="" align="left">0 1000 0000 0000000 00000000 00000000</td><td align="center">+2.0
+</td></tr><tr><td nowrap="" align="left">1 1000 0000 0000000 00000000 00000000</td><td align="center">-2.0
+</td></tr><tr><td nowrap="" align="left">0 1000 0000 1000000 00000000 00000000</td><td align="center">+3.0
+</td></tr><tr><td nowrap="" align="left">1 1000 0000 1000000 00000000 00000000</td><td align="center">-3.0
+</td></tr><tr><td nowrap="" align="left">0 1111 1110 1111111 11111111 11111111</td><td align="center">2<sup>255</sup>&nbsp;-&nbsp;2<sup>231</sup>
+</td></tr><tr><td nowrap="" align="left">0 0000 0001 0000000 00000000 00000000</td><td align="center">2<sup>-126</sup>
+</td></tr><tr><td nowrap="" align="left">0 0000 0000 1111111 11111111 11111111</td><td align="center">2<sup>-126</sup>&nbsp;-&nbsp;2<sup>-149</sup>
+</td></tr><tr><td nowrap="" align="left">0 0000 0000 0000000 00000000 00000001</td><td align="center">2<sup>-149</sup>
+</td></tr></tbody></table>
+</center>
+<br>
+</blockquote>
+
+<h2 align="left">Introduction to arrays</h2>
+<p>
+Arrays are our first example of <i>structured data</i>. Think of a book with
+pages numbered 1,2,<tt>...</tt>,400. The book is a single entity, has its
+individual name, author(s), publisher, bla bla bla, but the contents of its
+different pages are (normally) different. Moreover, Page&nbsp;251 of the
+book refers to a particular page of the book. To sum up, individual pages
+retain their identities and still we have a special handy bound structure
+treated as a single entity. That's again abstraction, but this course is
+mostly about that.
+</p><p>
+Now imagine that you plan to sum 400 integers. Where will you store the
+individual integers? Thanks to your ability to declare variables, you
+can certainly do that. Declare 400 variables with 400 different names,
+initialize them individually and finally add each variable separately
+to an accumulating sum. That's gigantic code just for a small task.
+</p><p>
+Arrays are there to help you. Like your book you now have a single name
+for an entire collection of 400 integers. Declaration is small. Codes for
+initialization and addition also become shorter, because you can now
+access the different elements of the collection by a unique index.
+There are built-in C constructs that allow you do parameterized
+(i.e., indexed) tasks repetitively.
+
+</p>
+<h3 align="left">Declaring arrays</h3>
+<p>
+Simple! Just as you did for individual data items, write the data type,
+then a (legal) name and immediately after that the size of the array
+within square brackets. For example, the declaration
+</p><pre><code>   int intHerd[400];
+</code></pre>
+<p>
+creates an array of name <tt>intHerd</tt> that is capable of storing
+400 <tt>int</tt> data. A more stylistic way to do the same is illustrated
+now.
+</p><pre><code>   #define HERD_SIZE 400
+   int intHerd[HERD_SIZE];
+</code></pre>
+<p>
+Here are two other arrays, the first containing 123 <tt>float</tt> data,
+the second 1024 <tt>unsigned char</tt> data.
+</p><pre><code>   float flock[123];
+   unsigned char crowd[1024];
+</code></pre>
+<p>
+You can intersperse declaration of arrays with those of simple variables
+and pointers.
+</p><pre><code>   unsigned long man, society[100], woman, *ptr;
+</code></pre>
+<p>
+This creates space for two <tt>unsigned long</tt> variables
+<tt>man</tt> and <tt>woman</tt>, an array called <tt>society</tt>
+with hundred <tt>unsigned long</tt> data, and also a pointer
+named <tt>ptr</tt> to an <tt>unsigned long</tt> data.
+</p><p>
+Note that all individual elements of a single array must be
+of the same type. You cannot declare an array some of whose
+elements are integers, the rest floating-point numbers. Such
+heterogeneous collections can be defined by other means that
+we will introduce later.
+
+</p><h3 align="left">Accessing individual array elements</h3>
+<p>
+Once an array A of size s is declared, its individual elements
+are accessed as <tt>A[0],A[1],...,A[s-1]</tt>. It is very important
+to note that:
+</p><p>
+<u>Array indexing in C is zero-based.</u>
+</p><p>
+This means that the "first" element of A is named as <tt>A[0]</tt>
+(not <tt>A[1]</tt>), the "second" as <tt>A[1]</tt>, and so on. The last
+element is <tt>A[s-1]</tt>.
+</p><p>
+Each element <tt>A[i]</tt> is of data type as provided in the
+declaration. For example, if the declaration goes as:
+</p><pre><code>   int A[32];
+</code></pre>
+<p>
+each of the elements <tt>A[0],A[1],...,A[31]</tt> is a <i>variable</i>
+of type <tt>int</tt>. You can do on each <tt>A[i]</tt> whatever you
+are allowed to do on a single <tt>int</tt> variable.
+</p><p>
+<u>C does <u>not</u> provide automatic range checking.</u>
+</p><p>If an array
+A of size s is declared, the element <tt>A[i]</tt> belongs to the array (more
+correctly, to the memory locations allocated to A) if and only if
+0&nbsp;&lt;=&nbsp;i&nbsp;&lt;=&nbsp;s-1. However, you can use <tt>A[i]</tt> for other values
+of i. No compilation errors (nor warnings) are generated for that.
+Now when you run the program, the executable attempts to access
+a part of the memory that is not allocated to your array, nor perhaps
+to (the data area allocated to) your program at all. You simply do not
+know what resides in that part of the memory. Moreover, illegal
+memory access may lead to the deadly "segmentation fault". C is too
+cruel at certain points. Beware of that!
+
+</p><h3 align="left">Initializing arrays</h3>
+<p>
+Arrays can be initialized during declaration. For that you have to
+specify constant values for its elements. The list of initializing
+values should be enclosed in curly braces. For the declaration
+</p><pre><code>   int A[5] = { 51, 29, 0, -34, 67 };
+</code></pre>
+<p>
+<tt>A[0]</tt> is initialized to 51, <tt>A[1]</tt> to 29,
+<tt>A[2]</tt> to 0, <tt>A[3]</tt> to -34 and <tt>A[4]</tt>
+to 67. Similarly, for the declaration
+</p><pre><code>   char C[8] = { 'a', 'b', 'h', 'i', 'j', 'i', 't', '\0' };
+</code></pre>
+<p>
+<tt>C[0]</tt> gets the value <tt>'a'</tt>, <tt>C[1]</tt> the
+value <tt>'b'</tt>, and so on. The last (7th) location receives
+the null character. Such null-terminated character arrays are
+also called <b>strings</b>. Strings can be initialized in an
+alternative way. The last declaration is equivalent to:
+</p><pre><code>   char C[8] = "abhijit";
+</code></pre>
+<p>
+Now see that the trailing null character is missing here. C automatically
+puts it at the end. Note also that for individual characters, C uses
+single quotes, whereas for strings, it uses double quotes.
+</p><p>
+If you do not mention sufficiently many initial values to populate
+an entire array, C uses your incomplete list to initialize the array
+locations at the lower end (starting from 0). The remaining locations
+are initialized to zero. For example, the initialization
+</p><pre><code>   int A[5] = { 51, 29 };
+</code></pre>
+<p>
+is equivalent to
+</p><pre><code>   int A[5] = { 51, 29, 0, 0, 0 };
+</code></pre>
+<p>
+If you specify an initialization list, you may omit the size of the
+array. In that case, the array will be allocated exactly as much space
+as is necessary to accommodate the initialization list. You must, however,
+provide the square brackets to indicate that you are declaring an
+array; the size may be missing between them.
+</p><pre><code>   int A[] = { 51, 29 };
+</code></pre>
+<p>
+creates an array A of size 2 with <tt>A[0]</tt> holding the value
+51 and <tt>A[1]</tt> the value 29. This declaration is equivalent to
+</p><pre><code>   int A[2] = { 51, 29 };
+</code></pre>
+<p>
+but not to
+</p><pre><code>   int A[5] = { 51, 29 };
+</code></pre>
+
+<p>
+There are a lot more things that pertain to arrays. You may declare
+multi-dimensional arrays, you may often interchange arrays with pointers,
+and so on. But it's now too early for these classified topics. Wait until
+your experience with C ripens.
+
+</p>
+  <div class="navigator">
+    <a href="#">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Introduction</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="assign.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Assignments</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

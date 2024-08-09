@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise set V | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Exercise set V</h1>
+<p><b>Note:</b>
+<i>Students are encouraged to solve as many problems from this set as possible.
+Some of these will be solved during the lectures, if time permits. We have
+made attempts to classify the problems based on the difficulty level of
+solving them. An unmarked exercise is of low to moderate difficulty. Harder
+problems are marked by H, H<sup>2</sup> and H<sup>3</sup> meaning "just hard",
+"quite hard" and "very hard" respectively. Exercises marked by M have
+mathematical flavor (as opposed to computational). One requires elementary
+knowledge of number theory or algebra or geometry or combinatorics in order
+to solve these mathematical exercises.</i>
+
+</p><ol>
+<li>[M] Arrange the following functions in the increasing order of their
+rates of growth:
+<pre>   (sqrt(2))<sup>n</sup>, 2<sup>sqrt(n)</sup>, n<sup>2</sup>log n, n(log n)<sup>2</sup>, (nlog n)<sup>2</sup>, n<sup>log n</sup>, n<sup>sqrt(n)</sup>, n<sup>n</sup>, (log n)<sup>n</sup>.
+</pre>
+
+</li><li>Let <tt>f(n)</tt> be the polynomial
+<pre>   f(n) = a<sub>d</sub>n<sup>d</sup> + a<sub>d-1</sub>n<sup>d-1</sup> + ... + a<sub>1</sub>n + a<sub>0</sub>
+</pre>
+<p>
+with <tt>a<sub>d</sub>&nbsp;&gt;&nbsp;0</tt>. Prove that
+<tt>f(n)&nbsp;=&nbsp;O(n<sup>d</sup>)</tt>
+and <tt>n<sup>d</sup>&nbsp;=&nbsp;O(f(n))</tt>.
+(Note that some of the coefficients <tt>a<sub>i</sub></tt> may be negative.)
+
+</p></li><li>Let <tt>f(n),g(n),f<sub>1</sub>(n),g<sub>1</sub>(n)</tt> be
+positive real-valued functions of natural numbers. Prove the following
+assertions:
+<ol type="a">
+<li>If <tt>f(n) = O(f<sub>1</sub>(n))</tt> and <tt>g(n) = O(g<sub>1</sub>(n))</tt>,
+then <tt>f(n) + g(n) = O(f<sub>1</sub>(n) + g<sub>1</sub>(n))</tt>.
+</li><li>If <tt>f(n) = O(f<sub>1</sub>(n))</tt> and <tt>g(n) = O(g<sub>1</sub>(n))</tt>,
+then <tt>f(n)g(n) = O(f<sub>1</sub>(n)g<sub>1</sub>(n))</tt>.
+</li><li><tt>f(n) + g(n) = O(max(f(n),g(n)))</tt>.
+</li></ol>
+
+</li><li>Establish that the worst-case running times of insertion sort and of
+selection sort on an array of <tt>n</tt> elements are <tt>O(n<sup>2</sup>)</tt>.
+
+</li><li>[M] Denote <tt>U(n) = S(n) / 3</tt>, where <tt>S(n)</tt> is as defined in
+the derivation of the running time of the recursive Fibonacci function. Find
+a closed form formula for <tt>U(n)</tt> and hence for <tt>T(n)</tt>.
+
+</li><li>Deduce that the following function recursively computes Fibonacci
+numbers in linear time.
+<pre><code>   int F ( int n , int *Fprev )
+   {
+      int Fn_1, Fn_2;
+
+      if (n == 0) {
+         *Fprev = 1;
+         return (0);
+      }
+      if (n == 1) {
+         *Fprev = 0;
+         return (1);
+      }
+      Fn_1 = F(n-1,&amp;Fn_2);
+      *Fprev = Fn_1;
+      return (Fn_1+Fn_2);
+   }
+</code></pre>
+
+</li><li>The following function recursively determines whether a given string
+is a palindrome. Determine its time complexity.
+<pre><code>   int isPalindrome ( char A[] , int n )
+   {
+      if (n &lt;= 1) return 1;
+      if (A[0] != A[n-1]) return 0;
+      return isPalindrome(&amp;A[1],n-2);
+   }
+</code></pre>
+
+</li><li>Determine the time complexity of the following iterative function:
+<pre><code>   int f ( int A[SIZE][SIZE] , int n )
+   {
+      int i, j, sum = 0;
+
+      for (i=0; i&lt;n; ++i) {
+         if (i % 2 == 0)
+            for (j=0; j&lt;=i; j=j+1) sum = sum + A[i][j];
+         else
+            for (j=n-1; j&gt;=i; j=j-1) sum = sum - A[i][j];
+      }
+   }
+</code></pre>
+
+</li><li>[H] Write a function that accepts a positive integer <tt>n</tt>
+and prints all permutations of <tt>1,2,3,...,n</tt>. Assume that printing
+a single integer is a basic operation and establish the time complexity
+of your function.
+
+</li><li>Establish that merging two sorted arrays each of size <tt>n/2</tt>
+can be done in <tt>O(n)</tt> time.
+
+</li><li>Establish that merging two sorted linked lists each of size
+<tt>n/2</tt> can be done in <tt>O(n)</tt> time.
+
+</li><li>[H] Write the sorting routines (bubble, insertion, selection, quick
+and merge sorts) for linked lists. Each routine should have the same time
+complexity as the corresponding routine on arrays.
+
+</li><li>Consider the <i>Tower of Hanoi</i> problem of
+<a href="https://cse.iitkgp.ac.in/pds/notes/exer2.html" id="noul" target="_blank">Exercise set II</a>. Solve the problem using
+the algorithm that first recursively moves the top n-1 disks from Peg A
+to Peg C using Peg B as an auxiliary location, then moves the largest disk
+from Peg A to Peg B, and finally moves the n-1 disks from Peg C to Peg B
+using Peg A as an auxiliary location. Let <tt>T(n)</tt> denote the number
+of disk movements done by the algorithm for <tt>n</tt> disks.
+<ol type="a">
+<li>Show that <tt>T(n)</tt> satisfies the following recurrence:
+<pre><code>   T(1) = 1,
+   T(n) = 2T(n-1) + 1 for n &gt;= 2.
+</code></pre>
+</li><li>Prove that <tt>T(n)&nbsp;=&nbsp;2<sup>n</sup>&nbsp;-&nbsp;1</tt> for
+all <tt>n&nbsp;&gt;=&nbsp;1</tt>.
+</li><li>[HM] Argue that any algorithm that solves the Tower of Hanoi problem
+<i>must</i> make at least <tt>2<sup>n</sup>&nbsp;-&nbsp;1</tt> disk
+movements. (Hint: Consider the instance when the largest disk is removed
+from Peg A.)
+</li></ol>
+
+</li><li>Compare the running times of the insertion and deletion functions
+in our implementations of the <a href="https://cse.iitkgp.ac.in/pds/notes/ADT.html#ADTexmp" id="noul" target="_blank">ordered
+list</a>, <a href="https://cse.iitkgp.ac.in/pds/notes/stackqueue.html#stackimpl" id="noul" target="_blank">stack</a> and
+<a href="https://cse.iitkgp.ac.in/pds/notes/stackqueue.html#queueimpl" id="noul" target="_blank">queue</a> ADTs. Express
+the running time in terms of the current size <tt>n</tt> (number of
+elements) of the list (or stack or queue).
+
+</li><li>[H<sup>2</sup>]
+In this exercise we plan to compute the binomial coefficient <tt>C(n,k)</tt>.
+Several algorithms are proposed to that effect. These algorithms vary widely
+in their time complexities ranging from polynomial to truly exponential.
+<ol type="a">
+<li>We know that binomial coefficients satisfy the recurrence relation:
+<pre><code>   C(n,k) = C(n-1,k) + C(n-1,k-1)
+</code></pre>
+for suitable values of <tt>n,k</tt>. Write a recursive function that
+straightaway uses this recurrence relation. Use suitable boundary conditions
+so that recursion eventually terminates.
+</li><li>Deduce that the running time of the recursive algorithm of Part a)
+is exponential and not polynomial in <tt>n</tt>. For computing the running
+time, take <tt>k&nbsp;&lt;=&nbsp;n</tt>.
+</li><li>Use a two-dimensional auxiliary array to keep track of the pairs
+<tt>(m,j)</tt> for which <tt>C(m,j)</tt> has already been computed. If
+the value is available, replace a recursive call for computing <tt>C(m,j)</tt>
+by reading the value from the auxiliary array. This technique is known as
+<i>memoization</i>.
+</li><li>Deduce that the running time of the recursive routine with memoization
+is polynomial in <tt>n</tt>.
+</li><li>Write an iterative routine that generates the Pascal triangle in the
+following order: <tt>C(0,0), C(1,0), C(1,1), C(2,0), C(2,1), C(2,2), ...</tt>
+till the value of <tt>C(n,k)</tt> is computed. The top-down algorithm of
+Part a) recomputes many <tt>C(m,j)</tt> values multiple times. The bottom-up
+technique of this part is an example of <i>dynamic programming</i>.
+</li><li>Deduce that the iterative algorithm of Part e) runs in time polynomial
+in <tt>n</tt>.
+</li><li>Use the formula
+<pre><code>   C(n,k) = n(n-1)...(n-k+1) / k!
+</code></pre>
+to compute the value of <tt>C(n,k)</tt>.
+</li><li>Argue that the running time of the algorithm of Part g) is polynomial
+in <tt>n</tt>.
+</li><li>Compare the space complexities of the above four algorithms.
+</li></ol>
+
+</li><li>
+Suppose we want to compute the transpose of a matrix <tt>A</tt> and
+store the result in <tt>A</tt> itself. We do not assume <tt>A</tt>
+to be necessarily a square matrix.
+<ol type="a">
+<li>Write a function that takes an <tt>m&nbsp;x&nbsp;n</tt> matrix
+<tt>A</tt> as input, computes in a local matrix <tt>B</tt> the transpose of
+<tt>A</tt> and finally copies <tt>B</tt> back to <tt>A</tt>. What is the
+space complexity of this function?
+</li><li>[H] Write a function that computes <tt>A<sup>t</sup></tt> in <tt>A</tt>
+using only a constant amount of additional storage.
+</li></ol>
+
+</li><li>Write a function that takes a square matrix <tt>A</tt> as input
+and computes in <tt>A</tt> itself the matrix
+<tt>A&nbsp;-&nbsp;A<sup>t</sup></tt> using only <tt>O(1)</tt> additional
+storage. (Hint: The matrix <tt>A&nbsp;-&nbsp;A<sup>t</sup></tt> is
+anti-symmetric, i.e., its <tt>(j,i)</tt>-th element is the negative of its
+<tt>(i,j)</tt>-th element.)
+
+</li><li>Let <tt>A</tt> be an <tt>n&nbsp;x&nbsp;n</tt> matrix.
+<ol type="a">
+<li>Write a function that converts <tt>A</tt> to row-reduced
+echelon form in <tt>O(n<sup>3</sup>)</tt> time using elementary row
+operations only.
+</li><li>Write a function that computes the determinant of <tt>A</tt> in
+<tt>O(n<sup>3</sup>)</tt> time.
+</li></ol>
+
+</li><li>Write a function that computes the rank of an <tt>n&nbsp;x&nbsp;n</tt>
+matrix in <tt>O(n<sup>3</sup>)</tt> time.
+
+</li><li>Write a function that inverts an <tt>n&nbsp;x&nbsp;n</tt> matrix in
+<tt>O(n<sup>3</sup>)</tt> time.
+
+</li><li>Write a function that, given a square system
+<pre><code>   Ax = b
+</code></pre>
+<p>
+of linear equations, determines a solution for <tt>x</tt>, provided that
+the system is solvable. Your function should run in a time polynomial in
+the size (number of variables or equations) of the system.
+Your function should handle underdetermined (but consistent)
+systems, i.e., systems that have multiple solutions.
+
+</p></li><li>
+In this exercise a sparse matrix denotes a square matrix having only few
+(constant numbers of) non-zero elements in each row.
+<ol type="a">
+<li>Define a data type for storing a sparse matrix.
+</li><li>Write a function that adds two <tt>n&nbsp;x&nbsp;n</tt> sparse matrices
+in <tt>O(n)</tt> time.
+</li><li>[H] Write a function that multiplies two <tt>n&nbsp;x&nbsp;n</tt> sparse
+matrices in <tt>O(n<sup>2</sup>)</tt> time.
+</li></ol>
+<p>
+Notice that the complexities of addition and multiplication of dense
+(non-sparse) <tt>n&nbsp;x&nbsp;n</tt> matrices are <tt>O(n<sup>2</sup>)</tt>
+and <tt>O(n<sup>3</sup>)</tt> respectively. The sparse representation
+brings down these complexity figures.
+
+</p></li></ol>
+
+
+  <div class="navigator">
+    <a href="performance.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Performance analysis of programs</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="#">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title"></div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

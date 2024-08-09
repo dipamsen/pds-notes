@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise set IV | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Exercise set IV</h1>
+<p><b>Note:</b>
+<i>Students are encouraged to solve as many problems from this set as possible.
+Some of these will be solved during the lectures, if time permits. We have
+made attempts to classify the problems based on the difficulty level of
+solving them. An unmarked exercise is of low to moderate difficulty. Harder
+problems are marked by H, H<sup>2</sup> and H<sup>3</sup> meaning "just hard",
+"quite hard" and "very hard" respectively. Exercises marked by M have
+mathematical flavor (as opposed to computational). One requires elementary
+knowledge of number theory or algebra or geometry or combinatorics in order
+to solve these mathematical exercises.</i>
+
+</p><ol>
+<li>Rewrite the dynamic linked list implementations of the ordered list,
+stack and queue ADTs incorporating the feature that whenever a node
+is deleted, the memory allocated to that node is freed.
+
+</li><li>Implement the ordered list, stack and queue ADTs with dynamic linked
+lists but without using the dummy nodes at the beginning of the lists.
+
+</li><li>
+Dynamic arrays may be used to provide a third implementation of ordered list,
+stack and queue ADTs. Here the array holding the list is to be allocated
+memory dynamically depending on the size of the list. Implement the ADTs
+using dynamic arrays.
+
+</li><li>Implement the ordered list ADT using doubly linked lists. (Recall
+from Exercise set III that in a doubly linked list each node maintains
+two pointers, one pointing to the next node in the list, the other to the
+previous node in the list.)
+
+</li><li>Write a function that takes as arguments two sorted linked lists
+and outputs a sorted linked list obtained by merging the two input lists.
+
+</li><li>Think of the ordered list ADT modified using the following strategy.
+Whenever an element is located using the <tt>isPresent()</tt> operation,
+that particular element is deleted from the current position and reinserted
+at the beginning of the list. The motivation behind this relocation is that
+in many situations an element accessed in a list is expected with high
+probability to be accessed several times in the future. So keeping the
+element near the beginning of the list reduces average search time.
+Modify the ordered list ADT implementations to incorporate this modification.
+
+</li><li>
+Consider the ADT set that represents a collection of integers. The ADT
+should support standard set operations:
+<pre><code>   S = init();
+      /* Initialize S to the empty set */
+
+   isEmpty(S);
+      /* Return true if and only if S is the empty set */
+
+   isSingleton(S);
+      /* Return true if and only if S contains only one element */
+
+   isMember(S,a);
+      /* Return true if and only if a is a member of the set S */
+
+   S = addElement(S,a);
+      /* Add the element a to the set S. If a is already in S,
+         there will be no change, else a new element is to be inserted. */
+
+   S = delElement(S,a);
+      /* Remove the element a from the set S. No change if a is not
+         a member of S. */
+
+   S = union(U,V);
+      /* Assign to S the union of the sets U and V */
+
+   S = intersection(U,V);
+      /* Assign to S the intersection of the sets U and V */
+
+   S = difference(U,V);
+      /* Assign to S the set difference U - V */
+
+   S = symmDiff(U,V);
+      /* Assign to S the symmetric difference (U - V) union (V - U) */
+
+   print(S);
+      /* Print the elements of the set S */
+
+   printSorted(S);
+      /* Print the elements of the set S in the sorted order. */
+</code></pre>
+<ol type="a">
+<li>Implement the set ADT using static arrays.
+</li><li>Implement the set ADT using dynamic arrays.
+</li><li>Implement the set ADT using linked lists.
+</li></ol>
+
+</li><li>A multiset is like a set with the exception that each member of the set
+may be present multiple times. For example, an aquarium is a multiset specified
+by the different species of fish it contains and by the number of fish in
+the aquarium belonging to each such species. For this exercise, concentrate
+on multisets of integers (because integers are less fishy). The
+multiset ADT should support the following operations.
+<pre><code>   S = init();
+      /* Initialize S to the empty multiset */
+
+   isMember(S,a);
+      /* Return true if and only if a is a member of the multiset S */
+
+   count(S,a);
+      /* Return the number of occurrences of a in the multiset S */
+
+   S = addElement(S,a,n);
+      /* Add n occurrences of a to the multiset S */
+
+   S = delElement(S,a,n);
+      /* Delete n occurrences of a from the multiset S. If S contains
+         less than n occurrences of a, only those many that are present
+         in S need be deleted. */
+
+   S = union(U,V);
+      /* Assign to S the union of the multisets U and V. If U and V
+         respectively contain m and n occurrences of a, then their
+         union would contain m+n occurrences of a. */
+
+   S = intersection(U,V);
+      /* Assign to S the difference of the multisets U and V. If U and V
+         respectively contain m and n occurrences of a, then their
+         intersection would contain min(m,n) occurrences of a. */
+
+   S = difference(U,V);
+      /* Assign to S the difference U - V. If U and V respectively
+         contain m and n occurrences of a, then their difference would
+         contain max(m-n,0) occurrences of a. */
+
+   print(S);
+      /* Print all the elements of S with positive multiplicities. Also
+         print the corresponding multiplicities. */
+
+   printSorted(S);
+      /* Same as print(S) except that the elements are printed in the
+         sorted order. */
+</code></pre>
+<ol type="a">
+<li>Implement the multiset ADT using static arrays.
+</li><li>Implement the multiset ADT using dynamic arrays.
+</li><li>Implement the multiset ADT using linked lists.
+</li></ol>
+
+</li><li>[H] A nested ordered list of integers is recursively defined as follows:
+<pre>   The empty tuple () is a nested list.
+   If A<sub>0</sub>,A<sub>1</sub>,...,A<sub>n-1</sub> are nested lists or integers for some n &gt;= 1,
+      then (A<sub>0</sub>,A<sub>1</sub>,...,A<sub>n-1</sub>) is again a nested list.
+</pre>
+<p>Here are some examples:
+</p><pre><code>   ()
+   (3,4,5)
+   ((),3,(),(4),5)
+   (3,(4),((5),(),(6,7,(8))),((9),()))
+</code></pre>
+<p>
+A nested list should support the following functions:
+</p><pre>   L = init(); 
+      /* Initialize the nested list L to the empty list */
+
+   isEmpty(L);
+      /* Returns true if and only if L is the empty list */
+
+   L = insertInt(U,a,k);
+      /* If U = (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>m-1</sub>) is a list and a an integer, then assign to L the
+         nested list (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>k-1</sub>,a,U<sub>k</sub>,...,U<sub>m-1</sub>). Report error if k &gt; m. */
+
+   L = insertList(U,V,k);
+      /* If U = (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>m-1</sub>) is a list and V a nested list, then assign to L the
+         nested list (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>k-1</sub>,V,U<sub>k</sub>,...,U<sub>m-1</sub>). Report error if k &gt; m. */
+
+   L = join(U,V);
+      /* If U = (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>m-1</sub>) and V = (V<sub>0</sub>,V<sub>1</sub>,...,V<sub>n-1</sub>) are nested lists,
+         assign to L the nested list (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>m-1</sub>,V<sub>0</sub>,V<sub>1</sub>,...,V<sub>n-1</sub>). */
+
+   L = joinAt(U,V,k);
+      /* If U = (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>m-1</sub>) and V = (V<sub>0</sub>,V<sub>1</sub>,...,V<sub>n-1</sub>) are nested lists,
+         assign to L the nested list (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>k-1</sub>,V<sub>0</sub>,V<sub>1</sub>,...,V<sub>n-1</sub>,U<sub>k</sub>,...,U<sub>m-1</sub>).
+         Report error if k &gt; m. */
+
+   L = delete(U,k);
+      /* If U = (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>m-1</sub>) is a nested list, assign to L the nested list
+         (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>k-1</sub>,U<sub>k+1</sub>,...,U<sub>m-1</sub>). Report error if k &gt;= m. */
+
+   L = sublist(U,k,l);
+      /* If U = (U<sub>0</sub>,U<sub>1</sub>,...,U<sub>m-1</sub>) is a nested list, return the sub-list (U<sub>k</sub>,...,U<sub>l</sub>).
+         Report error for improper indices k,l. */
+
+   print(L);
+      /* Print the nested list L as a fully parenthesized expression. */
+</pre>
+
+</li><li>Implement the (univariate) polynomial ADT with all standard arithmetic
+operations on polynomials. First mention the prototypes of the ADT functions
+and then implement. Use dynamic memory management to implement the list of
+coefficients.
+
+</li><li>A multivariate polynomial in n variables
+<tt>X<sub>1</sub>,...,X<sub>n</sub></tt> is a finite sum of terms of the form
+<tt>aX<sub>1</sub><sup>e<sub>1</sub></sup>,...,X<sub>n</sub><sup>e<sub>n</sub></sup></tt>,
+with each <tt>e<sub>i</sub></tt> being a non-negative integer and with the
+coefficient <tt>a</tt> being an integer.
+Arithmetic operations on a multivariate polynomial are carried out
+following standard rules.
+
+<ol type="a">
+<li>Write the ADT functions for polynomials. Include standard arithmetic
+operations and partial derivatives.
+</li><li>Assume that the number of variables is small, like 2 or 3. Implement
+the ADT using static multi-dimensional arrays to store the coefficients.
+</li><li>Also implement the ADT using dynamic multi-dimensional arrays to
+store the coefficients.
+</li><li>[H] Each term in a multivariate polynomial is identified by the coefficient
+and the exponents. For example, the term <tt>aX<sub>1</sub><sup>e<sub>1</sub></sup>,...,X<sub>n</sub><sup>e<sub>n</sub></sup></tt>
+is determined by the tuple <tt>(a,e<sub>1</sub>,...,e<sub>n</sub>)</tt>.
+So a structure capable of storing n+1 fields suffices to store a term, and
+a polynomial is an array of such structures. Use this strategy to implement
+the polynomial ADT. You should think of a way to order the exponent
+tuples <tt>(e<sub>1</sub>,...,e<sub>n</sub>)</tt> and store the terms
+sorted under this ordering.
+</li><li>[H<sup>2</sup>] An n-variate polynomial can be thought of as a univariate
+polynomial whose coefficients are (n-1)-variate polynomials. This recursive
+definition provides us with yet another handle for implementing the polynomial
+ADT. Use a nested linked list structure for a concrete recursive realization
+of the multivariate polynomial ADT.
+</li></ol>
+
+</li><li>
+Suppose you want to implement two stacks in a single array.
+Two possibilities are outlined here:
+<p><u>Odd-even strategy</u>: Stack 1 uses locations 0,2,4,<tt>...</tt> of the array,
+whereas Stack 2 uses the array locations 1,3,5,<tt>...</tt>
+</p><p><u>Colliding strategy</u>: The two stacks start from the two ends of
+the array and grow in opposite directions (towards one another).
+</p><p>Implement both the strategies. Write two sets of initialize, push and
+pop functions.
+
+</p></li><li>Write a function that uses the stack ADT calls in order to reverse
+a character string.
+
+</li><li>[M] Suppose that you have a stack and push to the stack the integers
+1,2,<tt>...</tt>,n in that sequence. In between these push operations
+you also invoke some pop operations in such a way that a pop request is
+never sent to an empty stack. Immediately before each pop operation you
+also print the top of the stack. After all of the integers 1,2,<tt>...</tt>,n
+are pushed, the elements remaining in the stack are printed and popped
+resulting in an eventually empty stack. The printed integers form a permutation
+of the integers <tt>1,2,...,n</tt>. An example is given below for
+n&nbsp;=&nbsp;5:
+<pre><code>   S = init();
+   S = push(S,1);
+   S = push(S,2);
+   print top(S);
+   S = pop(S);
+   S = push(S,3);
+   S = push(S,4);
+   print top(S);
+   S = pop(S);
+   print top(S);
+   S = pop(S);
+   S = push(S,5);
+   print top(S);
+   S = pop(S);
+   print top(S);
+   S = pop(S);
+</code></pre>
+<p>This sequence prints the permutation:
+</p><pre><code>   2,4,3,5,1
+</code></pre>
+Prove or disprove: All permutations of <tt>1,2,...,n</tt> can be generated
+by a suitable sequence of such push and pop operations.
+
+</li><li>Use stack ADT calls to recognize strings with balanced parentheses.
+Examples of such strings: <tt>()</tt>, <tt>((()))</tt>, <tt>()()()</tt>,
+<tt>()(()(()(()())))</tt>. Non-examples: <tt>(()</tt>, <tt>(()(())))</tt>,
+<tt>)()(</tt>.
+
+</li><li>Use stack ADT calls to recognize strings with balanced parentheses
+and square brackets. Examples of such strings: <tt>()</tt>, <tt>([()])</tt>,
+<tt>[]()[]</tt>, <tt>()[()(()[()()])]</tt>. Non-examples: <tt>(]</tt>,
+<tt>(()[)())</tt>, <tt>([]</tt>, <tt>[()[[]]])</tt>, <tt>]()[</tt>.
+
+</li><li>[HM] The usual infix notation for writing arithmetic expressions
+requires parentheses in order to specify the exact sequence of operations.
+For example, <tt>2+3x4</tt> refers to <tt>2+(3x4)</tt>. If we want
+to do the addition first and then the multiplication, we must put
+explicit parentheses like <tt>(2+3)x4</tt>. The postfix notation for
+<tt>2+(3x4)</tt> is <tt>2&nbsp;3&nbsp;4&nbsp;x&nbsp;+</tt> and that
+for <tt>(2+3)x4</tt> is <tt>2&nbsp;3&nbsp;+&nbsp;4&nbsp;x</tt>. In the
+postfix notation we do not require parentheses and still the meaning
+(i.e., the exact sequence of operations) is uniquely determined by the
+expression. In the rest of this exercise you are asked to prove this
+property of the postfix notation. The result continues to hold for any mix
+of binary, unary, ternary, <tt>...</tt> operators. In this exercise, assume
+for the sake of simplicity that all operators are binary. An arithmetic
+expression contains operands and operators. A <i>token</i> is either
+an operator or an operand. Prove the following assertions:
+<ol type="a">
+<li>An arithmetic expression (involving binary operations only)
+contains an odd number of tokens.
+</li><li>A postfix expression starts with an operand and
+ends with an operator provided that it is of length bigger than 1.
+</li><li>A postfix expression with (exactly) 2m+1 tokens has m operators
+and m+1 operands.
+</li><li>For any postfix expression and any position in the expression,
+the number of operands to the left of the position is strictly larger
+than the number of operators to the left of the same position.
+</li><li>No proper suffix of a valid postfix expression is again a valid
+postfix expression.
+</li><li>Let <tt>op</tt> be the last token (an operator) in a postfix expression with more than
+one tokens. Then the expression looks like <tt>arg1&nbsp;arg2&nbsp;op</tt>,
+where <tt>arg1</tt> and <tt>arg2</tt> are the two arguments for <tt>op</tt>
+and are again valid postfix expressions. The arguments <tt>arg1</tt>
+and <tt>arg2</tt> can be <i>uniquely</i> identified from the original
+postfix expression.
+</li></ol>
+
+</li><li>Write a function that takes a fully parenthesized arithmetic expression
+in the infix notation as the input and outputs the value of the expression.
+You may restrict only to binary operations (<tt>+,-,*,/,%</tt>). You may also
+assume that all operands are integers.
+<p>
+In order to evaluate a parenthesized arithmetic expression in the infix
+notation, one may use a stack. A <i>token</i> in such an expression is either
+an operand (an integer) or an operator (<tt>+,-</tt> etc.) or the left
+parenthesis or the right parenthesis. One starts with an empty stack and reads
+the input string from left to right. Once a token other than the right
+parenthesis is read from the input, the token is pushed to the stack. When a
+right parenthesis is encountered, pop operations are performed until a
+left parenthesis is popped out. The tokens (excluding the parentheses) that are popped out form a
+simple (sub)expression (either a single integer or two integers separated by an
+operation). Evaluate that sub-expression and push the value back to the stack.
+When the entire input is read, the stack should contain a single integer
+which is the value of the input expression.
+
+</p></li><li>Suppose you have the stock prices
+p<sub>1</sub>,<tt>...</tt>,p<sub>n</sub> of a company for n consecutive
+days. The <i>span</i> of day i is the maximum number of consecutive
+days (starting at and including day i) over which the stock price
+p<sub>i</sub> remains maximum. For example, for the stock prices
+5,4,3,3,4,2,6,3 on 8 days, the respective spans are 6,5,2,1,2,1,2,1.
+Use stack ADT calls to compute the span of each day.
+
+</li><li>Suppose that you have an <tt>mxn</tt> maze of rooms. Each adjacent pair of
+rooms has a door that allows passage between the rooms. At some point of
+time some of the doors are locked, the rest are open. A mouse sits at
+room number (s,t) and there is fabulous food for the mouse at room number
+(u,v). Your task is to determine whether there exists a route for the mouse
+from room (s,t) to room (u,v) through the open doors.
+The idea is to start a search at room no (s,t), then investigate rooms
+(s<sub>1</sub>,t<sub>1</sub>),<tt>...</tt>,(s<sub>k</sub>,t<sub>k</sub>)
+that can be reached from (s,t) and then those rooms that can be reached
+from each (s<sub>i</sub>,t<sub>i</sub>), and so on. There is no need to
+revisit a room during the search. Maintain an <tt>mxn</tt> array of flags in order
+to keep track of the rooms that are visited.
+<ol type="a">
+<li>[<i>Depth-first search</i>]
+Use a stack to implement the search. Initially push (s,t) to the empty
+stack. Subsequently, as long as the stack is not empty, consider the room
+(x,y) at the top of the stack. If (x,y) has a yet unvisited neighboring
+room, push that room at the top of the stack. If (x,y) does not
+have an unvisited neighboring room, pop (x,y) out of the stack. If
+during these operations, the desired room (u,v) ever appears at (the top of) the stack,
+then a route from (s,t) to (u,v) is detected. If the search completes
+(i.e., the stack becomes empty) without ever having (u,v) in the stack,
+then there is no (s,t)-(u,v) path.
+</li><li>[<i>Breadth-first search</i>]
+Implement the search using a queue. Maintain a queue of rooms to
+search from. Initially enqueue (s,t) to an empty queue. Subsequently, as
+long as the queue is not empty, look at the room (x,y) at the front of the
+queue. If (x,y)&nbsp;=&nbsp;(u,v), then report success and return. Else
+dequeue (x,y) from the front and enqueue all unvisited neighboring rooms
+at the back of the queue. If the search stops (i.e., the queue becomes
+empty) without ever having (u,v) at the front of the queue, report failure.
+</li><li>[<i>Random walk</i>] Also implement a memoryless version of the search.
+Your program does not have to remember what rooms have already been
+visited by the mouse. The mouse would instead randomly select one of the
+open doors for going to an adjacent room (which may be visited earlier).
+If there is no (s,t)-(u,v) path, then whatever random sequence of movements
+the mouse makes, it can never reach the room (u,v). On the other hand,
+if there exists an (s,t)-(u,v) path, the mouse would eventually reach the
+desired room (u,v) with high probability. However, in this case there
+remains a chance that the room selection of the mouse is so bad that it misses
+a desired path for ever. The probability that this awkward incident
+happens decreases considerably with the number of moves. Since
+your program has to run for a finite time, you cannot obviously wait for
+an indefinitely long exploration by the mouse. Assume instead that the mouse
+dies of hunger and exhaustion, after it makes million room changes without
+ever reaching the food at room (u,v).
+</li><li>Prepare some configurations of the rooms for which there actually exist
+(s,t)-(u,v) path(s). Run the above three algorithms on these configurations
+and compare the numbers of room changes that the mouse makes under the three
+different strategies in order to reach room (u,v).
+</li></ol>
+
+</li><li>Use queue ADT calls to implement round-robin scheduling as
+exemplified in <a href="https://cse.iitkgp.ac.in/pds/notes/swf/roundrobin.html" id="noul" target="_blank">this animation</a>.
+
+</li><li>Write a function making suitable stack and queue ADT calls to
+solve each of the following problems:
+<ol type="a">
+<li>Given a string, check if it is of the form <tt>w#w</tt>, where
+<tt>w</tt> is a string with alphanumeric characters only.
+</li><li>Given a string, check if it is of the form <tt>ww</tt>, where
+<tt>w</tt> is a string with alphanumeric characters only.
+</li><li>Given a string, check if it is of the form <tt>w#w<sup>r</sup></tt>, where
+<tt>w</tt> is a string with alphanumeric characters only, and where
+<tt>w<sup>r</sup></tt> stands for the reverse of the string <tt>w</tt>.
+</li><li>Given a string, check if it is of the form <tt>ww<sup>r</sup></tt>, where
+<tt>w</tt> is a string with alphanumeric characters only.
+</li><li>Given a string, check if it is a palindrome.
+</li></ol>
+
+</li><li>
+A <i>double-ended queue</i> is a queue with the exception that it supports insertion and
+deletion at both the ends. Each insert/delete operation must specify the end
+at which the operation is to be performed. Implement initialization,
+insertion and deletion functions on a double-ended queue using:
+<ol type="a">
+<li>Static arrays
+</li><li>Dynamic arrays
+</li><li>Linked lists
+</li><li>Doubly linked lists
+</li></ol>
+
+</li></ol>
+
+
+  <div class="navigator">
+    <a href="stackqueue.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Stacks and queues</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="performance.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Performance analysis of programs</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,522 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Structures | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Structures</h1>
+<p>
+Now it is time to combine heterogeneous data to form a named collection.
+For example, think of a student's record that might comprise a name,
+a roll number, a height and a CGPA. A name and a roll number
+are strings, a height (in cms, rounded to the nearest integer) is an
+integer and a CGPA is a floating point value. A structure can be used
+to combine these different types of data into a single item. Moreover,
+each constituent field in the composite data is made individually accessible.
+What we benefit from using structures is a convenient and logical way of
+looking at and arranging data. That's the basic motivation behind every
+abstraction.
+</p><h2 align="left">Defining structures</h2>
+<p>
+Structures can be defined by the <tt>struct</tt> keyword. For example,
+a student's record can be defined as:
+</p><pre><code>   #define MAXLEN 100
+
+   struct stud {
+      char name[MAXLEN];
+      char roll[MAXLEN];
+      int height;
+      float cgpa;
+   };
+</code></pre>
+<p>
+This declaration gives a user-defined data of type
+<tt>struct&nbsp;stud</tt> that has four members: two character arrays
+of names <tt>name</tt> and <tt>roll</tt>, an integer named <tt>height</tt>
+and a floating point value named <tt>cgpa</tt>. The <tt>struct</tt>
+declaration only defines a data type but no instances of data of this
+type. In order to declare specific instances of structure data, one should
+employ the usual variable declaration procedure.
+</p><pre><code>   struct stud thatStudent, FBStudents[60], *studPointer;
+</code></pre>
+<p>
+This declaration defines a structure with the name <tt>thatStudent</tt>,
+an array <tt>FBStudents</tt> consisting of 60 student records and a pointer
+<tt>studPointer</tt> to a student record. A single instance of
+<tt>struct&nbsp;stud</tt> is depicted in the following figure.
+</p><center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/struct1.gif" alt="example of structure">
+<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure : Example of a simple structure
+</center>
+<p>
+A second example is provided by complex numbers which can be represented
+as pairs of real numbers. One can use the following structure:
+</p><pre><code>   struct comp {
+      double real;
+      double imag;
+   };
+</code></pre>
+<p>
+Here the two fields of the structure are of the same data type
+and so one can in fact use a <tt>double</tt> array of size 2 to represent
+a complex number. However, the above definition enhances readability
+and highlights the logical (mathematical) structure of a complex number.
+</p><p>
+One then uses the declaration
+</p><pre><code>   struct comp z, z1, z2;
+</code></pre>
+<p>
+to obtain specific instances of complex numbers.
+</p>
+<h3 align="left">Type definitions</h3>
+<p>
+The <tt>typedef</tt> declarations are used to <i>rename</i> data types in C.
+For example, if one plans to work with <tt>unsigned long long int</tt>
+variables, but plans not to write that big a name, one may define the
+following short-cut:
+</p><pre><code>   typedef unsigned long long int ull;
+</code></pre>
+<p>
+After this definition, the data type <tt>unsigned long long int</tt> can be
+called also as <tt>ull</tt>, i.e., one can declare variables as:
+</p><pre><code>   ull n, array[100], *ptr;
+</code></pre>
+<p>
+One can also <tt>typedef</tt> pointers and arrays:
+</p><pre><code>   typedef ull *ullPointer;
+   typedef ull ullArray[128];
+</code></pre>
+<p>
+Here we assume that <tt>unsigned long long int</tt> is already <tt>typedef</tt>'d
+as <tt>ull</tt>. We use this definition to <tt>typedef</tt> two other
+data types. First, <tt>ullPointer</tt> is defined to be a pointer to an
+<tt>unsigned long long int</tt>, whereas <tt>ullArray</tt> is defined
+to be an array of 128 <tt>unsigned long long int</tt> data. One can
+instantiate data of these types in the usual way:
+</p><pre><code>   ullPointer p;
+</code></pre>
+<p>
+defines a pointer variable <tt>p</tt>, whereas
+</p><pre><code>   ullArray A;
+</code></pre>
+<p>
+defines an array <tt>A</tt> of 128 <tt>unsigned long long int</tt> data.
+</p><p>
+In an analogous way, one can use <tt>typedef</tt>'s to give short single-word
+names to structure data types. For example, the declarations
+</p><pre><code>   typedef struct stud student;
+   typedef struct comp complex;
+</code></pre>
+<p>
+give names <tt>student</tt> and <tt>complex</tt> to the user-defined
+data types <tt>struct stud</tt> and <tt>struct comp</tt>. The following
+variable declarations are legal after these <tt>typedef</tt>'s:
+</p><pre><code>   student thatStudent, FBStudents[60], *studPointer;
+   complex z, z1, z2;
+</code></pre>
+<p>
+One can combine a <tt>struct</tt> declaration and a subsequent <tt>typedef</tt>
+as follows:
+</p><pre><code>   typedef struct stud {
+      char name[MAXLEN];
+      char roll[MAXLEN];
+      int height;
+      float cgpa;
+   } student;
+
+   typedef struct {
+      double real;
+      double imag;
+   } complex;
+</code></pre>
+<p>
+Since the new <tt>struct</tt> data type is now given an explicit name
+(like <tt>student</tt> or <tt>complex</tt>), it is not necessary to give
+any tag after the keyword <tt>struct</tt>. This is what we have done
+for the <tt>complex</tt> data type. Notice, however, that using a tag
+after <tt>struct</tt> is not prohibited (see the definition of
+<tt>student</tt>) and is indeed essential in a particular situation
+that we will describe towards the end of this chapter.
+</p><h3 align="left">Initializing structures</h3>
+<p>
+Structures can be initialized much in the same way as arrays can be --
+by a curly-braced comma-separated list of initializing constant values for
+the individual members. For example, the above student record can be
+initialized as:
+</p><pre><code>   struct stud thatStudent = { "Foolan Barik", "03FB1331", 175, 9.81 };
+</code></pre>
+<p>
+or with the <tt>typedef</tt>'d name as:
+</p><pre><code>   student thatStudent = { "Foolan Barik", "03FB1331", 175, 9.81 };
+</code></pre>
+<p>
+Initializing values populate the members of the variable in the same
+order as they appear in the <tt>struct</tt> declaration. For
+the above example, the string <tt>name</tt> receives the value
+<tt>"Foolan Barik"</tt>, <tt>roll</tt> the value <tt>"03FB1331"</tt>,
+<tt>height</tt> the value 175 and <tt>cgpa</tt> the value 9.81.
+</p><h3 align="left">Accessing members of structures</h3>
+<p>
+Accessing individual members of a structure is different from what is
+done with arrays. Now one should write the name of a structure variable
+followed by a dot (<tt>.</tt>) and then by the formal name given to the
+member. For example, if <tt>thatStudent</tt> is initialized as above,
+<tt>thatStudent.name</tt> refers to the string <tt>"Foolan Barik"</tt>,
+<tt>thatStudent.roll</tt> refers to the string <tt>"03FB1331"</tt>,
+<tt>thatStudent.height</tt> refers to the integer value 175 and
+<tt>thatStudent.cgpa</tt> to the floating point value 9.81.
+</p><p>
+If we have an array of structures, one first uses square brackets
+to refer to an element of the array and then uses dot and a member
+name to access the corresponding member of the structure, For example,
+<tt>FBStudents[5].height</tt> refers to the <tt>height</tt> field of
+the element at index 5 in the array <tt>FBStudents</tt>.
+</p><p>
+If we have a pointer to a structure, we first dereference the pointer
+in order to obtain the structure and then write dot and the member name. For
+example, if <tt>studPointer</tt> is a pointer to a <tt>struct stud</tt>,
+the notation <tt>(*studPointer).roll</tt> refers to the string holding
+the roll number of the student whose records are pointed to by the
+pointer <tt>studPointer</tt>. There is an alternative way of writing
+the same thing: <tt>studPointer-&gt;roll</tt>. The dereferencing <tt>*</tt>
+and the dot <tt>.</tt> are combined to the symbol <tt>-&gt;</tt> which
+C designers deemed to be an intuitive and natural notation.
+</p><p>
+<b>Example:</b>
+The following function computes the average CGPA of the students of
+the Department of Foobarnautic Engineering:
+</p><pre><code>   float avCGPA ( struct stud FBStudents[] , int n )
+   {
+      float sum = 0;
+      int i;
+
+      for (i=0; i&lt;n; ++i) sum += FBStudents[i].cgpa;
+      return (sum/(float)n);
+   }
+</code></pre>
+<p>
+Here is how you can do the same with pointers:
+</p><pre><code>   float avCGPA2 ( struct stud FBStudents[] , int n )
+   {
+      float sum = 0;
+      int i;
+      struct stud *p;
+
+      p = FBStudents;
+      for (i=0; i&lt;n; ++i) {
+         sum += p-&gt;cgpa;
+         ++p;
+      }
+      return (sum/(float)n);
+   }
+</code></pre>
+
+<h2 align="left">Passing structures to functions</h2>
+<p>
+Syntactically, structures are treated analogously as normal (built-in)
+variables. Passing structure variables to and from functions follows
+the call-by-value mechanism explained earlier.
+</p><p>
+<b>Example:</b>
+Let us write a function that accepts two complex structures as arguments
+and returns the structure representing the product of these two arguments.
+</p><pre><code>   #include &lt;stdio.h&gt;
+
+   struct comp {
+      float real;
+      float imag;
+   };
+
+   struct comp cmul ( struct comp z1 , struct comp z2 )
+   {
+      struct comp z;
+
+      z.real = (z1.real) * (z2.real) - (z1.imag) * (z2.imag);
+      z.imag = (z1.real) * (z2.imag) + (z1.imag) * (z2.real);
+      return z;
+   }
+
+   int main ()
+   {
+      struct comp a = {1.1,2.2}, b = {2.4,-3.6}, c;
+
+      c = cmul(a,b);
+      printf("product = (%f)+i(%f)\n", c.real, c.imag);
+   }
+</code></pre>
+<p>
+This program outputs:
+</p><pre><code>   product = (10.560000)+i(1.320000)
+</code></pre>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/complex.html" target="_blank">Animation example : passing structures to functions</a></h3>
+</td></tr></tbody></table>
+</p><p>
+What requires explanation is what is meant by call-by-value in connection
+with structure arguments. A structure requires some amount of memory to
+accommodate all the defining members. This size (in bytes) can be accessed
+by the <tt>sizeof</tt> call, like:
+</p><pre><code>   printf("Size of struct stud = %d\n", sizeof(struct stud));
+</code></pre>
+<p>
+In fact, the <tt>sizeof</tt> statement can be used for any data type,
+built-in or user-defined. For example, <tt>sizeof(int)</tt> typically
+returns 4, <tt>sizeof(double)</tt> returns 8, <tt>sizeof(char)</tt>
+returns 1 and so on. For structures, the value returned by the <tt>sizeof</tt>
+statement is dependent on the compiler and the architecture of the
+underlying machine.
+</p><p>
+When a structure is passed to a function, the corresponding <tt>sizeof()</tt>
+bytes are copied to the formal argument of the function. For example,
+in my machine <tt>sizeof(struct stud)</tt> is 208. This includes locations
+to store the arrays <tt>name</tt> and <tt>roll</tt>, the integer
+<tt>height</tt> and the floating point number <tt>cgpa</tt>. When a
+<tt>struct stud</tt> variable is passed to a function, these 208 bytes
+are copied to the argument. This, in particular, implies that changes
+in the members of the argument are not visible outside the function.
+This also includes changes in the arrays <tt>name</tt> and <tt>roll</tt>.
+</p><p>
+When a <tt>struct stud</tt> value is returned from a function and assigned
+to a variable in the caller function, 208 bytes are copied from the
+returned value to the variable.
+</p><p>
+Let us now define a structure with pointers:
+</p><pre><code>   struct stud2 {
+      char *name;
+      char *roll;
+      int height;
+      float cgpa;
+   };
+</code></pre>
+<center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/struct2.gif" alt="structure with pointers">
+<br><br>Figure : Example of a structure with pointers
+</center>
+<p>
+Now <tt>sizeof(struct stud2)</tt> is 16. This is what is needed to store
+two pointers, one integer and one floating point number. These pointers
+may point to arrays (or may be allocated memory dynamically), but
+the memory for these arrays lies outside the structure variable. When
+we pass a <tt>struct stud2</tt> variable to a function, only 16 bytes
+are copied. That includes the pointers <tt>name</tt> and <tt>roll</tt>,
+but not the arrays which they point to. Any change in the arrays pointed
+to by these pointers is now visible to the caller function.
+</p><p>
+Arrays and pointers are similar, but not the same thing!
+
+</p><h2 align="left">Structures with self-referencing pointers</h2>
+<p>
+A structure with pointer(s) to structure(s) of the same type turns out to
+be very useful for representing many interesting objects. The following
+figure illustrates how such structures form the basic building block
+(a node) for representing a list and a tree. We will see later how such
+objects can be dynamically created and maintained. For the time being,
+let us focus on how a structure representing a node in a list or tree
+can be defined.
+</p><center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/struct3.gif" alt="structure with self-referencing pointers">
+<br><br>Figure : Example of structures with self-referencing pointers<br>
+        (a) List structure (b) Tree structure
+</center>
+<p>
+First consider a node in a list. Let us assume that we are dealing with
+a list of integers. In order to create the linked structure of the above
+figure, we need a node to contain a pointer to another node of the same type.
+In practice, a node may contain data other than an integer and a pointer.
+For simplicity here we restrict the members of a node to only these
+two fields.
+</p><pre><code>   struct _listnode {
+      int data;
+      struct _listnode *next;
+   };
+</code></pre>
+<p>
+One can also use type definitions:
+</p><pre><code>   typedef struct _listnode {
+      int data;
+      struct _listnode *next;
+   } listnode;
+</code></pre>
+<p>
+An important thing to note here is that the formal tag after the
+<tt>struct</tt> keyword (<tt>_listnode</tt> in the last example) was
+absolutely necessary for these declarations, even when the new structure
+is <tt>typedef</tt>'d. There is nothing other than this formal name that
+can specify the type of the pointer <tt>next</tt>. It is only after the part
+inside curly braces can be defined properly, when the <tt>typedef</tt>
+makes sense.
+</p><p>
+After these definitions we can use individual variables and pointers.
+The declaration
+</p><pre><code>   listnode mynode, *head;
+</code></pre>
+<p>
+defines a structure <tt>mynode</tt> of type <tt>listnode</tt> and a pointer
+<tt>head</tt> to a structure of this type.
+</p><p>
+A node in a (binary) tree consists of two pointers, the first for pointing
+to the left child and the second for pointing to the right child.
+</p><pre><code>   typedef struct _treenode {
+      int data;
+      struct _treenode *left;
+      struct _treenode *right;
+   } treenode;
+</code></pre>
+<p>
+After this definition one can declare individual nodes like:
+</p><pre><code>   treenode thatNode, leaf[100];
+</code></pre>
+<p>
+One can declare pointers to nodes in the usual way:
+</p><pre><code>   treenode *root;
+</code></pre>
+<p>
+or by using other type definitions:
+</p><pre><code>   typedef treenode *tnptr;
+   tnptr root;
+</code></pre>
+<p>
+We will shortly use such linked structures with dynamic memory allocation
+for realizing several useful (abstract) objects.
+</p><h2 align="left">Unions</h2>
+<p>
+Suppose we want to make a list of nodes. Each node in the list may be one
+of two possible types: a data node and a control node. Suppose further that
+a data node stores an <tt>int</tt>, whereas a control node stores a control
+information that can be specified by a 16-character string. A structure
+like the following can be used:
+</p><pre><code>   struct foonode {
+      int data;
+      char control[16];
+   } thisNode, fooArray[1024];
+</code></pre>
+<p>
+The problem with this is that irrespective of whether a node is a control
+node or a data node, the structure requires space for both the data and
+the control string. A data node does not use the control string at all,
+and similarly a control node does not require the data. That leads to
+unnecessary waste of space. In order to reduce the space requirement of
+each node, we should use a <tt>union</tt> instead of a <tt>struct</tt>.
+</p><pre><code>   union barnode {
+      int data;
+      char control[16];
+   } thisNode, barArray[1024];
+</code></pre>
+<p>
+In this case the compiler reserves the space that is sufficient to store the
+biggest of the individual members. For example, the <tt>int</tt> member requires
+4 bytes, whereas the control string requires 16 bytes. For the <tt>struct
+foonode</tt> the compiler uses 20 bytes of memory. For the <tt>union
+barnode</tt>, on the other hand, a memory of only 16 bytes is allocated.
+That memory (more correctly, a part of it) can be used as an integer
+variable or as a character string. In other words, the members of a union
+occupy overlapping space. When we say <tt>thatNode.data</tt> or
+<tt>barArray[51].data</tt>, the content of the memory is interpreted as
+an integer, whereas <tt>thatNode.control</tt> or <tt>barArray[51].control</tt>
+refers to a character string.
+</p><p>
+This may seem confusing initially, because it is not clear what data is
+actually stored in the memory. Interpreting a character string as an integer
+need not always make sense, and vice versa. The information regarding what
+kind of data a union stores is to be maintained externally, i.e., outside
+the union. One possibility is to use unions in conjunction with structures.
+</p><pre><code>   #define DATA_NODE 0
+   #define CONTROL_NODE 1
+
+   struct foobarnode {
+      int what;    /* can be either DATA_NODE or CONTROL_NODE */
+      union {
+         int data;
+         char control[16];
+      } info;
+   } thatNode, foobarArray[1024];
+</code></pre>
+<p>
+This structure stores the type of the node and then the union of an integer
+and a character string. Depending on the value of <tt>what</tt>, the
+programmer is to interpret the type of the node. If <tt>what</tt> is set
+to <tt>DATA_NODE</tt>, one should use the union <tt>info</tt> as an
+integer data and access this as <tt>thatNode.info.data</tt> or as
+<tt>foobarArray[131].info.data</tt>. On the other hand, if <tt>what</tt>
+is set to <tt>CONTROL_NODE</tt>, one should use the union as a character
+string that can be accessed as <tt>thatNode.info.control</tt> or as
+<tt>foobarArray[131].info.control</tt>.
+</p><p>
+Here is another example, in which a node contains a union of three different
+kinds of data.
+</p><pre><code>   #include &lt;stdio.h&gt;
+
+   typedef struct _foostruct {
+      int intArray[512];
+      double dblArray[128];
+      char chrArray[1024];
+      struct _foostruct *next;
+   } foostruct;
+
+   typedef struct _barstruct {
+      int type;
+      union {
+         int intArray[512];
+         double dblArray[128];
+         char chrArray[1024];
+      } data;
+      struct _barstruct *next;
+   } barstruct;
+
+   int main ()
+   {
+      printf("sizeof(foostruct) = %d\n", sizeof(foostruct));
+      printf("sizeof(barstruct) = %d\n", sizeof(barstruct));
+   }
+</code></pre>
+<p>
+In my machine, this program outputs:
+</p><pre><code>   sizeof(foostruct) = 4100
+   sizeof(barstruct) = 2056
+</code></pre>
+<p>
+Look at the space saving effected by using the union. Note also that
+the <tt>next</tt> pointer should be there in every node irrespective of its
+type. That is why this pointer should be declared outside the union.
+</p>
+  <div class="navigator">
+    <a href="exer2.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Exercise set II</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="dynamic.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Pointers and dynamic memory management</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

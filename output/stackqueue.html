@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stacks and queues | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Stacks and queues</h1>
+<p>
+Stacks and queues are special kinds of ordered lists in which insertion and
+deletion are restricted only to some specific positions. They are very
+important tools for solving many useful computational problems. Since we
+have already implemented ordered lists in the most general form, we can
+use these to implement stacks and queues. However, because of the special
+insertion and deletion patterns for stacks and queues, the ADT functions can be
+written to be much more efficient than the general functions. Given the
+importance of these new ADTs, it is worthwhile to devote time to these
+special implementations.
+</p><h2 align="left">The stack ADT and its applications</h2>
+<p>
+A stack is an ordered list of elements in which elements are always inserted
+and deleted at one end, say the beginning. In the terminology of stacks,
+this end is called the <b>top</b> of the stack, whereas the other end
+is called the <b>bottom</b> of the stack. Also the insertion operation is
+called <b>push</b> and the deletion operation is called <b>pop</b>. The element
+at the top of a stack is frequently referred, so we highlight this special
+form of <tt>getElement</tt>.
+</p><p>
+A stack ADT can be specified by the following basic operations. Once again
+we assume that we are maintaining a stack of characters. In practice, the
+data type for each element of a stack can be of any data type. Characters are
+chosen as place-holders for simplicity.
+</p><dl>
+<dt><tt>S = init();</tt>
+</dt><dd>Initialize <tt>S</tt> to an empty stack.
+</dd><dt><tt>isEmpty(S);</tt>
+</dt><dd>Returns "true" if and only if the stack <tt>S</tt> is empty, i.e.,
+contains no elements.
+</dd><dt><tt>isFull(S);</tt>
+</dt><dd>Returns "true" if and only if the stack <tt>S</tt> has a bounded
+size and holds the maximum number of elements it can.
+</dd><dt><tt>top(S);</tt>
+</dt><dd>Return the element at the top of the stack <tt>S</tt>, or error if
+the stack is empty.
+</dd><dt><tt>S = push(S,ch);</tt>
+</dt><dd>Push the character <tt>ch</tt> at the top of the stack <tt>S</tt>.
+</dd><dt><tt>S = pop(S);</tt>
+</dt><dd>Pop an element from the top of the stack <tt>S</tt>.
+</dd><dt><tt>print(S);</tt>
+</dt><dd>Print the elements of the stack <tt>S</tt> from top to bottom.
+</dd></dl>
+<p>
+An element popped out of the stack is always the last element to have been
+pushed in. Therefore, a stack is often called a <b>Last-In-First-Out</b>
+or a <b>LIFO</b> list.
+</p><p><b>Applications of stacks</b>
+</p><p>Stacks are used in a variety of applications. While some of these
+applications are "natural", most other are essentially "pedantic".
+Here is a list anyway.
+</p><ul>
+<li>For processing nested structures, like checking for balanced
+parentheses, evaluation of postfix expressions.
+</li><li>For handling function calls and, in particular, recursion.
+</li><li>For searching in special data structures (depth-first search in graphs
+and trees), for example, for implementing <i>backtracking</i>.
+</li></ul>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/postfix.html" target="_blank">Animation example : Use of stacks to evaluate postfix expressions</a></h3>
+</td></tr><tr><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/exprEval/" target="_blank">Interactive animation : Use of stacks to evaluate postfix expressions</a></h3>
+</td></tr></tbody></table>
+</p><h2 align="left">Implementations of the stack ADT</h2>
+<p>
+A stack is specified by the ordered collection representing the content
+of the stack together with the choice of the end of the collection to be treated as the top.
+The top should be so chosen that pushing and popping can be made as far
+efficient as possible.
+</p>
+<h3 align="left">Using static arrays</h3>
+<p>
+Static arrays can realize stacks of a maximum possible size. If we assume
+that the stack elements are stored in the array starting from the index 0,
+it is convenient to take the top as the maximum index of an element in the
+array. Of course, the other choice, i.e., the other boundary 0, can in
+principle be treated as the top, but insertions and deletions at the location
+0 call for too many relocations of array elements. So our original choice
+is definitely better.
+</p><pre><code>   #define MAXLEN 100
+
+   typedef struct {
+      char element[MAXLEN];
+      int top;
+   } stack;
+
+   stack init ()
+   {
+      stack S;
+
+      S.top = -1;
+      return S;
+   }
+
+   int isEmpty ( stack S )
+   {
+      return (S.top == -1);
+   }
+
+   int isFull ( stack S )
+   {
+      return (S.top == MAXLEN - 1);
+   }
+
+   char top ( stack S )
+   {
+      if (isEmpty(S)) {
+         fprintf(stderr, "top: Empty stack\n");
+         return '\0';
+      }
+      return S.element[S.top];
+   }
+
+   stack push ( stack S , char ch )
+   {
+      if (isFull(S)) {
+         fprintf(stderr, "push: Full stack\n");
+         return S;
+      }
+      ++S.top;
+      S.element[S.top] = ch;
+      return S;
+   }
+
+   stack pop ( stack S )
+   {
+      if (isEmpty(S)) {
+         fprintf(stderr, "pop: Empty stack\n");
+         return S;
+      }
+      --S.top;
+      return S;
+   }
+
+   void print ( stack S )
+   {
+      int i;
+
+      for (i = S.top; i &gt;= 0; --i) printf("%c",S.element[i]);
+   }
+</code></pre>
+<p>
+Here is a possible <tt>main()</tt> function calling these routines:
+</p><pre><code>   int main ()
+   {
+      stack S;
+
+      S = init(); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+      S = push(S,'d'); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+      S = push(S,'f'); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+      S = push(S,'a'); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+      S = pop(S); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+      S = push(S,'x'); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+      S = pop(S); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+      S = pop(S); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+      S = pop(S); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+      S = pop(S); printf("Current stack : "); print(S); printf(" with top = %c.\n", top(S));
+   }
+</code></pre>
+<p>
+Here is the <a href="https://cse.iitkgp.ac.in/pds/notes/prog/stq1.c" id="noul" target="_blank">complete program</a>.
+The output of the program is given below:
+</p><pre><code>   top: Empty stack
+   Current stack :  with top = .
+   Current stack : d with top = d.
+   Current stack : fd with top = f.
+   Current stack : afd with top = a.
+   Current stack : fd with top = f.
+   Current stack : xfd with top = x.
+   Current stack : fd with top = f.
+   Current stack : d with top = d.
+   top: Empty stack
+   Current stack :  with top = .
+   pop: Empty stack
+   top: Empty stack
+   Current stack :  with top = .
+</code></pre>
+<p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/stack1.html" target="_blank">Animation example : Implementation of stacks with static memory</a></h3>
+</td></tr></tbody></table>
+<p></p><h3 align="left">Using dynamic linked lists</h3>
+<p>
+As we have seen earlier, it is no big deal to create and maintain a dynamic
+list of elements. The only consideration now is to decide whether the
+beginning or the end of the list is to be
+treated as the top of the stack. Deletion becomes costly, if we choose the
+end of the list as the top. Choosing the beginning as the top makes the
+implementations of both push and pop easy. So we stick to this convention.
+As usual, we maintain a dummy node at the top (beginning)
+for simplifying certain operations. The ADT functions are implemented below:
+</p><pre><code>   typedef struct _node {
+      char element;
+      struct _node *next;
+   } node;
+
+   typedef node *stack;
+
+   stack init ()
+   {
+      stack S;
+
+      /* Create the dummy node */
+      S = (node *)malloc(sizeof(node));
+      S -&gt; element = '\0';
+      S -&gt; next = NULL;
+      return S;
+   }
+
+   int isEmpty ( stack S )
+   {
+      return (S -&gt; next == NULL);
+   }
+
+   int isFull ( stack S )
+   {
+      /* With dynamic memory the stack never gets full. However, a new
+        allocation request may fail because of memory limitations. That may
+        better be checked immediately after each malloc statement is executed.
+        For simplicity we avoid this check in this implementation. */
+      return 0;
+   }
+
+   char top ( stack S )
+   {
+      if (isEmpty(S)) {
+         fprintf(stderr, "top: Empty stack\n");
+         return '\0';
+      }
+      return S -&gt; next -&gt; element;
+   }
+
+   stack push ( stack S , char ch )
+   {
+      node *T;
+
+      if (isFull(S)) {
+         fprintf(stderr, "push: Full stack\n");
+         return S;
+      }
+
+      /* Copy the new element in the dummy node */
+      S -&gt; element = ch;
+
+      /* Create a new dummy node */
+      T = (node *)malloc(sizeof(node));
+      T -&gt; element = '\0';
+      T -&gt; next = S;
+      return T;
+   }
+
+   stack pop ( stack S )
+   {
+      if (isEmpty(S)) {
+         fprintf(stderr, "pop: Empty stack\n");
+         return S;
+      }
+
+      /* Treat the stack top as the new dummy node */
+      S -&gt; next -&gt; element = '\0';
+      return S -&gt; next;
+   }
+
+   void print ( stack S )
+   {
+      node *T;
+
+      T = S -&gt; next;
+      while (T != NULL) {
+         printf("%c", T -&gt; element);
+         T = T -&gt; next;
+      }
+   }
+</code></pre>
+<p>
+These new functions are compatible with the <tt>main()</tt> function of the
+implementation using arrays. The complete program is
+<a href="https://cse.iitkgp.ac.in/pds/notes/prog/stq2.c" id="noul" target="_blank">here</a>.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/stack2.html" target="_blank">Animation example : Implementation of stacks with dynamic linked lists</a></h3>
+</td></tr></tbody></table>
+<p></p>
+<h2 align="left">The queue ADT and its applications</h2>
+<p>
+A queue is like a "natural" queue of elements. It is an ordered list in
+which all insertions occur at one end called the <b>back</b> or <b>rear</b>
+of the queue, whereas all deletions occur at the other end called the
+<b>front</b> or <b>head</b> of the queue. In the popular terminology,
+insertion and deletion in a queue are respectively called the <b>enqueue</b>
+and the <b>dequeue</b> operations. The element dequeued from a queue
+is always the first to have been enqueued among the elements currently
+present in the queue. In view of this, a queue is often called a
+<b>First-In-First-Out</b> or a <b>FIFO</b> list.
+</p><p>
+The following functions specify the operations on the queue ADT. We are going
+to maintain a queue of characters. In practice, each element of a queue can
+be of any well-defined data type.
+</p><dl>
+<dt><tt>Q = init();</tt>
+</dt><dd>Initialize the queue <tt>Q</tt> to the empty queue.
+</dd><dt><tt>isEmpty(Q);</tt>
+</dt><dd>Returns "true" if and only if the queue <tt>Q</tt> is empty.
+</dd><dt><tt>isFull(Q);</tt>
+</dt><dd>Returns "true" if and only if the queue <tt>Q</tt> is full, provided
+that we impose a limit on the maximum size of the queue.
+</dd><dt><tt>front(Q);</tt>
+</dt><dd>Returns the element at the front of the queue <tt>Q</tt> or error if
+the queue is empty.
+</dd><dt><tt>Q = enqueue(Q,ch);</tt>
+</dt><dd>Inserts the element <tt>ch</tt> at the back of the queue <tt>Q</tt>.
+Insertion request in a full queue should lead to failure together with some
+appropriate error messages.
+</dd><dt><tt>Q = dequeue(Q);</tt>
+</dt><dd>Delete one element from the front of the queue <tt>Q</tt>. A dequeue
+attempt from an empty queue should lead to failure and appropriate error
+messages.
+</dd><dt><tt>print(Q);</tt>
+</dt><dd>Print the elements of the queue <tt>Q</tt> from front to back.
+</dd></dl>
+<p><b>Applications of queues</b>
+</p><ul>
+<li>For implementing any "natural" FIFO service, like telephone enquiries,
+reservation requests, traffic flow, etc.
+</li><li>For implementing any "computational" FIFO service, for instance, to access
+some resources. Examples: printer queues, disk queues, etc.
+</li><li>For searching in special data structures (breadth-first search in
+graphs and trees).
+</li><li>For handling scheduling of processes in a multitasking operating
+system.
+</li></ul>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/roundrobin.html" target="_blank">Animation example : Use of queues for round-robin scheduling</a></h3>
+</td></tr></tbody></table>
+</p><h2 align="left">Implementations of the queue ADT</h2>
+<p>
+Continuing with our standard practice followed so far, we are going
+to provide two implementations of the queue ADT, the first using
+static memory, the second using dynamic memory. The implementations
+aim at optimizing both the insertion and deletion operations.
+</p>
+<h3 align="left">Using static arrays</h3>
+<p>
+Recall that in our implementation of the "ordered list" ADT we always let the
+list start from the array index 0. This calls for relocation of elements of
+the list in the supporting array after certain operations (usually deletion).
+Now we plan to exploit the specific insertion and deletion patterns in queues
+to avoid these costly relocations.
+</p><p>
+We maintain two indices to represent the front and the back of the queue.
+During an enqueue operation, the back index is incremented and the new element
+is written in this location. For a dequeue operation, on the other hand, the
+front is simply advanced by one position. It then follows that the entire
+queue now moves down the array and the back index may hit the right end of
+the array, even when the size of the queue is smaller than the capacity
+of the array.
+</p><p>
+In order to avoid waste of space, we allow our queue to <i>wrap</i>
+at the end. This means that after the back pointer reaches the end of the
+array and needs to proceed further down the line, it comes back to the
+zeroth index, provided that there is space at the beginning of the array to
+accommodate new elements. Thus, the array is now treated as a circular one
+with index <tt>MAXLEN</tt> treated as <tt>0</tt>, <tt>MAXLEN&nbsp;+&nbsp;1</tt>
+as <tt>1</tt>, and so on. That is, index calculation is done modulo
+<tt>MAXLEN</tt>. We still don't have to maintain the total queue size. As
+soon as the back index attempts to collide with the front index modulo
+<tt>MAXLEN</tt>, the array is considered to be full.
+</p><p>
+There is just one more problem to solve. A little thought reveals that
+under this wrap-around technology, there is no difference between a full queue
+and an empty queue with respect to arithmetic modulo <tt>MAXLEN</tt>. This
+problem can be tackled if we allow the queue to grow to a maximum size of
+<tt>MAXLEN&nbsp;-&nbsp;1</tt>. This means we are going to lose one available
+space, but that loss is inconsequential. Now the condition for full array
+is that the front index is two locations ahead of the back modulo
+<tt>MAXLEN</tt>, whereas the empty array is characterized by that the
+front index is just one position ahead of the back again modulo
+<tt>MAXLEN</tt>.
+</p><p>
+An implementation of the queue ADT under these design principles is now given.
+</p><pre><code>   #define MAXLEN 100
+
+   typedef struct {
+      char element[MAXLEN];
+      int front;
+      int back;
+   } queue;
+
+   queue init ()
+   {
+      queue Q;
+
+      Q.front = 0;
+      Q.back = MAXLEN - 1;
+      return Q;
+   }
+
+   int isEmpty ( queue Q )
+   {
+      return (Q.front == (Q.back + 1) % MAXLEN);
+   }
+
+   int isFull ( queue Q )
+   {
+      return (Q.front == (Q.back + 2) % MAXLEN);
+   }
+
+   char front ( queue Q )
+   {
+      if (isEmpty(Q)) {
+         fprintf(stderr,"front: Queue is empty\n");
+         return '\0';
+      }
+      return Q.element[Q.front];
+   }
+
+   queue enqueue ( queue Q , char ch )
+   {
+      if (isFull(Q)) {
+         fprintf(stderr,"enqueue: Queue is full\n");
+         return Q;
+      }
+      ++Q.back;
+      if (Q.back == MAXLEN) Q.back = 0;
+      Q.element[Q.back] = ch;
+      return Q;
+   }
+
+   queue dequeue ( queue Q )
+   {
+      if (isEmpty(Q)) {
+         fprintf(stderr,"dequeue: Queue is empty\n");
+         return Q;
+      }
+      ++Q.front;
+      if (Q.front == MAXLEN) Q.front = 0;
+      return Q;
+   }
+
+   void print ( queue Q )
+   {
+      int i;
+
+      if (isEmpty(Q)) return;
+      i = Q.front;
+      while (1) {
+         printf("%c", Q.element[i]);
+         if (i == Q.back) break;
+         if (++i == MAXLEN) i = 0;
+      }
+   }
+</code></pre>
+<p>
+Here is a sample <tt>main()</tt> for these functions.
+</p><pre><code>   int main ()
+   {
+      queue Q;
+
+      Q = init(); printf("Current queue : "); print(Q); printf("\n");
+      Q = enqueue(Q,'h'); printf("Current queue : "); print(Q); printf("\n");
+      Q = enqueue(Q,'w'); printf("Current queue : "); print(Q); printf("\n");
+      Q = enqueue(Q,'r'); printf("Current queue : "); print(Q); printf("\n");
+      Q = dequeue(Q); printf("Current queue : "); print(Q); printf("\n");
+      Q = dequeue(Q); printf("Current queue : "); print(Q); printf("\n");
+      Q = enqueue(Q,'c'); printf("Current queue : "); print(Q); printf("\n");
+      Q = dequeue(Q); printf("Current queue : "); print(Q); printf("\n");
+      Q = dequeue(Q); printf("Current queue : "); print(Q); printf("\n");
+      Q = dequeue(Q); printf("Current queue : "); print(Q); printf("\n");
+   }
+</code></pre>
+<p>Finally, this is the output of the <a href="https://cse.iitkgp.ac.in/pds/notes/prog/stq3.c" id="noul" target="_blank">complete
+program</a>.
+</p><pre><code>   Current queue :
+   Current queue : h
+   Current queue : hw
+   Current queue : hwr
+   Current queue : wr
+   Current queue : r
+   Current queue : rc
+   Current queue : c
+   Current queue :
+   dequeue: Queue is empty
+   Current queue :
+</code></pre>
+<p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/queue1.html" target="_blank">Animation example : Implementation of queues with static memory</a></h3>
+</td></tr></tbody></table>
+<p></p><h3 align="left">Using dynamic linked lists</h3>
+<p>
+Linked lists can be used for implementing queues. We plan to maintain a
+dummy node at the beginning and two pointers, the first pointing to this
+dummy node and the second pointing to the last element. Both insertion and
+deletion are easy at the beginning. Insertion is easy at the end, but
+deletion is difficult at the end, since we have to move the pointer at
+the end one step back and there is no way other than
+traversing the entire list in order to trace the new end.
+So the natural choice is to take the beginning
+of the linked list as the front of the queue and the end of the list as
+the back of the queue.
+</p><p>
+The corresponding implementation is detailed below:
+</p><pre><code>   typedef struct _node {
+      char element;
+      struct _node *next;
+   } node;
+
+   typedef struct {
+      node *front;
+      node *back;
+   } queue;
+
+   queue init ()
+   {
+      queue Q;
+
+      /* Create the dummy node */
+      Q.front = (node *)malloc(sizeof(node));
+      Q.front -&gt; element = ' ';
+      Q.front -&gt; next = NULL;
+      Q.back = Q.front;
+      return Q;
+   }
+
+   int isEmpty ( queue Q )
+   {
+      return (Q.front == Q.back);
+   }
+
+   int isFull ( queue Q )
+   {
+      return 0;
+   }
+
+   char front ( queue Q )
+   {
+      if (isEmpty(Q)) {
+         fprintf(stderr,"front: Queue is empty\n");
+         return '\0';
+      }
+      return Q.front -&gt; element;
+   }
+
+   queue enqueue ( queue Q , char ch )
+   {
+      node *C;
+      if (isFull(Q)) {
+         fprintf(stderr,"enqueue: Queue is full\n");
+         return Q;
+      }
+
+      /* Create new node */
+      C = (node *)malloc(sizeof(node));
+      C -&gt; element = ch;
+      C -&gt; next = NULL;
+
+      /* Adjust the back of queue */
+      Q.back -&gt; next = C;
+      Q.back = C;
+
+      return Q;
+   }
+
+   queue dequeue ( queue Q )
+   {
+      if (isEmpty(Q)) {
+         fprintf(stderr,"dequeue: Queue is empty\n");
+         return Q;
+      }
+
+      /* Make the front of the queue the new dummy node */
+      Q.front = Q.front -&gt; next;
+      Q.front -&gt; element = '\0';
+
+      return Q;
+   }
+
+   void print ( queue Q )
+   {
+      node *G;
+
+      G = Q.front -&gt; next;
+      while (G != NULL) {
+         printf("%c", G -&gt; element);
+         G = G -&gt; next;
+      }
+   }
+</code></pre>
+<p>
+And here is the <a href="https://cse.iitkgp.ac.in/pds/notes/prog/stq4.c" id="noul" target="_blank">program</a> with a
+<tt>main()</tt> identical to that for the array implementation.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/queue2.html" target="_blank">Animation example : Implementation of queues with dynamic linked lists</a></h3>
+</td></tr></tbody></table>
+<p></p>
+
+  <div class="navigator">
+    <a href="ADT.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Abstract data types</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="exer4.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Exercise set IV</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise set I | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Exercise set I</h1>
+<p><b>Note:</b>
+<i>Students are encouraged to solve as many problems from this set as possible.
+Some of these will be solved during the lectures, if time permits. We have
+made attempts to classify the problems based on the difficulty level of
+solving them. An unmarked exercise is of low to moderate difficulty. Harder
+problems are marked by H, H<sup>2</sup> and H<sup>3</sup> meaning "just hard",
+"quite hard" and "very hard" respectively. Exercises marked by M have
+mathematical flavor (as opposed to computational). One requires elementary
+knowledge of number theory or algebra or geometry or combinatorics in order
+to solve these mathematical exercises.</i>
+
+</p><ol>
+<li>Assume that the CPU of a particular computer has three general-purpose
+registers A,B,C. Assume also that m,n,t are integer values stored in the machine's
+memory. Write assembly instructions for performing the following assignments.
+Use an assembly language similar to that discussed in the examples given
+in the notes. Assume that all operations are integer operations.
+<ol type="a">
+<li>m = m + n - 1;
+</li><li>t = (m+5)*(n+5);
+</li><li>n = (m+5)/(n+5)+(n+5)/(m+5);
+</li></ol>
+
+</li><li>[M]
+Let n be a non-negative integer less than 2<sup>t</sup>. Let
+(<tt>a<sub>t-1</sub>a<sub>t-2</sub>...a<sub>1</sub>a<sub>0</sub>)</tt><sub>2</sub>
+be the t-bit binary expansion of n obtained by the repeated divide-by-2
+procedure described in the notes. Prove that:
+<pre>   n = a<sub>t-1</sub>2<sup>t-1</sup> + a<sub>t-2</sub>2<sup>t-2</sup> + ... + a<sub>1</sub>2<sup>1</sup> + a<sub>0</sub>.
+</pre>
+
+</li><li>Write the 8-bit 2's complement representations of the following
+integers:
+<ol type="a">
+<li>123
+</li><li>-123
+</li><li>-7
+</li><li>63
+</li></ol>
+
+</li><li>Find the 32-bit floating point representation of the following
+real numbers (under the IEEE 754 format):
+<ol type="a">
+<li>123
+</li><li>-123
+</li><li>0.1
+</li><li>0.2
+</li><li>0.25
+</li><li>-543.21
+</li></ol>
+
+</li><li>[H<sup>2</sup>M] Let x be a proper fraction, i.e., a real number in the range
+0&lt;=x&lt;1. Prove that x has a terminating binary expansion if
+and only if it is of the form a/2<sup>k</sup> for some integers a,k
+with 0&lt;=a&lt;2<sup>k</sup>.
+
+</li><li>Let x,y,z be unsigned integers. Find the values of x,y,z after the
+following statements are executed.
+<pre><code>   x = 5;
+   z = 12;
+   x *= x;
+   x += z * z;
+   y = x &lt;&lt; 1;
+   z = y % z;
+</code></pre>
+
+</li><li>Assume that m and n are (signed) integer variables and that x and y are
+floating point variables. Write logical conditions that evaluate to "true" if
+and only if:
+<ol type="a">
+<li>x+y is an integer.
+</li><li>m lies strictly between x and y.
+</li><li>m equals the integer part of x.
+</li><li>x is positive with integer part at least 3 and with fractional part
+less than 0.3.
+</li><li>m and n have the same parity (i.e., are both odd or both even).
+</li><li>m is a perfect square.
+</li></ol>
+
+</li><li>Write a program to solve the following problems:
+<ol type="a">
+<li>Show that -29 and 31 are roots of the polynomial
+<tt>x<sup>3</sup> + x<sup>2</sup> - 905x - 2697</tt>. What is its third root?
+</li><li>Show that -2931 is a root of the polynomial
+<tt>x<sup>3</sup> + 2871x<sup>2</sup> - 174961x + 2634969</tt>.
+</li><li>The three roots of the polynomial
+<tt>x<sup>3</sup> + x<sup>2</sup> - 74034x + 5294016</tt> are integers.
+Find them.
+</li><li>The three roots of the polynomial
+<tt>x<sup>3</sup> + x<sup>2</sup> - 28033x - 1815937</tt>
+are again integers. Find them.
+</li></ol>
+
+</li><li>
+Read five positive real numbers a, b, c, d and e from the user and compute
+their arithmetic mean, geometric mean, harmonic mean and standard deviation.
+
+</li><li>Input four integers a, b, c and d with b and d positive.
+<ol type="a">
+<li>Output the rational numbers (not their float equivalents)
+(a/b)+(c/d), (a/b)-(c/d) and (a/b)*(c/d).
+</li><li>Output the rational numbers (a/b)+(c/d), (a/b)-(c/d) and (a/b)*(c/d)
+in lowest terms, that is, in the form m/n with n&gt;0 and gcd(m,n)=1.
+</li></ol>
+
+</li><li>Input four integers a, b, c and d with a or b (or both) non-zero
+and with c or d (or both) non-zero.
+<ol type="a">
+<li>Output the complex numbers (a+ib)/(c+id) and (c+id)/(a+ib) in the form
+(r/s)+i(u/v) with r,s,u,v integers and s,v&gt;0.
+</li><li>Output the complex numbers (a+ib)/(c+id) and (c+id)/(a+ib) in the form
+(r/s)+i(u/v) with r/s and u/v in lowest terms, that is, with s,v&gt;0 and
+with gcd(r,s)=gcd(u,v)=1.
+</li></ol>
+
+</li><li>Let m and n be 32-bit unsigned integers. Use bit operations to assign
+to m the following functions of n:
+<ol type="a">
+<li>1 if n is odd, 0 if n is even.
+</li><li>1 if n is divisible by 4, 0 otherwise.
+</li><li>2<sup>n</sup> (Assume that n&lt;=31).
+</li><li>n rotated by k positions to the left for some integer k&gt;=0.
+</li><li>n rotated by k positions to the right for some integer k&gt;=0.
+</li></ol>
+
+</li><li>Write a program that does the following: Scan six real numbers
+a,b,c,d,e,f and compute the point of intersection of the straight lines:
+<pre><code>   ax + by = c
+   dx + ey = f
+</code></pre>
+<p>
+Your program should specifically handle the case that the two given lines
+are parallel.
+
+</p></li><li>Write a program to determine the roots of a quadratic equation.
+Figure out a way to handle the case when the the roots are not real.
+
+</li><li>Write a program that scans a string and checks if it represents
+a valid date in the format DD-MM-YYYY. (Example: 29-02-2005 is not a valid
+date, but 29-02-2004 is valid.)
+
+</li><li>An ant is sitting at the left end of a rope of length 10&nbsp;cm.
+At t=0 the ant starts moving along the rope to reach the other end of
+the rope. The ant has a speed of 1&nbsp;cm per second. After every second the
+rope stretches instantaneously and uniformly (along its length) by 10&nbsp;cm
+with the left end fixed at the point from where the ant started its journey.
+Suppose that the ant's legs provide it sufficient friction in order to
+withstand the stretching of the rope. Write a program to
+demonstrate that the ant will be able to reach the right end of the rope.
+Your program should also calculate how many seconds the ant would take to
+achieve this goal. You may assume that the length of the ant is negligible
+(i.e., zero).
+<p>
+<b>Note:</b> The ant would reach the right end of the rope, even if its
+initial length and stretching per second were 1 km (or even a billion
+kilometers) instead of 10&nbsp;cm. But for these dimensions the ant would
+take such an unbelievably large time that your program will not give you
+the confirmation in your life-time. Moreover, you will require more
+precision than what <tt>double</tt> can provide. Try to solve this puzzle
+mathematically.
+
+</p></li><li>Randomly generate a sequence of integers between -5 and +99 and
+output the maximum and minimum values generated so far. Exit,
+if a negative integer is generated. You must not store the sequence generated
+(say using an array), but update the maximum and minimum values
+on the fly, as soon as a new entry is generated. A sample run is given below:
+<pre><code>   Iteration   1: new entry =  84, max =  84, min =  84
+   Iteration   2: new entry =  87, max =  87, min =  84
+   Iteration   3: new entry =  72, max =  87, min =  72
+   Iteration   4: new entry =  53, max =  87, min =  53
+   Iteration   5: new entry =  93, max =  93, min =  53
+   ...
+</code></pre>
+
+</li><li>It is known that the harmonic number H<sub>n</sub> converges to <tt>k&nbsp;+&nbsp;ln n</tt>
+as n tends to infinity. Here <tt>ln</tt> is the natural logarithm and k is a constant
+known as <i>Euler's constant</i>. In this exercise you are asked to compute
+an approximate value for Euler's constant.
+Generate the values of <tt>H<sub>n</sub></tt> and <tt>ln&nbsp;n</tt> successively for
+<tt>n=1,2,3,...</tt>, and compute the difference
+<tt>k<sub>n</sub>&nbsp;=&nbsp;H<sub>n</sub>&nbsp;-&nbsp;ln&nbsp;n</tt>.
+Stop when <tt>k<sub>n</sub>-k<sub>n-1</sub></tt> is less than
+a specific error bound (like <tt>10<sup>-8</sup></tt>).
+<p>
+<b>Note:</b> It is not known whether Euler's constant is rational or
+not. It has, however, been shown that if Euler's constant is rational,
+its denominator must have more than 10,000 decimal digits.
+
+</p></li><li>Write a program that, given a positive integer n, determines the integer
+t with the property that <tt>2<sup>t-1</sup>&lt;=n&lt;2<sup>t</sup></tt>.
+This integer t is called the <i>bit-length</i> of n.
+
+</li><li>A <i>Pythagorean triple</i> is a triple (a,b,c) of positive integers
+with the property that a<sup>2</sup>+b<sup>2</sup>=c<sup>2</sup>. Write
+a program that scans a positive integer value k and outputs all
+Pythagorean triples (a,b,c) with 0&lt;a&lt;=b&lt;c&lt;=k.
+
+</li><li>Consider the function
+<pre>   f(a,b) = (a<sup>2</sup>+b<sup>2</sup>)/(ab-1)
+</pre>
+<p>
+of two positive integers a,b with ab&gt;1.
+</p><ol type="a">
+<li>Write a program that scans a positive integer k and prints the three
+values a,b,f(a,b) if and only if 0&lt;a&lt;=b&lt;=k and f(a,b) is an integer.
+</li><li>[H<sup>3</sup>M] Do you see a surprising fact about these f(a,b) values?
+Can you prove your hunch?
+</li></ol>
+
+</li><li>
+Given a number in decimal write a program to print the reverse of the
+number. For example, the reverse of 3481 is 1843.
+
+</li><li>Write a program that does the following: Read a decimal integer
+and print the ternary (base 3) representation of the integer.
+
+</li><li>Write a program that does the following: Read a string of 0's and
+1's and print the decimal equivalent of the string treated as an integer
+in the binary representation.
+
+</li><li>[H] Write a program that does the following: Read a string of 0's, 1's
+and 2's and print the decimal equivalent of the string treated as an
+integer in the ternary representation.
+
+</li><li>Write a program that, given a positive number x (not necessarily
+integral) and an integer k, computes the kth root of x using the bisection
+method. Supply an accuracy for your answer.
+
+</li><li>Generate a random sequence of birthdays and store the birthdays
+in an array. As soon as a match is found, report that. Also report how
+many birthdays were generated to get the match.
+<p>
+<b>Note:</b> It is surprising to see that you usually require a very small
+number of people (around 25) in order to have a match in their birthdays.
+However counter-intuitive it might sound, it is a mathematical truth,
+commonly known as the <b>birthday paradox</b>. In short it says that if
+you draw (with replacement) about sqrt(n) samples from a pool of n objects,
+there is about 50/50 chance that you get a repetition. If you draw
+2&nbsp;sqrt(n) samples, you can be almost certain that there will be at
+least one repetition.
+
+</p></li><li>Write a program that, given an array <tt>A[]</tt> of integers,
+finds out the largest and second largest elements of the array.
+
+</li><li>Write a program that, given an array <tt>A[]</tt> of signed integers,
+finds out a subsequence <tt>i,i+1,...,j</tt> such that the sum
+<pre><code>   A[i] + A[i+1] + ... + A[j]
+</code></pre>
+is maximum over all such subsequences. Note that the problem is trivial
+if all numbers are positive -- your algorithm should work when the numbers
+may have different signs.
+
+</li><li>[H<sup>2</sup>] Can you write a program that solves the problem of the last
+exercise using roughly n operations?
+
+</li><li>Read an English sentence from the terminal. Count and print the
+number of occurrences of the alphabetic letters (a through z) in it.
+Also print the total number of distinct alphabetic letters in the sentence.
+Make no distinction between upper and lower case letters, i.e., 'a' is treated
+the same as 'A', 'b' the same as 'B' and so on. Neglect non-alphabetic
+characters (digits, spaces, punctuation symbols etc.).
+
+</li><li>Input two strings a and b from the user and check if b is a substring
+of a. If b is a substring of a, then your program should also print the
+leftmost position of the leftmost match of b in a.
+
+</li><li>Write a program that scans a positive integer and checks if
+the integer is a perfect number (i.e., a number which is equal to
+the sum of all its proper integral divisors, e.g., 6&nbsp;=&nbsp;1+2+3).
+
+</li><li>Write a program that reads a positive integer n and lists all primes
+between 1 and n. Use the <i>sieve of Eratosthenes</i> described below:
+<p>
+Use an array of n cells indexed 1 through n. Since C starts
+indexing from 0, one may, for the ease of referencing, use an array of
+n+1 cells (rather than n). Initially all the array
+cells are unmarked. During the process one marks the cells
+with composite indices. An unmarked cell holds the value
+0, a marked cell holds 1. Henceforth, let us abbreviate "marking
+the cell at index i" as "marking i".
+</p><p>
+Any positive integral multiple of a positive integer k, other than
+k itself, is called a <i>proper multiple</i> of k. Starting with k=2,
+mark all proper multiples of 2 between 1 and n. Then
+look at the smallest integer &gt;2 that has not been marked.
+This is k=3 and must be a prime. Mark
+all the proper multiples of 3 and then look at the next
+unmarked integer -- this is k=5. Then mark the
+proper multiples of 5 and so on. The process need continue as long
+as k&lt;=sqrt(n), since every composite integer m, 1&lt;m&lt;=n,
+must have a prime divisor &lt;=sqrt(n).
+</p><p>
+After the loop described in the last paragraph terminates, report
+the indices of the unmarked cells in your array. These are precisely
+all the primes in the range <tt>1,2,...,n</tt>.
+</p><p>
+Now adjust the bound n in order to detect the millionth prime.
+</p></li><li>[HH] Repeat the above problem where a cell is marked at most
+once. In the previous description, cell 6 will will get marked when we
+consider 2 as well as 3 etc.
+</li><li>[HM] Write a program that, given two integers a,b with 0&lt;a&lt;b,
+finds integers n<sub>1</sub>,n<sub>2</sub>,<tt>...</tt>,n<sub>k</sub>
+with the properties that:
+<pre>   n<sub>1</sub> &lt; n<sub>2</sub> &lt; <tt>...</tt> &lt; n<sub>k</sub> and
+   a/b = 1/n<sub>1</sub> + 1/n<sub>2</sub> + ... + 1/n<sub>k</sub>.
+</pre>
+<p>
+(Hint: You may use the following idea. If a/b is already of the form 1/n,
+we are done. Otherwise, find the integer n such that 1/n&lt;a/b&lt;1/(n-1).
+Print n, replace a/b by (a/b)-(1/n) and repeat. Prove that this gives
+a strictly increasing sequence of printed values (n) and that the process
+terminates after finitely many steps.)
+
+</p></li><li>Write a program that, given a set of n points in the plane
+(specified by their x and y coordinates), determines the smallest circle
+that encloses all these points.
+(Hint: The smallest circle must either pass through three given points
+or have two given points at the opposite ends of a diameter.)
+
+</li><li>In this exercise you are asked to compute approximate values
+of pi.
+<ol type="a">
+<li>Write the infinite series for 1/(1+x<sup>2</sup>).
+</li><li>Integrate (between 0 and x) both 1/(1+x<sup>2</sup>) and the infinite
+series for it, put the value x = 1/sqrt(3) and write pi as an infinite series.
+</li><li>Truncate the series after n terms and evaluate the truncated series to
+get an approximate value of pi. Use the values n=10<sup>i</sup> for
+i=1,2,<tt>...</tt>,6.
+</li><li>Write the infinite series for 1/sqrt(1-x<sup>2</sup>).
+</li><li>Integrate (between 0 and x) both 1/sqrt(1-x<sup>2</sup>) and the infinite
+series for it, put the value x = 1/2 and write pi as an infinite series.
+</li><li>Truncate the series after n terms and evaluate the truncated series to
+get an approximate value of pi. Use the values n=10<sup>i</sup> for
+i=1,2,<tt>...</tt>,6.
+</li></ol>
+
+</li><li>[H] Write a program to determine the smallest positive integer n
+with the following property. Let
+<pre>   n = a<sub>k</sub>a<sub>k-1</sub>...a<sub>1</sub>a<sub>0</sub>
+</pre>
+<p>
+be the decimal representation of n with <tt>a<sub>k</sub>&gt;0</tt>.
+Look at the integer:
+</p><pre>   n' = a<sub>0</sub>a<sub>k</sub>a<sub>k-1</sub>...a<sub>2</sub>a<sub>1</sub>
+</pre>
+<p>
+(the cyclic right shift of n). The desired property of n is that n' must be
+a proper integral multiple of n.
+
+</p></li><li>[H] Write a program to find the smallest positive integer n with the
+property that the decimal expansion of 2<sup>n</sup> starts with the
+four digits <tt>2005</tt>, i.e., 2<sup>n</sup>&nbsp;=&nbsp;2005<tt>...</tt>
+(Hint: Take log.)
+
+</li></ol>
+
+
+  <div class="navigator">
+    <a href="loop.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Loops and iteration</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="function.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Functions and recursion</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

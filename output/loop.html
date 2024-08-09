@@ -1,0 +1,928 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Loops and iteration | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+<h1 align="center">Loops and iteration</h1>
+<p>
+This is the first time we are going to make an attempt to move backward in
+a program. Loops make this backward movement feasible in a controlled manner.
+This control is imparted by logical conditions.
+</p><p>
+Many problem-solving strategies involve repetitive steps. For example,
+suppose we want to compute the sum of n numbers. A specific instance of
+this problem is the computation of the <b>harmonic number</b>:
+</p><pre>   H<sub>n</sub> = 1/1 + 1/2 + 1/3 + ... + 1/n.
+</pre>
+<p>
+A reasonable strategy to solve this problem is to start with a sum
+initialized to zero and then let each <tt>1/i</tt> be added to the sum.
+When all of the n summands are added, the number accumulated in the sum
+is the desired output. Here the repetitive part is the addition of the
+next number to the current sum. So there should be a way to identify
+the "next" number. Moreover, when there are no more (next) numbers,
+the repetitive addition should stop. Here is a high-level
+description of this process:
+</p><pre><code>   Initialize sum to 0.
+   for each i in the set {1,2,...,n} add 1/i to sum.
+   Report the accumulated sum as the output value.
+</code></pre>
+<p>
+Here i identifies the "next" number and when all of the n possible values
+of i have been tried out, the repetitive addition process should stop.
+
+</p><h2 align="left">Mathematical induction</h2>
+<p>
+Let us formalize the above notion of repetitive calculation. The following
+sets occur frequently in the study of computer science. So let us designate
+them by some special symbols.
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Symbol</th><th>Set</th><th>Description
+</th></tr><tr><td align="center"><b>N</b></td><td align="center"><tt>{1,2,3,4,...}</tt></td><td align="left">The set of natural numbers (i.e., positive integers)
+</td></tr><tr><td align="center"><b>N<sub>0</sub></b></td><td align="center"><tt>{0,1,2,3,...}</tt></td><td align="left">The set of non-negative integers
+</td></tr><tr><td align="center"><b>Z</b></td><td align="center"><tt>{...,-3,-2,-1,0,1,2,3,...}</tt></td><td align="left">The set of integers
+</td></tr></tbody></table>
+</center>
+<p>
+<b>Theorem:</b> [<i>Principle of mathematical induction</i>]<br>
+</p>
+Let S be a subset of <b>N</b> with the following properties:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 1 is in S.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) Whenever n is in S, so also is n+1.<br>
+Then S = <b>N</b>.
+
+<p>
+A similar theorem holds for the set <b>N<sub>0</sub></b>:
+</p><p>
+<b>Theorem:</b> [<i>Principle of mathematical induction</i>]<br>
+</p>
+Let S be a subset of <b>N<sub>0</sub></b> with the following properties:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 0 is in S.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) Whenever n is in S, so also is n+1.<br>
+Then S = <b>N<sub>0</sub></b>.
+
+<p>
+The principle of mathematical induction can be stated in various equivalent
+forms. The following is one such equivalent statement.
+</p><p>
+<b>Theorem:</b> [<i>Principle of strong mathematical induction</i>]<br>
+</p>
+Let S be a subset of <b>N</b> with the following properties:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 1 is in S.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) Whenever 1,2,<tt>...</tt>,n are in S, so also is n+1.<br>
+Then S = <b>N</b>.
+
+<p>
+For <b>N<sub>0</sub></b> this can be stated as:
+</p><p>
+<b>Theorem:</b> [<i>Principle of strong mathematical induction</i>]<br>
+</p>
+Let S be a subset of <b>N<sub>0</sub></b> with the following properties:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 0 is in S.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) Whenever 0,1,2,<tt>...</tt>,n are in S, so also is n+1.<br>
+Then S = <b>N<sub>0</sub></b>.
+
+<p>
+Let us now see how we can exploit these principles for designing
+iterative algorithms. First look at the the computation of harmonic numbers.
+For the sake of simplicity let us also define:
+</p><pre>   H<sub>0</sub> = 0.
+</pre>
+<p>
+Let S denote the set of all non-negative integers for which H<sub>n</sub>
+can be computed. I will show that S&nbsp;=&nbsp;<b>N<sub>0</sub></b>.
+First, H<sub>0</sub> is equal to the constant 0 and so can be computed;
+so 0 is in S. Now suppose that H<sub>n</sub> can be computed for some
+n&gt;=0, i.e., n is in S. It is easy to see that
+</p><pre>   H<sub>n+1</sub> = H<sub>n</sub> + 1/(n+1).
+</pre>
+<p>
+But then since 1/(n+1) is also computable, adding this quantity to
+H<sub>n</sub> gives us a way to compute H<sub>n+1</sub>, i.e., n+1 is
+in S too. Hence by the principle of mathematical induction
+S&nbsp;=&nbsp;<b>N<sub>0</sub></b>.
+</p><p>
+This argument not only establishes that H<sub>n</sub> can be computed
+for all non-negative n, but also suggests a way to compute H<sub>n</sub>.
+Here is the algorithm:
+</p><pre>   Set i = 0 and H<sub>0</sub> = 0.
+   For i = 1,2,3,...,n in that order
+      compute H<sub>i</sub> = H<sub>i-1</sub> + 1/i.
+</pre>
+<p>
+We will shortly see how this English description can be translated to a
+C program. For the time being let us concentrate on some other examples.
+</p><p>
+The <i>greatest common divisor</i> gcd(a,b) of two non-negative integers
+(not both 0) is defined as the largest natural number of which both a and
+b are integral multiples. The standard gcd algorithm taught in schools
+is based on successive Euclidean division. Let us try to render it as a
+sequence of repetitive computations. For the sake of simplicity, we assume
+that whenever we write gcd(a,b) we mean a&gt;=b.
+</p><p>
+The first step is to show that gcd(a,b) is computable for all a&gt;=1 and
+for all b in the range 0&lt;=b&lt;=a. We proceed by induction on a. If a=1,
+we must have b=0 or b=1. Now both gcd(1,0) and gcd(1,1) equal the constant 1.
+For the inductive step assume that gcd(a',b') is computable whenever a'&lt;a,
+and that we want to compute gcd(a,b). We use the following theorem:
+</p><p>
+<b>Theorem:</b> [<i>Euclidean gcd theorem</i>]
+</p><p>
+Let a,b be positive integers and r&nbsp;=&nbsp;a&nbsp;rem&nbsp;b.
+Then gcd(a,b)&nbsp;=&nbsp;gcd(b,r).
+</p><p>
+Let us now come back to the inductive step. If a is an integral multiple
+of b, we have r=0, and so by the theorem gcd(a,b)=gcd(b,0)=b. If
+a is not an integral multiple of b, we cannot have a=b, i.e., now
+a&gt;b. By the induction hypothesis gcd(b,r) is computable. Also the
+remainder r is computable from a and b. Therefore, gcd(a,b) is also
+computable.
+</p><p>
+This proof also leads to the following iterative algorithm:
+</p><pre><code>   As long as b is not equal to 0 do the following:
+      Compute the remainder r = a rem b.
+      Replace a by b and b by r.
+   Report a as the desired gcd.
+</code></pre>
+<h2 align="left">Recursive definitions</h2>
+<p>
+A sequence a<sub>n</sub> for all n in <b>N</b> (or <b>N<sub>0</sub></b>)
+can often be inductively (also called recursively) defined. For example,
+the sequence of harmonic numbers is defined as:
+</p><pre>   H<sub>0</sub> = 0,
+   H<sub>n</sub> = H<sub>n-1</sub> + (1/n) for n&gt;=1.
+</pre>
+<p>
+The sequence a<sub>n</sub> = n<sup>2</sup> can be recursively defined as:
+</p><pre>   a<sub>0</sub> = 0,
+   a<sub>n</sub> = a<sub>n-1</sub> + 2n - 1 for n&gt;=1.
+</pre>
+<p>
+Also recall the definition of <i>Fibonacci numbers</i>:
+</p><pre>   F<sub>0</sub> = 0,
+   F<sub>1</sub> = 1,
+   F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub> for n&gt;=2.
+</pre>
+<p>
+In all these cases the recursive definition provides a way to compute
+an element in the sequence from one or more elements that occur earlier
+in the sequence. The basis cases specify the terminal conditions, where
+constant values are to be used for the initial elements of the sequence.
+</p><p>
+More complicated entities may also be defined recursively. For example,
+suppose we want to obtain the list of all permutations of the natural
+numbers 1,2,<tt>...</tt>,n. If n=1, the list consists of a single
+element. For n&gt;=2, we inductively compute the list of permutations
+of 1,2,<tt>...</tt>,n-1. Then for each permutation in the list we
+insert n in any one of the n allowed positions. One can easily check
+that in this way we can generate all the permutations of 1,2,<tt>...</tt>,n
+with each such permutation generated exactly once.
+</p><p>
+Induction proves to be a useful methodology for attacking problems.
+In the first place, it is procedural, i.e., it often leads to good algorithms
+for computing recursively defined objects. Second, the idea of reduction
+of a problem into one or more smaller problems and then combining the
+solutions of the subproblems to obtain the solution of the original
+problem turns out to be extremely useful for designing algorithms.
+We will come back again to a discussion of recursion in connection
+with functions.
+
+</p><h2 align="left">Loops</h2>
+<p>
+It is high time now that we concentrate on the realization of repetitive
+structures in C. In the C terminology these are called <b>loops</b>.
+
+</p>
+<h3 align="left">Pre-test and post-test loops</h3>
+<p>
+Loops can be broadly classified in two categories based on the location
+where the condition for looping back is checked.
+</p><p>
+In a <b>pre-test loop</b> the condition for entering the body of the
+loop is checked at the beginning (top) of the loop. If the condition
+is satisfied, execution enters the body and proceeds sequentially.
+After the entire body is executed, control comes back unconditionally
+to the top of the loop. Meanwhile, the body might have changed the
+world in a way so as to affect the continuation condition. If it is still
+satisfied, the loop is entered once more, and the body is again
+executed and control again comes back to the top of the loop. If
+the condition at the top is not satisfied, the loop body is ignored
+and the control of execution goes to the area after the end of the loop.
+</p><center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/loop1.gif" alt="Pre-test loop"><br><br>
+Figure: Pre-test loop
+</center>
+<p>
+In a <b>post-test loop</b>, on the other hand, the control of execution
+enters the loop body unconditionally. After the entire body is executed,
+the loop condition is checked. If it is satisfied, control goes back to the
+top of the loop, the body is again executed and the continuation condition
+is again checked. This process is repeated until the continuation
+condition becomes false. In that case, control leaves the loop and
+proceeds further down the code.
+</p><center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/loop2.gif" alt="Post-test loop"><br><br>
+Figure: Post-test loop
+</center>
+<p>
+It is important to note that for a post-test loop the loop body is executed
+at least once, since control enters the body unconditionally. On the other
+hand, in a pre-test loop the loop body need not be executed at all. If
+the continuation condition is false initially, the entire loop is
+ignored.
+
+</p><h3 align="left">while loops</h3>
+<p>
+The pre-test loop of the above figure can be rendered in C as follows:
+</p><pre><code>   while (the continuation condition is true) {
+      execute loop body;
+   }
+</code></pre>
+<p>
+If the loop body consists of a single statement, the braces may be omitted.
+</p><p><b>Example:</b>
+As a specific example of a while loop, let us implement the gcd algorithm
+using repeated division.
+</p><pre><code>   while (b &gt; 0) {
+      r = a % b;     /* Compute the next remainder */
+      a = b;         /* Replace a by b */
+      b = r;         /* Replace b by r */
+   }
+   printf("gcd = %d\n",a);
+</code></pre>
+<p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/while.html" target="_blank">Animation example : while loop</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/while/" target="_blank">Interactive animation : while loop</a></h3>
+</td></tr><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/gcdSlow/" target="_blank">Interactive animation : gcd</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/gcdEuclid/" target="_blank">Interactive animation : Euclidean gcd</a></h3>
+</td></tr></tbody></table>
+<p></p><p><b>Example:</b>
+Here is how the n-th harmonic number may be computed using a while loop.
+Note that <tt>H<sub>i</sub></tt> can be generated from
+<tt>H<sub>i-1</sub></tt> and <tt>i</tt>. So
+it is not necessary to store all the values
+<tt>H<sub>0</sub>,H<sub>1</sub>,...,H<sub>i-1</sub></tt>. Remembering
+only the previous harmonic number suffices.
+</p><pre><code>   float i, H;
+   unsigned int n;
+
+   ...
+
+   i = 0;
+   H = 0;
+   while (i &lt; n) {
+      ++i;          /* Increment i */
+      H += 1.0/i;   /* Update the harmonic number accordingly */
+   }
+   printf("H(%d) = %f\n", n, H);
+</code></pre>
+<p><b>Example:</b>
+Finally, let us look at the computation of Fibonacci numbers using
+while loops.
+</p><pre>   i = 1;    /* Initialize i to 1 */
+   F = 1;    /* Initialize F<sub>i</sub> */
+   p1 = 0;   /* Initialize F<sub>i-1</sub> */
+   while (i &lt; n) {
+      ++i;          /* Increment i */
+      p2 = p1;      /* The old F<sub>i-1</sub> now becomes F<sub>i-2</sub> */
+      p1 = F;       /* The old F<sub>i</sub> now becomes F<sub>i-1</sub> */
+      F = p1 + p2;  /* Compute F<sub>i</sub> from F<sub>i-1</sub> and F<sub>i-2</sub> */
+   }
+   printf("F(%d) = %d", n, F);
+</pre>
+
+<h3 align="left">do-while loops</h3>
+<p>
+The do-while loop of C is a post-test loop. It has the following syntax:
+</p><pre><code>   do {
+      execute loop body;
+   } while (continuation condition is true);
+</code></pre>
+<p><b>Example:</b>
+Harmonic numbers can be computed using the do-while loop as:
+</p><pre><code>   float i, H;
+   unsigned int n;
+
+   ...
+
+   i = 0;
+   H = 0;
+   do {
+      ++i;          /* Increment i */
+      H += 1.0/i;   /* Update the harmonic number accordingly */
+   } while (i &lt; n);
+   printf("H(%d) = %f\n", n, H);
+</code></pre>
+<p><b>Example:</b>
+The following loop computes the gcd of two integers a,b with
+<tt>1&lt;=b&lt;=a</tt>.
+</p><pre><code>   do {
+      r = a % b;     /* Compute the next remainder */
+      a = b;         /* Replace a by b */
+      b = r;         /* Replace b by r */
+   } while (b &gt; 0);
+   printf("gcd = %d\n",a);
+</code></pre>
+<p><b>Example:</b>
+Finally, here is an implementation of the computation of Fibonacci
+numbers <tt>F<sub>i</sub></tt> for <tt>i&gt;=2</tt>.
+</p><pre>   i = 1;    /* Initialize i to 1 */
+   F = 1;    /* Initialize F<sub>i</sub> */
+   p1 = 0;   /* Initialize F<sub>i-1</sub> */
+   do {
+      ++i;          /* Increment i */
+      p2 = p1;      /* The old F<sub>i-1</sub> now becomes F<sub>i-2</sub> */
+      p1 = F;       /* The old F<sub>i</sub> now becomes F<sub>i-1</sub> */
+      F = p1 + p2;  /* Compute F<sub>i</sub> from F<sub>i-1</sub> and F<sub>i-2</sub> */
+   } while (i &lt; n);
+   printf("F(%d) = %d", n, F);
+</pre>
+<p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/do.html" target="_blank">Animation example : do-while loop</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/do/" target="_blank">Interactive animation : do-while loop</a></h3>
+</td></tr></tbody></table>
+
+<p></p><h3 align="left">for loops</h3>
+<p>
+These are <i>pre-test</i> loops and have the following syntax:
+</p><pre><code>   for ( initialize loop; continuation condition ; loop increment ) {
+      execute loop body;
+   }
+</code></pre>
+<p>
+Here the loop initialization step consists of a set of book-keeping task
+that need be carried out before entering the loop, and the loop increment
+step refers to a set of tasks carried out at the end of the loop body
+just before the continuation condition is checked. The for loop can be
+equivalently described in terms of the following while loop:
+</p><pre><code>   initialize loop;
+   while (continuation condition is true) {
+      execute loop body;
+      loop increment;
+   }
+</code></pre>
+<p><b>Example:</b>
+One can compute gcds using for loops as follows:
+</p><pre><code>   for ( ; b &gt; 0 ; ) {
+      r = a % b;     /* Compute the next remainder */
+      a = b;         /* Replace a by b */
+      b = r;         /* Replace b by r */
+   }
+</code></pre>
+<p>
+Here the initialization and increment steps are empty.
+</p><p><b>Example:</b>
+Computation of harmonic numbers using for loops is quite simple:
+</p><pre><code>   H = 0;
+   for (i=1; i&lt;=n; ++i) H += 1.0/i;
+   printf("H(%d) = %f\n", n, H);
+</code></pre>
+<p><b>Example:</b>
+If more than one statements need be executed during the initialization
+or increment step, they should be separated by commas, since semi-colons
+indicate separation of the three parts of the loop control area.
+</p><p>
+The Fibonacci computation may have the following form with for loops. We
+assume that n&gt;=2.
+</p><pre>   for ( i = 2, p1 = 1, p2 = 0; i &lt;= n; ++i , p2 = p1 , p1 = F ) 
+      F = p1 + p2;  /* Compute F<sub>i</sub> from F<sub>i-1</sub> and F<sub>i-2</sub> */
+   printf("F(%d) = %d", n, F);
+</pre>
+<p><b>Example:</b>
+The following animation demonstrates an iterative computation of the
+sequence 1<sup>2</sup>+2<sup>2</sup>+<tt>...</tt>+n<sup>2</sup>.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/for.html" target="_blank">Animation example : for loop</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/for/" target="_blank">Interactive animation : for loop</a></h3>
+</td></tr><tr>
+<td colspan="2"><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/fibonacciIter/" target="_blank">Interactive animation : computation of Fibonacci numbers</a></h3>
+</td></tr></tbody></table>
+<p></p><p><b>Example:</b>
+The following animation iteratively assigns values to the elements of
+an array. The i-th location receives the value (i+1)<sup>2</sup>.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/square.html" target="_blank">Animation example : for loop with arrays</a></h3>
+</td></tr></tbody></table>
+<p></p><p>
+<b>Example:</b> [<i>Linear search</i>]
+</p><p>
+Given an array of n elements A[0],A[1],<tt>...</tt>,A[n-1] and an element x,
+we want to find if x is present in the array, i.e., if x&nbsp;=&nbsp;A[i] for some i.
+This is the famous search problem. One obvious strategy is to compare x successively
+with A[0],A[1],A[2],<tt>...</tt> The algorithm stops as soon as a match is found
+or the array gets exhausted.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/linsearch.html" target="_blank">Animation example : linear search</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/linSearch/" target="_blank">Interactive animation : linear search</a></h3>
+</td></tr></tbody></table>
+<p></p><p>
+The code for linear search is given below:
+</p><pre><code>   found = 0;
+   for (i=0; (!found)&amp;&amp;(i&lt;n); ++i) {
+      if (A[i] == x) {
+         printf("Match found\n");
+         found = 1;
+      }
+   }
+   if (!found) printf("No match found\n");
+</code></pre>
+<p>
+<b>Example:</b> [<i>Binary search</i>]
+</p><p>
+Now assume that the array A is sorted, i.e.,
+A[0]&nbsp;&lt;=&nbsp;A[1]&nbsp;&lt;=&nbsp;<tt>...</tt>&nbsp;&lt;=&nbsp;A[n-1].
+First we compare the element x with the array element A[(n-1)/2].
+If x&nbsp;&gt;&nbsp;A[(n-1)/2], then x cannot be found in the first half
+of the array. On the other hand, if x&nbsp;&lt;=&nbsp;A[(n-1)/2], there is
+no need to search x in the second half of the array. Thus by a single
+comparison we discard one half of the array. We then repeat the process,
+every time discarding half of the remaining part of the array. Eventually,
+we reduce the search to a single array element and check whether x equals
+this element.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/binsearch.html" target="_blank">Animation example : binary search</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/binSearch/" target="_blank">Interactive animation : binary search</a></h3>
+</td></tr></tbody></table>
+<p></p><p>
+Here is how we can translate the binary search algorithm in C:
+</p><pre><code>   L = 0; R = n-1;
+   while (L &lt; R) {
+      M = (L + R) / 2;
+      if (x &gt; A[M]) L = M+1; else R = M;
+   }
+   if (A[L] == x) printf("Match found\n");
+   else printf("Match not found\n");
+</code></pre>
+
+
+<h2 align="left">Loop invariants</h2>
+<p>
+For verifying the correctness of loops one often uses the concept of
+<b>loop invariance</b>. A loop invariant refers to a statement that is
+true at all instants when the loop condition is checked. It may be expressed
+in terms of one or more variables controlling the flow of the loop.
+</p><p>
+<b>Example:</b>
+Consider the while loop implementation of the computation of <tt>H<sub>n</sub></tt>.
+</p><pre><code>   i = 0;
+   H = 0;
+   while (i &lt; n) {
+      ++i;          /* Incremet i */
+      H += 1.0/i;   /* Update the harmonic number accordingly */
+   }
+</code></pre>
+<p>
+Here the loop invariant is the statement "<tt>H</tt> stores the value <tt>H<sub>i</sub></tt>
+for all <tt>i=0,1,2,...,n</tt>". The correctness of this statement can be
+proved using induction on i. It is initially true (<tt>H<sub>0</sub>=0</tt>).
+Now suppose it is true for a particular <tt>i&nbsp;&lt;&nbsp;n</tt>. As the loop body is
+executed the value of <tt>i</tt> changes to <tt>i+1</tt> and that of <tt>H</tt> changes to
+<tt>H<sub>i</sub>+1/(i+1)=H<sub>i+1</sub></tt>. The loop terminates when <tt>i</tt> equals <tt>n</tt>.
+By the loop invariance property <tt>H</tt> then stores the value <tt>H<sub>n</sub></tt>.
+This is precisely what we wanted to compute.
+</p><p>
+<b>Example:</b>
+Next look at the do-while implementation of Fibonacci computation.
+</p><pre>   i = 1;    /* Initialize i to 1 */
+   F = 1;    /* Initialize F<sub>i</sub> */
+   p1 = 0;   /* Initialize F<sub>i-1</sub> */
+   do {
+      ++i;          /* Increment i */
+      p2 = p1;      /* The old F<sub>i-1</sub> now becomes F<sub>i-2</sub> */
+      p1 = F;       /* The old F<sub>i</sub> now becomes F<sub>i-1</sub> */
+      F = p1 + p2;  /* Compute F<sub>i</sub> from F<sub>i-1</sub> and F<sub>i-2</sub> */
+   } while (i &lt; n);
+</pre>
+<p>
+It is easy to check that an invariant for this loop is the statement
+"<tt>F</tt> holds the value <tt>F<sub>i</sub></tt> and <tt>p1</tt> the value
+<tt>F<sub>i-1</sub></tt>" and is true for <tt>i=1,2,...,</tt>n. The loop
+terminates for <tt>i=n</tt>, and in that case <tt>F</tt> stores <tt>F<sub>n</sub></tt> as desired.
+</p><p>
+<b>Example:</b>
+Here is a new example. Suppose we want to compute the maximum of
+n positive integers stored in an array A.
+</p><pre><code>   max = A[0];
+   for (i=1; i&lt;n; ++i) {
+      if (A[i] &gt; max) max = A[i];
+   }
+</code></pre>
+<p>
+A loop invariant here is "<tt>max</tt> stores the maximum value among
+the integers <tt>A[0],A[1],...,A[i-1]</tt>" and is true for all
+<tt>i=1,2,...,n</tt>.
+</p><p>
+<b>Example:</b>
+Let us now come to a really non-trivial example of loop invariance.
+</p><p>
+<b>Theorem:</b> Let a,b be positive integers and d&nbsp;=&nbsp;gcd(a,b).
+Then there exist integers u,v with the property that
+ua&nbsp;+&nbsp;vb&nbsp;=&nbsp;d.
+</p><p>
+Computation of the gcd d along with the multipliers u,v is called the
+<b>extended gcd</b> computation. The following algorithm does that.
+</p><pre><code>   /* Initialize */
+   r2 = a; u2 = 1; v2 = 0;  /* Previous-to-previous values */
+   r1 = b; u1 = 0; v1 = 1;  /* Previous values */
+
+   /* Extended gcd loop */
+   while (r1 &gt; 0) {
+      /* Compute values for the current iteration */
+      q = r2 / r1;       /* Compute the next quotient */
+      r = r2 - q * r1;   /* Compute the next remainder */
+      u = u2 - q * u1;   /* Identically compute the next u value */
+      v = v2 - q * v1;   /* Identically compute the next v value */
+
+      /* Prepare for the next iteration */
+      r2 = r1; u2 = u1; v2 = v1;  /* Let the previous-to-previous values be the previous values */
+      r1 = r; u1 = u; v2 = v;     /* Let the previous values be the current values */
+   }
+
+   printf("gcd(a,b) = %d = (%d) * a + (%d) * b\n", r2, u2, v2);
+</code></pre>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/gcdEuclidExt/" target="_blank">Interactive animation : extended Euclidean gcd</a></h3>
+</td></tr></tbody></table>
+</p><p>
+It is not at all clear that this algorithm works correctly. The correctness
+can be established from the following invariance property:
+</p><p>
+<b>Claim:</b> Whenever the continuation condition for the above loop is
+checked, we have:
+</p><pre><code>   gcd(r2,r1) = gcd(a,b),      (1)
+   u2 * a + v2 * b = r2,       (2)
+   u1 * a + v1 * b = r1.       (3)
+</code></pre>
+<p>
+<i>Proof</i>&nbsp;&nbsp;&nbsp;&nbsp;
+The three conditions are obviously true at the beginning of the first
+iteration; this is how the values are initialized. Now suppose that the
+relations hold for certain iteration with r1&nbsp;&gt;&nbsp;0. The loop
+body is then executed. First, the quotient q and the remainder r of
+Euclidean division of r2 by r1 is computed. By Euclid's gcd theorem
+</p><pre><code>   gcd(r1,r) = gcd(r2,r1) = gcd(a,b).
+</code></pre>
+<p>
+Moreover,
+</p><pre><code>   u = u2 - q * u1, and v = v2 - q * v1,
+</code></pre>
+<p>
+and so
+</p><pre><code>     u * a + v * b
+   = (u2 - q * u1) * a + (v2 - q * v1) * b
+   = (u2 * a + v2 * b) - q * (u1 * a + v1 * b)
+   = r2 - q * r1
+   = r.
+</code></pre>
+<p>
+Thus the three equations (1)-(3) continue to be satisfied for the
+new r,u,v values. QED
+</p><p>
+The loop terminates when r1 becomes 0. In that case gcd(a,b) =
+gcd(r2,r1) = gcd(r2,0) = r2 = u2 * a + v2 * b, and, therefore,
+r2,u2,v2 constitute a desired set of values for the extended gcd.
+</p><p>
+Let us look at the trace of the values stored in different variables
+for a sample run with a=78 and b=21.
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Iteration No</th><th>r2</th><th>r1</th><th>u2</th><th>u1</th><th>v2</th><th>v1</th><th>q</th><th>r</th><th>u</th><th>v</th><th>u2*a+v2*b
+</th></tr><tr><td align="center">Before loop</td><td align="center">78</td><td align="center">21</td><td align="center">1</td><td align="center">0</td><td align="center">0</td><td align="center">1</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">78
+</td></tr><tr><td align="center">1</td><td align="center">78<br>21</td><td align="center">21<br>15</td><td align="center">1<br>0</td><td align="center">0<br>1</td><td align="center">0<br>1</td><td align="center">1<br>-3</td><td align="center">3<br>3</td><td align="center">15<br>15</td><td align="center">1<br>1</td><td align="center">-3<br>-3</td><td align="center">78<br>21
+</td></tr><tr><td align="center">2</td><td align="center">21<br>15</td><td align="center">15<br>6</td><td align="center">0<br>1</td><td align="center">1<br>-1</td><td align="center">1<br>-3</td><td align="center">3<br>4</td><td align="center">1<br>1</td><td align="center">6<br>6</td><td align="center">-1<br>-1</td><td align="center">4<br>4</td><td align="center">21<br>15
+</td></tr><tr><td align="center">3</td><td align="center">15<br>6</td><td align="center">6<br>3</td><td align="center">1<br>-1</td><td align="center">-1<br>3</td><td align="center">-3<br>4</td><td align="center">4<br>-11</td><td align="center">2<br>2</td><td align="center">3<br>3</td><td align="center">3<br>3</td><td align="center">-11<br>-11</td><td align="center">15<br>6
+</td></tr><tr><td align="center">4</td><td align="center">6<br>3</td><td align="center">3<br>0</td><td align="center">-1<br>3</td><td align="center">3<br>-7</td><td align="center">4<br>-11</td><td align="center">-11<br>26</td><td align="center">2<br>2</td><td align="center">0<br>0</td><td align="center">-7<br>-7</td><td align="center">26<br>26</td><td align="center">6<br>3
+</td></tr></tbody></table>
+<br>
+gcd(78,21)&nbsp;=&nbsp;3&nbsp;=&nbsp;(3)&nbsp;*&nbsp;78&nbsp;+&nbsp;(-11)&nbsp;*&nbsp;21
+</center>
+<h2 align="left">Nested loops</h2>
+<p>
+One or more loops can be nested inside another loop. In that case the inner loops
+usually have continuation conditions dependent on variables different from the
+variable(s) governing the continuation of the outer loop. The programmer should
+be sufficiently careful so as not to do something silly inside the inner loops,
+that affects the behavior of the outer loop.
+</p><p>
+<b>Example:</b> [<i>Bubble sort</i>]
+</p><p>
+Suppose you have an array A of n elements (say, integers). They are stored in
+the array locations A[0],A[1],<tt>...</tt>,A[n-1]. We want to rearrange these
+integers in such a way that after the rearrangement we have
+</p><pre><code>   A[0] &lt;= A[1] &lt;= A[2] &lt;= ... &lt;= A[n-1].
+</code></pre>
+<p>
+Such an array is called a <b>sorted array</b> and the process of making
+the array sorted is refered to as <b>sorting</b>. Sorting is a basic and
+fundamental computational problem. There are several algorithms proposed
+for sorting. For the time being, let us look at an algorithm known as
+<b>bubble sort</b>.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/bubble.html" target="_blank">Animation example : bubble sort</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/bubbleSort/" target="_blank">Interactive animation : bubble sort</a></h3>
+</td></tr></tbody></table>
+</p><p>
+The bubble sort algorithm can be implemented using a singly nested loop
+as follows:
+</p><pre><code>   for (i=n-2; i&gt;=0; --i) {    /* Attempt to bubble till the value of i */
+      for (j=0; j&lt;=i; ++j) {   /* Run j from 0 to the current upper bound i */
+         if (A[j] &gt; A[j+1]) {  /* Two consecutive elements are in the opposite order */
+                               /* Swap A[j] and A[j+1] */
+            t = A[j];          /* Store A[j] in a temporary variable t */
+            A[j] = A[j+1];     /* Change A[j] to A[j+1] */
+            A[j+1] = t;        /* Change A[j+1] to the old value of A[j] stored in t */
+         }
+      }
+   }
+</code></pre>
+<p>
+<b>Example:</b> [<i>Selection sort</i>]
+</p><p>
+The working of the selection sort is somewhat similar to that of bubble
+sort. Here the outer loop runs over i ranging from n-1 down to 1. For a
+given i, the largest element in the subarray A[0],A[1],<tt>...</tt>,A[i]
+is found out and is swapped with the element A[i]. Thus during the first
+iteration of the outer loop A[n-1] receives the largest element in the
+array, in the second iteration A[n-2] receives the second largest
+element, and so on.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/selection.html" target="_blank">Animation example : selection sort</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/selectionSort/" target="_blank">Interactive animation : selection sort</a></h3>
+</td></tr></tbody></table>
+</p><p>
+The code for selection sort follows:
+</p><pre><code>   for (i=n-1; i&gt;=1; --i) {
+      /* First find the maximum element of A[0],A[1],...,A[i] */
+      /* Initialize maximum entry to be the leftmost one */
+      maxidx = 0;
+      max = A[0];
+      /* Now search for a potentially bigger maximum */
+      for (j=1; j&lt;=i; ++j) {
+         if (A[j] &gt; max) {  /* An element bigger that the current maximum is located */
+            /* Adjust the maximum entry */
+            maxidx = j;
+            max = A[j];
+         }
+      }
+      /* Swap A[i] with the maximum element */
+      A[maxidx] = A[i];  /* Store the last element at index maxidx */
+      A[i] = max;        /* Store the maximum at the last index */
+   }
+</code></pre>
+<p>
+<b>Example:</b> [<i>Insertion sort</i>]
+</p><p>
+Here is yet another sorting algorithm that uses nested loops. Here the outer
+loop runs over a variable i ranging from 1 to n-1. For a particular i,
+the portion A[0],A[1],<tt>...</tt>,A[i-1] is already sorted. Then
+the element A[i] is considered and is <i>inserted</i> at the appropriate
+position in the sorted list A[0],A[1],<tt>...</tt>,A[i-1]. That will
+make a bigger sorted list A[0],A[1],<tt>...</tt>,A[i]. When the loop
+body finishes execution with i=n, the entire array is sorted.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/insertion.html" target="_blank">Animation example : insertion sort</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/insertSort/" target="_blank">Interactive animation : insertion sort</a></h3>
+</td></tr></tbody></table>
+</p><p>
+Here is the code for insertion sort.
+</p><pre><code>   for (i=1; i&lt;n; ++i) {        /* Consider A[i] */
+      /* Search for the correct insertion location of A[i] */
+      t = A[i];                 /* Store A[i] in a temporary variable */
+      j = 0;                    /* Initialize search location */
+      while (t &gt; A[j]) ++j;     /* Skip smaller entries */
+      /* Here j holds the desired insertion location */
+
+      /* Shift forward the remaining entries each by one location */
+      for (k=i-1; k&gt;=j; --k) A[k+1] = A[k];
+
+      /* Finally insert the old A[i] at the j-th location */
+      A[j] = t;
+   }
+</code></pre>
+
+<h2 align="left">Flow control inside loops</h2>
+<p>
+The continuation condition dictates whether the loop body is to be
+repeated or skipped. There are some constructs by which this natural
+flow can be altered.
+</p>
+<h3 align="left">The <tt>break</tt> statement</h3>
+<p>
+A loop may be forcibly broken from inside irrespective of whether
+the continuation condition is satisfied or not. This is achieved by
+the <tt>break</tt> statement.
+</p><p>
+<b>Example:</b>
+Let us write the gcd algorithm with explicit break statement.
+Here we make the loop an infinite one. The check whether b equals 0
+is carried out inside the loop. If the check succeeds, the loop is
+broken explicitly by a break statement.
+</p><pre><code>   while (1) {
+      if (b == 0) break;
+      r = a % b;
+      a = b;
+      b = r;
+   }
+   printf("gcd = %d\n", a);
+</code></pre>
+<p>
+Note that any loop can be implemented as an infinite loop with an explicit
+break. The do-while loop
+</p><pre><code>   do {
+      execute loop body;
+   } while (continuation condition is true);
+</code></pre>
+<p>
+is equivalent to
+</p><pre><code>   do {
+      execute loop body;
+      if (continuation condition is false) break;
+   } while (1);
+</code></pre>
+<p>
+and also to
+</p><pre><code>   while (1) {
+      execute loop body;
+      if (continuation condition is false) break;
+   }
+</code></pre>
+<p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/forBreak/" target="_blank">Interactive animation : for loop with break</a></h3>
+</td></tr></tbody></table>
+<p></p><p>
+In case of nested loops, a <tt>break</tt> statement causes the
+innermost loop (in which the statement is executed) to be broken.
+As a toy example, suppose that we want to compute the sum of
+gcds of all pairs (a,b) with 1&lt;=a&lt;=b&lt;=20. Here is an
+implementation with explicit break statements.
+</p><pre><code>   /* Initialize sum */
+   sum = 0;
+
+   for (i=1; i&lt;=20; ++i) {
+      for (j=i; j&lt;=20; ++j) {
+         /* Now we plan to compute gcd(j,i) */
+         /* But we must not disturb the loop variables */
+         /* So we copy j and i to temporary variables a and b and change those copies */
+         a = j; b = i;
+
+         /* The Euclidean gcd loop */
+         while (1) {
+            if (b == 0) break; /* gcd computation is over, so break the while loop */
+            r = a % b;
+            a = b;
+            b = r;
+         }
+
+         /* When the while loop is broken, a contains gcd(j,i). Add it to the accumulating sum. */
+         sum += a;
+      }
+   }
+   printf("The desired sum = %d\n", sum);
+</code></pre>
+<p>
+Next follows a more obfuscating implementation of the same algorithm. Here all
+the loops are broken with explicit break statements. Moreover, the break
+statements occur in the middle of the loops. Finally, the gcd loop is rewritten
+so that we can break as soon as we find a zero remainder. In that case,
+b holds the desired gcd.
+</p><pre><code>   sum = 0;                    /* Initialize sum to 0 */
+   i = 0;                      /* Initialize the outer loop variable */
+   while (1 != 0) {            /* This condition is always true */
+      j = ++i;                 /* Increment i and assign the incremented value to j */
+      if (j == 21) break;      /* Break the outermost loop */
+      while (3.1416 &gt; 0) {     /* This condition is always true */
+         a = j; b = i;         /* Copy j and i to temporary variables */
+         while ('A') {         /* This condition is again always true, since 'A' = 65 */
+            r = a % b;         /* Compute next remainder */
+            if (!r) break;     /* Break the innermost loop */
+            a = b;             /* Adjust a and b and */
+            b = r;             /* prepare for the next iteration */
+         }                     /* End of innermost loop */
+         sum += b;             /* Add gcd(j,i) to the accumulating sum */
+         if (j == 20) break;   /* Break the intermediate loop */
+         ++j;                  /* Prepare for the next value of j */
+      }                        /* End of intermediate loop */
+   }                           /* End of outermost loop */
+   printf("The desired sum = %d\n", sum);
+</code></pre>
+<p>
+Well then, is it a good style to write programs this way? Certainly no!
+This makes your code quite unreadable to (and hence unusable by) others.
+Even if some code is meant for your personal consumption only, debugging
+it may cause you enough headache, in particular, when you are already
+pretty tired or hungry and plan to finish the day's programming as early
+as possible.
+</p><p>
+Programming is fun anyway. For the kick you may at your leisure time make
+attempts to write and/or understand obfuscated codes. So then, what does
+the following program print (as a function of n)?
+</p><pre><code>   #include &lt;stdio.h&gt;
+
+   main ()
+   {
+      unsigned int n, i, j, s;
+
+      printf("Enter a positive integer : ");
+      scanf("%d",&amp;n);
+      s = 0x00000041 ^ (unsigned int)'A';
+      while (i = --n) while (j = --i) while (--j) ++s;
+      printf("s = %d\n", s);
+   }
+</code></pre>
+<h3 align="left">The <tt>continue</tt> statement</h3>
+<p>
+The <tt>continue</tt> statement also affects the normal execution of
+a loop. It does not cause the loop to terminate, but throws the control
+to the top of the loop ignoring the remaining part of the loop body
+for the <i>current</i> iteration.
+</p><p><b>Example:</b>
+Suppose we want to print the integers 1,2,<tt>...</tt>,100 neatly
+with 10 integers printed in a line. Here is how this can be done:
+</p><pre><code>   for (i=1; i&lt;=100; ++i) {
+      printf("%4d",i);
+      if (i%10 != 0) continue;
+      printf("\n");
+   }
+</code></pre>
+<p>
+Here if i is a multiple of 10, the new line character is printed.
+Otherwise the continue statement lets the control flow reach the top of the
+loop, i.e., to the loop increment area where the variable i is incremented.
+The same effect can be realized by the following while loop:
+</p><pre><code>   i = 0;
+   while (i &lt; 100) {
+      ++i;
+      printf("%4d",i);
+      if (i%10 != 0) continue;
+      printf("\n");
+   }
+</code></pre>
+<p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/forContinue/" target="_blank">Interactive animation : for loop with continue</a></h3>
+</td></tr></tbody></table>
+<p></p>
+
+  <div class="navigator">
+    <a href="branch.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Conditions and branching</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="exer1.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Exercise set I</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

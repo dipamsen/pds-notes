@@ -1,0 +1,650 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Abstract data types | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Abstract data types</h1>
+<p>
+You are now a master C programmer. You know most of the essential features
+of C. So, given a problem, you plan to jump to write the code. Yes,
+I see that you have mentally written the <tt>#include</tt> line.
+</p><p>
+Please wait. Solving a problem is a completely different game. Writing
+the final code is only a tiny part of it. I admit that even when all the
+algorithms are fully specified, writing a good program is not always a joke, in
+particular, when the program is pretty huge and involves cooperation of
+many programmers. Think of the Linux operating system which was developed
+by thousands of free-lance programmers all over the globe. The system
+works pretty harmoniously and reportedly with much less bugs than software
+from commercial giants like Microsoft.
+</p><p>
+First notice that your code may be understood and augmented by third parties
+in your absence. Even if you flood your code with documentation, its
+readability is not ensured. An important thing you require is a design
+document. That is not at the programming level, but at a more abstract level.
+</p><p>
+Data abstraction is the first step. A problem is a problem of its own nature.
+It deals with input and output in specified formats not related to any
+computer program. For example, a weather forecast system reads gigantic
+databases and outputs some prediction. Where is C coming in the picture
+in this behavioral description? One can use any other computer language,
+perhaps assembly languages, or even hand calculations, to arrive at the
+solution.
+</p><p>
+Assume that you are taught the natural language English pretty well. You are
+also given a plot. Your problem is to write an attractive detective story in
+English. Is it a trivial matter? I think it is not quite so, at least for
+most of us. You have to carefully plan about your characters, the location,
+the sequence, the suspense, and what not. Each such planning step involves
+many things that have nothing to do with English. The murderer is to be
+modeled as a human being, an abstract data, together with a set of behaviors,
+a set of abstract procedures. There is no English till this point. A
+language is necessary only when you want to give a specific concrete form
+to these abstract things.
+</p><p>
+Still, you cannot perhaps be a Conan Doyle or Christie, neither in plot
+design nor in expressions. Well, they are geniuses. However, if you plan
+carefully and master English reasonably well to arrive at a decent and
+sleek production, who knows, you may be the script-writer for the next
+Bollywood blockbuster?
+</p><h2 align="left">What is an abstract data type?</h2>
+<p>
+An abstract data type (<b>ADT</b>) is an object with a generic description
+independent of implementation details. This description includes a
+specification of the components from which the object is made and also
+the behavioral details of the object. Instances of abstract objects include
+mathematical objects (like numbers, polynomials, integrals, vectors),
+physical objects (like pulleys, floating bodies, missiles),
+animate objects (dogs, Pterodactyls, Indians) and objects (like poverty,
+honesty, inflation) that are abstract even in the natural language sense.
+You do not see C in Pterodactyls. Only when you want to simulate a flying
+Pterodactyl, you would think of using a graphics package in tandem
+with a computer language. Similarly, inflation is an abstract concept.
+When you want to model it and want to predict it for the next 10 years,
+you would think of writing an extrapolation program in C.
+</p><p>
+Specifying only the components of an object does not suffice. Depending on the problem you
+are going to solve, you should also identify the properties and behaviors of the object
+and perhaps additionally the pattern of interaction of the object with other objects of same
+and/or different types. Thus in order to define an ADT we need to specify:
+</p><ul>
+<li>The components of an object of the ADT.
+</li><li>A set of procedures that provide the behavioral description of objects
+belonging to the ADT.
+</li></ul>
+<p>
+There may be thousands of ways in which a given ADT can be implemented,
+even when the coding language remains constant. Any such implementation must
+comply with the content-wise and behavioral description of the ADT.
+</p><p>
+<b>Examples</b>
+</p><ul>
+<li><b>Integers:</b> An integer is an abstract data type having the standard
+mathematical meaning. In order that integers may be useful, we also need to
+specify operations (arithmetic operations, gcd, square root etc.) and
+relations (ordering, congruence etc.) on integers.
+</li><li><b>Real numbers:</b> There are mathematically rigorous ways of defining
+real numbers (Dedekind cuts, completion of rational numbers, etc). To avoid
+these mathematical details, let us plan to represent real numbers by decimal
+expansions (not necessarily terminating). Real numbers satisfy
+standard arithmetic and other operations and the usual ordering.
+</li><li><b>Complex numbers:</b> A complex number may be mathematically treated
+as an ordered pair of real numbers. An understanding of real numbers is
+then sufficient to represent complex numbers. However, the complex arithmetic
+is markedly different from the real arithmetic.
+</li><li><b>Polynomials</b> with real (or complex or integer or rational)
+coefficients with the standard arithmetic.
+</li><li><b>Matrices</b> with real (or complex or integer or rational) entries
+with the standard matrix arithmetic (which may include dimension, rank,
+nullity, etc).
+</li><li><b>Sets</b> are unordered collections of elements. We may restrict
+our study to sets of real (or complex) numbers and talk about union, intersection,
+complement and other standard operations on sets.
+</li><li>A <b>multiset</b> is an unordered collection of elements (say, numbers),
+where each element is allowed to have multiple occurrences. For example,
+an aquarium is a multiset of fish types. One can add or delete fishes
+to or from an aquarium.
+</li><li>A <b>book</b> is an ADT with attributes like name, author(s), ISBN,
+number of pages, subject, etc. You may think of relations like comparison
+of difficulty levels of two books.
+</li></ul>
+<h2 align="left">How to implement an abstract data type?</h2>
+<p>
+It is now and only now when you think about writing C codes. Carefully investigate
+the specification of the ADT and possible target applications where this ADT
+is going to be used. Plan for suitable C constructs to provide the appropriate
+functionality with good performance. Try to exploit your experience
+with C. But fully understand what you are going to implement, the limitations,
+the expected performance figures, the ease of code maintenance, and a lot
+of related issues. After all, you have to market your product.
+</p><p>
+<b>Examples</b>
+</p><ul>
+<li><b>Integers:</b> Oh, my! C provides so many integer variables and
+still I have to write my integers. Yep! You may have to. For most common-place
+applications C's built-in integer data types are sufficient. But not always.
+Suppose my target application is designing a cryptosystem, where one deals
+with very big integers, like those of bit-sizes one to several thousand bits.
+Our C's maximum integer length is 64 bits. That is grossly inadequate to
+address the cryptosystem designer's problem. ANSI standards dictate use of
+integers of length at most 32 bits, which are even poorer for cryptography,
+but at the minimum portable across platforms. At any rate, you need your
+customized integer data types.
+<p>
+A common strategy is to break big integers into pieces and store each piece
+in a built-in data type. To an inexperienced user breaking with respect to
+the decimal representation seems easy and intuitive. But computer's world is
+binary. So breaking with respect to the binary representation is much more
+efficient in terms of space and running time. So we plan to use an array
+of <tt>unsigned long</tt> variables to store the bits of a big integer.
+Each such variable is a 32-bit word and is capable of storing 32 bits of
+a big integer. Therefore, if we plan to work with integers of size no
+larger than 10,000 bits, we require an array of size no more than 313
+<tt>unsigned long</tt> variables. The zeroth location of the array holds
+the least significant 32 bits of a big integer, the first location the
+next 32 bits, and so on. Since all integers are not necessarily of size
+10,000 bits, it is also necessary to store the actual word-size of a big
+integer. Finally, if we also plan to allow negative integers, we should also
+reserve a location for storing the sign information. So here is a possible
+implementation of the big integer data type.
+</p><pre><code>   typedef struct {
+      unsigned long words[313];
+      unsigned int wordSize;
+      unsigned char sign;
+   } bigint;
+</code></pre>
+<p>
+This sounds okay, but has an efficiency problem. When you pass a
+<tt>bigint</tt> data to a function, the entire <tt>words</tt> array is
+copied element-by-element. That leads to unreasonable overheads during
+parameter passing. We can instead use an array of 315 <tt>unsigned long</tt>
+variables and use its 313-th and 314-th locations to store the size and
+sign information. The first 313 locations (at indexes 0 through 312)
+represent the magnitude of the integer as before.
+</p><pre><code>   #define SIZEIDX 313
+   #define SIGNIDX 314
+   typedef unsigned long goodbigint[315];
+</code></pre>
+<p>
+Now <tt>goodbigint</tt> is a simple array and so passing it to a function
+means only a pointer is passed. Quite efficient, right?
+</p><p>
+These big integers are big enough for cryptographic applications, but cannot
+represent integers bigger than big, for example, integers of bit-size
+millions to billions. Whenever we use static arrays, we have to put an
+upper limit on the size. If we have to deal with integers of arbitrary
+sizes (as long as memory permits), we have no option other than using
+dynamic memory and allocate the exact amount of memory needed to store a very big
+integer. But then since the maximum index of the dynamic array is not fixed,
+we have to store the size and sign information at the beginning of the array.
+Thus the magnitude of the very big integer is stored starting from the second
+array index. This leads to somewhat clumsy translation between word indices
+and array indices.
+</p><pre><code>   #define SIZEIDX 0
+   #define SIGNIDX 1
+   typedef unsigned long *verybigint;
+</code></pre>
+<p>
+A better strategy is to use a structure with a dynamic words pointer.
+</p><pre><code>   typedef struct {
+      unsigned long *words;
+      unsigned int size;
+      unsigned char sign;
+   } goodverybigint;
+</code></pre>
+<p>
+So you have to pay a hell lot of attention, when implementation issues
+come. Good solutions come from experience and innovativeness.
+</p><p>
+Being able to define integers for a variety of applications is not enough.
+We need to do arithmetic (add, subtract, multiply etc.) on these integers.
+It is beyond the scope of this elementary course to go into the details of
+these arithmetic routines. It suffices here only to highlight the difference between
+abstract specifications and application-specific implementations. Both are important.
+</p></li><li><b>Real numbers:</b>
+Again C provides built-in implementations of real numbers: <tt>float</tt>,
+<tt>double</tt> and <tt>long double</tt>. If one has to use floating point
+numbers of higher precision, one has to go for private floating point
+data types and write arithmetic routines for these new data types. These
+are again topics too advanced for this course.
+</li><li><b>Complex numbers:</b> If we are happy with real numbers of
+<tt>double</tt> precision, the most natural way to define a complex number is
+the following:
+<pre><code>   typedef struct {
+      double real;
+      double imag;
+   } complex;
+</code></pre>
+<p>
+Let us also illustrate the implementation of some arithmetic routines on complex
+numbers:
+</p><pre><code>   complex cadd ( complex z1 , complex z2 )
+   {
+      complex z;
+      z.real = z1.real + z2.real;
+      z.imag = z1.imag + z2.imag;
+      return z;
+   }
+
+   complex cmul ( complex z1 , comple z2 )
+   {
+      complex z;
+      z.real = z1.real * z2.real - z1.imag * z2.imag;
+      z.imag = z1.real * z2.imag + z1.imag * z2.real;
+      return z;
+   }
+
+   complex conj ( complex z1 )
+   {
+      complex z;
+      z.real = z1.real;
+      z.imag = -z1.imag;
+      return z;
+   }
+
+   void cprn ( complex z )
+   {
+      printf("(%lf) + i(%lf)", z.real, z.imag);
+   }
+</code></pre>
+</li><li><b>Matrices:</b>
+Suppose we want to work with matrices having complex entries and suppose
+that the <tt>complex</tt> ADT has been defined as above. We may define
+matrices of bounded sizes as:
+<pre><code>   #define MAXROW 10
+   #define MAXCOL 15
+   typedef struct {
+      int rowdim;
+      int coldim;
+      complex entry[MAXROW][MAXCOL];
+   } matrix;
+</code></pre>
+<p>
+Let us now implement some basic arithmetic operations on these matrices.
+</p><pre><code>   matrix msetid ( int n )
+   {
+      matrix C;
+      int i, j;
+
+      if ((n &gt; MAXROW) || (n &gt; MAXCOL)) {
+         fprintf(stderr, "msetid: Matrix too big\n");
+         C.rowdim = C.coldim = 0;
+         return C;
+      }
+      C.rowdim = C.coldim = n;
+      for (i = 0; i &lt; C.rowdim; ++i) {
+         for (j = 0; j &lt; C.coldim; ++j) {
+            A.entry[i][j].real = (i == j) ? 1 : 0;
+            A.entry[i][j].imag = 0;
+         }
+      }
+      return C;
+   }
+
+   matrix madd ( matrix A , matrix B )
+   {
+      matrix C;
+      int i, j;
+
+      if ((A.rowdim != B.rowdim) || (A.coldim != B.coldim)) {
+         fprintf(stderr, "madd: Matrices of incompatible dimensions\n");
+         C.rowdim = C.coldim = 0;
+         return C;
+      }
+
+      C.rowdim = A.rowdim;
+      C.coldim = A.coldim;
+      for (i = 0; i &lt; C.rowdim; ++i)
+         for (j = 0; j &lt; C.coldim; ++j)
+            C.entry[i][j] = cadd(A.entry[i][j],B.entry[i][j]);
+      return C;
+   }
+
+   matrix mmul ( matrix A , matrix B )
+   {
+      matrix C;
+      int i, j, k;
+      complex z;
+
+      if (A.coldim != B.rowdim) {
+         fprintf(stderr, "mmul: Matrices of incompatible dimensions\n");
+         C.rowdim = C.coldim = 0;
+         return C;
+      }
+      C.rowdim = A.rowdim;
+      C.coldim = B.coldim;
+      for (i = 0; i &lt; A.rowdim; ++i) {
+         for (j = 0; j &lt; B.coldim; ++j) {
+            C.entry[i][j].real = 0;
+            C.entry[i][j].imag = 0;
+            for (k = 0; k &lt; A.coldim; ++k) {
+               z = cmul(A.entry[i][k], B.entry[k][j]);
+               C.entry[i][j] = cadd(C.entry[i][j],z);
+            }
+         }
+      }
+      return C;
+   }
+</code></pre>
+</li></ul>
+<h2 align="left">A complete example : the ordered list ADT</h2>
+<p>
+Let us now define a new ADT which has not been encountered earlier in your
+math courses. We call this ADT the ordered list. It is a list of elements,
+say characters, in which elements are ordered, i.e., there is a zeroth element,
+a first element, a second element, and so on, and in which repetitions of elements
+are allowed. For an ordered list L, let us plan to have the following
+functionality:
+</p><dl>
+<dt><tt>L = init();</tt>
+</dt><dd>Initialize <tt>L</tt> to an empty list.
+</dd><dt><tt>L = insert(L,ch,pos);</tt>
+</dt><dd>Insert the character <tt>ch</tt> at position <tt>pos</tt> in the
+list <tt>L</tt> and return the modified list. Report error if <tt>pos</tt>
+is not a valid position in <tt>L</tt>.
+</dd><dt><tt>delete(L,pos);</tt>
+</dt><dd>Delete the character at position <tt>pos</tt> in the list <tt>L</tt>.
+Report error if <tt>pos</tt> is not a valid position in <tt>L</tt>.
+</dd><dt><tt>isPresent(L,ch);</tt>
+</dt><dd>Check if the character <tt>ch</tt> is present in the list <tt>L</tt>.
+If no match is found, return -1, else return the index of the leftmost match.
+</dd><dt><tt>getElement(L,pos);</tt>
+</dt><dd>Return the character at position <tt>pos</tt> in the list <tt>L</tt>.
+Report error if <tt>pos</tt> is not a valid position in <tt>L</tt>.
+</dd><dt><tt>print(L);</tt>
+</dt><dd>Print the list elements from start to end.
+</dd></dl>
+<p>
+We will provide two complete implementations of this ADT.
+We assume that the element positions are indexed starting from 0.
+</p>
+<h3 align="left">Implementation using static arrays</h3>
+<p>
+Let us restrict the number of elements in the ordered list to be <tt>&lt;=&nbsp;100</tt>.
+One can then use an array of characters of this size. Moreover, one needs
+to maintain the current size of the list. Thus the list data type can be
+defined as:
+</p><pre><code>   #define MAXLEN 100
+
+   typedef struct {
+      int len;
+      char element[MAXLEN];
+   } olist;
+</code></pre>
+Let us now implement all the associated functions one by one.
+<pre><code>   olist init ()
+   {
+      olist L;
+
+      L.len = 0;
+      return L;
+   }
+
+   olist insert ( olist L , char ch , int pos )
+   {
+      int i;
+
+      if ((pos &lt; 0) || (pos &gt; L.len)) {
+         fprintf(stderr, "insert: Invalid index %d\n", pos);
+         return L;
+      }
+      if (L.len == MAXLEN) {
+         fprintf(stderr, "insert: List already full\n");
+         return L;
+      }
+      for (i = L.len; i &gt; pos; --i) L.element[i] = L.element[i-1];
+      L.element[pos] = ch;
+      ++L.len;
+      return L;
+   }
+
+   olist delete ( olist L , int pos )
+   {
+      int i;
+
+      if ((pos &lt; 0) || (pos &gt;= L.len)) {
+         fprintf(stderr, "delete: Invalid index %d\n", pos);
+         return L;
+      }
+      for (i = pos; i &lt;= L.len - 2; ++i) L.element[i] = L.element[i+1];
+      --L.len;
+      return L;
+   }
+
+   int isPresent ( olist L , char ch )
+   {
+      int i;
+
+      for (i = 0; i &lt; L.len; ++i) if (L.element[i] == ch) return i;
+      return -1;
+   }
+
+   char getElement ( olist L , int pos )
+   {
+      if ((pos &lt; 0) || (pos &gt;= L.len)) {
+         fprintf(stderr, "getElement: Invalid index %d\n", pos);
+         return '\0';
+      }
+      return L.element[pos];
+   }
+
+   void print ( olist L )
+   {
+      int i;
+
+      for (i = 0; i &lt; L.len; ++i) printf("%c", L.element[i]);
+   }
+</code></pre>
+<p>
+Here is a possible <tt>main()</tt> function with these calls.
+</p><pre><code>   int main ()
+   {
+      olist L;
+
+      L = init();
+      L = insert(L,'a',0);
+      printf("Current list is : "); print(L); printf("\n");
+      L = insert(L,'b',0);
+      printf("Current list is : "); print(L); printf("\n");
+      L = delete(L,5);
+      printf("Current list is : "); print(L); printf("\n");
+      L = insert(L,'c',1);
+      printf("Current list is : "); print(L); printf("\n");
+      L = insert(L,'b',3);
+      printf("Current list is : "); print(L); printf("\n");
+      L = delete(L,2);
+      printf("Current list is : "); print(L); printf("\n");
+      L = insert(L,'z',8);
+      printf("Current list is : "); print(L); printf("\n");
+      L = delete(L,2);
+      printf("Current list is : "); print(L); printf("\n");
+      printf("Element at position 1 is %c\n", getElement(L,1));
+   }
+</code></pre>
+<p>
+Here is the <a href="https://cse.iitkgp.ac.in/pds/notes/prog/ADT1.c" target="_blank">complete program</a>.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/list1.html" target="_blank">Animation example : Implementation of the ordered list ADT with static memory</a></h3>
+</td></tr></tbody></table>
+<p></p><h3 align="left">Implementation using linked lists</h3>
+<p>
+Let us now see an implementation based on dynamic linked lists. We use the same
+prototypes for function calls. But we define the basic data type <tt>olist</tt> in a
+separate manner. For the sake of ease of writing the functions, we maintain
+a dummy node at the beginning of the linked list.
+</p><pre><code>   typedef struct _node {
+      char element;
+      struct _node *next;
+   } node;
+
+   typedef node *olist;
+
+   olist init ()
+   {
+      olist L;
+
+      /* Create the dummy node */
+      L = (node *)malloc(sizeof(node));
+      L -&gt; element = '\0';
+      L -&gt; next = NULL;
+      return L;
+   }
+
+   olist insert ( olist L , char ch , int pos )
+   {
+      int i;
+      node *p, *n;
+
+      if (pos &lt; 0) {
+         fprintf(stderr, "insert: Invalid index %d\n", pos);
+         return L;
+      }
+      p = L;
+      i = 0;
+      while (i &lt; pos) {
+         p = p -&gt; next;
+         if (p == NULL) {
+            fprintf(stderr, "insert: Invalid index %d\n", pos);
+            return L;
+         }
+         ++i;
+      }
+      n = (node *)malloc(sizeof(node));
+      n -&gt; element = ch; 
+      n -&gt; next = p -&gt; next;
+      p -&gt; next = n;
+      return L;
+   }
+
+   olist delete ( olist L , int pos )
+   {
+      int i;
+      node *p;
+
+      if (pos &lt; 0) {
+         fprintf(stderr, "delete: Invalid index %d\n", pos);
+         return L;
+      }
+      p = L;
+      i = 0;
+      while ((i &lt; pos) &amp;&amp; (p -&gt; next != NULL)) {
+         p = p -&gt; next;
+         ++i;
+      }
+      if (p -&gt; next == NULL) {
+         fprintf(stderr, "delete: Invalid index %d\n", pos);
+         return L;
+      }
+      p -&gt; next = p -&gt; next -&gt; next;
+      return L;
+   }
+
+   int isPresent ( olist L , char ch )
+   {
+      int i;
+      node *p;
+
+      i = 0;
+      p = L -&gt; next;
+      while (p != NULL) {
+         if (p -&gt; element == ch) return i;
+         p = p -&gt; next;
+         ++i;
+      }
+      return -1;
+   }
+
+   char getElement ( olist L , int pos )
+   {
+      int i;
+      node *p;
+
+      i = 0;
+      p = L -&gt; next;
+      while ((i &lt; pos) &amp;&amp; (p != NULL)) {
+         p = p -&gt; next;
+         ++i;
+      }
+      if (p == NULL) {
+         fprintf(stderr, "getElement: Invalid index %d\n", pos);
+         return '\0';
+      }
+      return p -&gt; element;
+   }
+
+   void print ( olist L )
+   {
+      node *p;
+
+      p = L -&gt; next;
+      while (p != NULL) {
+         printf("%c", p -&gt; element);
+         p = p -&gt; next;
+      }
+   }
+</code></pre>
+<p>
+The <tt>main()</tt> function of the static array implementation can be used
+without any change under this implementation.
+Here is the <a href="https://cse.iitkgp.ac.in/pds/notes/prog/ADT2.c" target="_blank">complete program</a>.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/list2.html" target="_blank">Animation example : Implementation of the ordered list ADT with dynamic memory</a></h3>
+</td></tr></tbody></table>
+<p></p><p>
+This exemplifies that
+the abstract properties and functional behaviors are independent of the actual
+implementation, or stated in another way, our two implementations of the
+ordered list ADT correctly and consistently tally with the abstract
+specification.
+</p><p>
+And why should we stop here? There could be thousand other ways in
+which the same ADT can be implemented, and in all these cases the function prototypes
+may be so chosen that the same <tt>main()</tt> function will work. This is
+the precise difference between an abstract specification and particular
+implementations.
+</p>
+
+  <div class="navigator">
+    <a href="exer3.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Exercise set III</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="stackqueue.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Stacks and queues</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

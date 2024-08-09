@@ -1,0 +1,527 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pointers and dynamic memory allocation | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Pointers and dynamic memory allocation</h1>
+<p>
+All variables, arrays, structures and unions that we worked with so far are
+<i>statically</i> allocated, meaning that whenever an appropriate scope
+is entered (e.g. a function is invoked) an amount of memory dependent
+on the data types and sizes is allocated from
+the stack area of the memory. When the program
+goes out of the scope (e.g. when a function returns), this memory is
+returned back to the stack. There is an alternative way of allocating
+memory, more precisely, from the heap part of the memory. In this case,
+the user makes specific calls to capture some amount of memory and continues
+to hold that memory unless it is explicitly (i.e., by distinguished calls)
+returned back to the heap. Such memory is said to be <i>dynamically</i>
+allocated.
+</p><p>
+In order to exemplify the usefulness of dynamic memory allocation, suppose
+that there are two types of foomatic collections: the first type refers to
+an array of ten integers, whereas the second type refers to an array of ten
+million integers. A foomatic chain is made from a combination of
+one million collections of first type and few (say, ten) collections
+of the second type. Such a chain demands a total memory capable of
+holding 110 million integers. Assuming that an integer is of size 32 bits,
+this amounts to a memory of 440 Megabytes. A modern personal computer
+usually has enough memory to accommodate this data.
+</p><p>
+It is a foomatic convention to treat both types of collection uniformly,
+i.e., our plan is to represent both by a single data type. Think of the
+difference between you and me. I am the instructor (synonymously the
+president) of the class, whereas students are only listeners (synonymous
+with citizens). A president is the most important person in a society,
+he requires microphones, computers, bla bla bla. Still, both the president
+and each citizen are of the same data type called <tt>human</tt>.
+</p><p>
+So a <tt>foollection</tt> is a foomatic <tt>human</tt> capable of representing
+a collection of either type. If we plan to handle it using a structure with
+an array (or union), we must prepare for the bigger collections. The definition
+goes like this:
+</p><pre><code>   typedef struct {
+      int type;
+      int data[10000000];
+   } foollection;
+</code></pre>
+<p>
+Now irrespective of what a <tt>foollection</tt> data actually stores, it
+requires memory for ten million and one integers. (Think of each of you
+being given a PA system and a computer in the class.) A foomatic chain
+then requires over 40,000 Gigabytes of memory. This is sheer waste of
+space, since only 440 Megabytes suffice. Moreover, no personal computer
+I have heard of comes with so much memory including hard disks.
+</p><p>
+What is the way out? Let us plan to redefine <tt>foollection</tt> in the
+following way:
+</p><pre><code>   typedef struct {
+      int type;
+      int *data;
+   } foollection;
+</code></pre>
+<p>
+I have replaced the static array by a pointer. We will soon see that a
+pointer can be allocated memory from the heap and that the amount of memory
+to be allocated to each pointer can be specified during the execution of
+the program. Thus the <tt>data</tt> pointer in a <tt>foollection</tt>
+variable is assigned exactly as much memory as is needed. (It is as if
+when I come to the classroom, the run-time system gives me a PA system
+and a computer, whereas a student is given only a comfortable chair.)
+Now each collection requires, in addition to the actual data array, the
+space for an <tt>int</tt> variable and for a pointer, typically demanding
+4&nbsp;bytes each. So a foomatic chain requires a space overhead of
+slightly more than 8 Megabytes, i.e., a chain with all foomatic abstractions
+now fits in a memory of size less than 450 Megabytes. My computer has this
+much space.
+</p><p>
+Let me illustrate another situation where dynamic memory allocation proves
+to be extremely useful. Look at lists and trees made up of structures
+with self-referencing pointers:
+</p><center><img src="https://cse.iitkgp.ac.in/pds/notes/img/struct3.gif" alt="linked lists"><br>Figure: Dynamic lists</center>
+<p>
+A static array can implement such lists, but has two disadvantages:
+</p><ul>
+<li>The size of a static array is fixed during declaration, i.e., a static
+array can handle lists of a bounded size. Even if my machine has more memory
+than yours, I cannot leverage this superiority of my computer with static
+arrays.  On the other extreme, irrespective of the actual size of the
+collection, a static array necessarily consumes the entire space for the
+biggest supportable collection.
+</li><li>The linked structure can be incorporated in the framework of an array,
+but that requires (often awful) calculations to find the locations of the
+next objects. If pointers with dynamically assigned memory are used,
+accessing objects following the links becomes much easier.
+</li></ul>
+<p>
+So there is a big bunch of reasons why we should jump for dynamic memory
+management. Do it. But listen to the standard good advice from me. Dynamic
+memory allocation gives a programmer too much control of memory. Inexperienced
+programmers do not know how to effectively exploit that control. There remains
+every chance that everything gets repeatedly goofed up and the programmer,
+tired of fighting with segmentation faults for weeks, eventually gives up
+and joins the ice-cream industry. If you excel in this new job, I won't
+mind, even given that I am not a particular fan of ice-creams. But my job
+is to teach you programming, not how to manufacture tasty ice-creams.
+</p><h2 align="left">One-dimensional dynamic memory</h2>
+<p>
+The built-in function <tt>malloc</tt> allocates a one-dimensional array
+to a pointer. You have to specify the total amount of memory (in bytes)
+that you would like to allocate to the pointer.
+</p><pre><code>   #define SIZE1 25
+   #define SIZE2 36
+   int *p;
+   long double *q;
+   p = (int *)malloc(SIZE1 * sizeof(int));
+   q = (long double *)malloc(SIZE2 * sizeof(long double));
+</code></pre>
+<p>
+The first call of <tt>malloc</tt> allocates to <tt>p</tt> a (dynamic)
+array capable of storing <tt>SIZE1</tt> integers. The second call
+allocates an array of <tt>SIZE2</tt> <tt>long double</tt> data to the
+pointer <tt>q</tt>. In addition to the size of each array, we need
+to specify the <tt>sizeof</tt> (size in bytes of) the underlying data
+type. <tt>malloc</tt> allocates memory in bytes and reads the amount of
+bytes needed from its sole argument.
+</p><p>
+If you demand more memory than is currently available in your system,
+<tt>malloc</tt> returns the <tt>NULL</tt> pointer. So checking the
+allocated pointer for <tt>NULL</tt>ity is the way how one can check
+if the allocation request has been successfully processed by the memory
+management system.
+</p><p>
+<tt>malloc</tt> allocates raw memory from some place in the heap. No
+attempts are made to initialize that memory. It is the programmer's
+duty to initialize and then use the values stored at the locations of
+a dynamic array.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr><td>
+<h3 align="left"><a href="https://cse.iitkgp.ac.in/pds/notes/swf/dynamic1.html" id="noul" target="_blank">Animation example : 1-D dynamic memory</a></h3>
+</td></tr></tbody></table>
+</p><p>
+<b>Example:</b>
+Let us now write a function that allocates an appropriate amount of
+memory to a <tt>foollection</tt> structure based on the type of the
+collection it is going to represent.
+</p><pre><code>   foollection initfc ( int type )
+   {
+      foollection fc;
+
+      /* Set type of the collection */
+      fc.type = type;
+
+      /* Allocate memory for the data pointer */
+      if (type == 1) fc.data = (int *)malloc(10*sizeof(int));
+      else if (type == 2) fc.data = (int *)malloc(10000000*sizeof(int));
+      else fc.data = NULL;
+
+      /* Check for error conditions */
+      if (fc.data == NULL)
+         fprintf(stderr, "Error: insufficient memory or unknown type.\n");
+
+      return fc;
+   }
+</code></pre>
+<p>
+<b>Example:</b>
+Let us now create a linked list of 4 nodes holding the integer values
+<tt>3,5,7,9</tt> from start to end. For simplicity we do not check
+for error conditions.
+</p><pre><code>   typedef struct _node {
+      int data;
+      struct _node *next;
+   } node;
+   node *head, *p;
+   int i;
+
+   head = (node *)malloc(sizeof(node));  /* Create the first node */
+   head-&gt;data = 3;                       /* Set data for the first node */
+   p = head;                             /* Next p will navigate down the list */
+   for (i=1; i&lt;=3; ++i) {
+      p-&gt;next = (node *)malloc(sizeof(node));  /* Allocate the next node */
+      p = p-&gt;next;                             /* Advance p by one node */
+      p-&gt;data = 2*i+3;                         /* Set data */
+   }
+   p-&gt;next = NULL;                       /* Terminate the list by NULL */
+</code></pre>
+<p>
+An important thing to notice here is that we are always allocating
+memory to <tt>p-&gt;next</tt> and not to <tt>p</tt> itself. For example,
+first consider the allocation of <tt>head</tt> and subsequently an
+allocation of <tt>p</tt> assigned to <tt>head-&gt;next</tt>.
+</p><pre><code>   head = (node *)malloc(sizeof(node));
+   p = head-&gt;next;
+   p = (node *)malloc(sizeof(node));
+</code></pre>
+<p>
+After the first assignment of <tt>p</tt>, both this pointer and the <tt>next</tt>
+pointer of <tt>*head</tt> point to the same location. However, they continue
+to remain <i>different pointers</i>. Therefore, the subsequent memory
+allocation of <tt>p</tt> changes <tt>p</tt>, whereas <tt>head-&gt;next</tt>
+remains unaffected. For maintaining the list structure we, on the other hand,
+want <tt>head-&gt;next</tt> to be allocated memory. So allocating the
+running pointer <tt>p</tt> is an error. One should allocate
+<tt>p-&gt;next</tt> with <tt>p</tt> assigned to <tt>head</tt> (not to
+<tt>head-&gt;next</tt>). Now <tt>p</tt> and <tt>head</tt> point to the
+same node and, therefore, both <tt>p-&gt;next</tt> and <tt>head-&gt;next</tt>
+refer to the same pointer -- the one to which we like to allocate memory
+in the subsequent step.
+</p><p>
+This example illustrates that the first node is to be treated separately
+from subsequent nodes. This is the reason why we often maintain a <i>dummy
+node</i> at the head and start the actual data list from the next node.
+We will see many examples of this convention later in this course.
+</p><p>
+There are two other ways by which memory can be allocated to pointers.
+The <tt>calloc</tt> call takes two arguments, a number <tt>n</tt> of cells
+and a size <tt>s</tt> of a data, and returns an allocated array capable
+of storing <tt>n</tt> objects each of size <tt>s</tt>. Moreover, the
+allocated memory is initialized to zero. If the allocation request fails,
+the <tt>NULL</tt> pointer is returned.
+</p><pre><code>   #define FOO_CHAIN_SIZE 1000000
+
+   typedef struct {
+      int type;
+      int *data;
+   } foollection;
+
+   foollection *foochain;
+
+   foochain = (foollection *)calloc(FOO_CHAIN_SIZE,sizeof(foollection));
+</code></pre>
+<p>
+This call creates an array of one million <tt>foollection</tt> structures
+(or <tt>NULL</tt> if the machine cannot provide the requested amount of
+memory). Each structure in the array is initialized to zero, i.e., each
+<tt>foochain[i].type</tt> is set to 0 and each <tt>foochain[i].data</tt>
+is set to <tt>NULL</tt>.
+</p><p>
+The <tt>realloc</tt> call reallocates memory to a pointer. It is essentially
+used to change the amount of memory allocated to some pointer. If the new
+size <tt>s'</tt> of the memory is larger than the older size <tt>s</tt>,
+then <tt>s</tt> bytes are copied from the old memory to the new memory.
+The remaining <tt>s'-s</tt> bytes are left uninitialized. On the contrary,
+if <tt>s'&lt;s</tt>, then only <tt>s'</tt> bytes are copied. If the
+reallocation request fails, the original pointer remains unchanged and
+the <tt>NULL</tt> pointer is returned.
+</p><p>
+As an example, suppose that we want to change the size of the dynamic
+array pointed to by <tt>foochain</tt> from one million to two millions,
+but without altering the data currently stored in the array. We can use
+the following call:
+</p><pre><code>   #define NEW_SIZE 2000000
+
+   foochain = realloc(foochain, NEW_SIZE * sizeof(foollection));
+   if (foochain == NULL)
+      fprintf(stderr, "Error: unable to reallocate storage.\n");
+</code></pre>
+<p>
+Memory allocated by <tt>malloc</tt>, <tt>calloc</tt> or <tt>realloc</tt>
+can be returned to the heap by the <tt>free</tt> system call. It takes
+an allocated pointer as argument. For example, the <tt>foochain</tt>
+pointer can be deallocated memory by the call:
+</p><pre><code>   free(foochain);
+</code></pre>
+<p>
+When a program terminates, all allocated memory (static and dynamic)
+is returned to the system. There is no necessity to free memory explicitly.
+However, since memory is a bounded resource, allocating it several times,
+say, inside a loop, may eventually let the system run out of memory. So
+it is a good programming practice to free memory that will no longer be used
+in the program.
+</p><h2 align="left">Two-dimensional dynamic memory</h2>
+<p>
+Allocating two-dimensional memory is fundamentally similar to allocating
+one-dimensional memory. One uses the same calls (<tt>malloc</tt>, etc.)
+described in the previous section. One should only be careful about the
+allocation sizes and the return types.
+</p><p>
+Recall that we have four ways of declaring two-dimensional arrays. These
+are summarized below:
+</p><pre><code>   #define ROWSIZE 100
+   #define COLSIZE 200
+
+   int A[ROWSIZE][COLSIZE];
+   int (*B)[COLSIZE];
+   int *C[ROWSIZE];
+   int **D;
+</code></pre>
+<p>
+The first array <tt>A</tt> is fully static. It cannot be allocated or
+deallocated memory dynamically. As the definition of <tt>A</tt>
+is encountered, the required amount of space is allocated to <tt>A</tt> from
+the stack area of the memory. When the definition of <tt>A</tt> expires
+(i.e., the scope of <tt>A</tt> ends, say, due to return from a function
+or exit from a block), the static memory is returned back to the stack.
+Each of the three other arrays (<tt>B,C,D</tt>) has a dynamic component in
+it. Let us study them case-by-case.
+</p><p>
+<tt>B</tt> is a pointer to an array of <tt>COLSIZE</tt> integers. So it
+can be allocated <tt>ROWSIZE</tt> rows in the following way:
+</p><pre><code>   B = (int (*)[COLSIZE])malloc(ROWSIZE * sizeof(int[COLSIZE]));
+</code></pre>
+<p>
+The same can be achieved in a  more readable way as follows:
+</p><pre><code>   typedef int matrow[COLSIZE];
+
+   B = (matrow *)malloc(ROWSIZE * sizeof(matrow));
+</code></pre>
+<p>
+<tt>C</tt> is a static array of <tt>ROWSIZE</tt> <tt>int</tt>
+pointers. Therefore, <tt>C</tt> itself cannot be allocated or deallocated
+memory. The individual rows of <tt>C</tt> should be allocated memory.
+</p><pre><code>   int i;
+
+   for (i=0; i&lt;ROWSIZE; ++i)
+      C[i] = (int *)malloc(COLSIZE * sizeof(int));
+</code></pre>
+<p>
+<tt>D</tt> is dynamic in both directions. First, it should be allocated
+memory to store <tt>ROWSIZE</tt> <tt>int</tt> pointers each meant for a row
+of the 2-D array. Each row pointer, in turn, should be allocated memory
+for <tt>COLSIZE</tt> <tt>int</tt> data.
+</p><pre><code>   int i;
+
+   D = (int **)malloc(ROWSIZE * sizeof(int *));
+   for (i=0; i&lt;ROWSIZE; ++i)
+      D[i] = (int *)malloc(COLSIZE * sizeof(int));
+</code></pre>
+<p>
+The last two pointers <tt>C,D</tt> allow rows of different sizes, since
+each row is allocated memory individually.
+</p><p>
+That's all! It may be somewhat confusing to understand the differences among
+these four cases. Things become clearer once you realize what type of
+pointer each of <tt>A,B,C,D</tt> is.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr><td>
+<h3 align="left"><a href="https://cse.iitkgp.ac.in/pds/notes/swf/dynamic2.html" id="noul" target="_blank">Animation example : 2-D dynamic memory</a></h3>
+</td></tr></tbody></table>
+</p><p>
+Though the internal organizations of these arrays are quite different in the
+memory, their access mechanism is the same in the sense that the same notation
+<tt><i>Array_name</i>[i][j]</tt> refers to the <tt>i,j</tt>-th entry in
+each of the four arrays. In order to promote this uniformity, the C compiler
+has to be quite fussy about the types of these arrays. Typecasting among
+these four types is often a crime that may result in mild warnings to failure
+of compilation to segmentation faults. Take sufficient care. Beware of the
+ice-cream industry!
+</p><p>
+The <tt>free</tt>ing mechanism is also different for the four arrays.
+</p><pre><code>   int i;
+
+   /* A is a static array and cannot be free'd */
+
+   /* B is a single pointer */
+   free(B);
+
+   /* C is a static array of pointers each to be free'd individually */
+   for (i=0; i&lt;ROWSIZE; ++i) free(C[i]);  /* Free each row */
+
+   /* D is a pointer to pointers. Each of these pointers is to be free'd */
+   for (i=0; i&lt;ROWSIZE; ++i) free(D[i]);  /* Free each row */
+   free(D);                               /* Free the row top */
+</code></pre>
+<p>
+I think it suffices to learn to work with only the
+completely static (<tt>A</tt>) and the completely dynamic (<tt>D</tt>) versions
+of 2-D arrays. They are my personal favorites and any-time recommendations.
+</p><p>
+Still, if you care, here follows <a href="https://cse.iitkgp.ac.in/pds/notes/prog/dynamic1.c" target="_blank">a program</a>
+that shows you the internal organizations of each memory cell and each
+row header for these four kinds of arrays. The addresses are displayed
+as byte distances relative to the header of the entire matrix.
+</p><pre><code>   #include &lt;stdio.h&gt;
+
+   #define ROWSIZE 4
+   #define COLSIZE 5
+
+   int A[ROWSIZE][COLSIZE];
+   int (*B)[COLSIZE];
+   int *C[ROWSIZE];
+   int **D;
+
+   int main ()
+   {
+      int i, j;
+
+      printf("\nArray A\n");
+      printf("sizeof(*A) = %d\n",sizeof(*A));
+      printf("                        j=0   j=1   j=2   j=3   j=4\n");
+      printf("                    +-------------------------------+\n");
+      for (i=0; i&lt;ROWSIZE; ++i) {
+         printf("A[%d] = %4d :  i=%d  |", i, (int)A[i]-(int)A, i);
+         for (j=0; j&lt;COLSIZE; ++j)
+            printf("%6d", (int)(&amp;A[i][j])-(int)A);
+         printf(" |\n");
+      }
+      printf("                    +-------------------------------+\n");
+
+      printf("\nArray B\n");
+      B = (int (*)[COLSIZE])malloc(ROWSIZE * sizeof(int[COLSIZE]));
+      printf("sizeof(*B) = %d\n",sizeof(*B));
+      printf("                        j=0   j=1   j=2   j=3   j=4\n");
+      printf("                    +-------------------------------+\n");
+      for (i=0; i&lt;ROWSIZE; ++i) {
+         printf("B[%d] = %4d :  i=%d  |", i, (int)B[i]-(int)B, i);
+         for (j=0; j&lt;COLSIZE; ++j)
+            printf("%6d", (int)(&amp;B[i][j])-(int)B);
+         printf(" |\n");
+      }
+      printf("                    +-------------------------------+\n");
+
+      printf("\nArray C\n");
+      for (i=0; i&lt;ROWSIZE; ++i)
+         C[i] = (int *)malloc(COLSIZE * sizeof(int));
+      printf("sizeof(*C) = %d\n",sizeof(*C));
+      printf("                        j=0   j=1   j=2   j=3   j=4\n");
+      printf("                    +-------------------------------+\n");
+      for (i=0; i&lt;ROWSIZE; ++i) {
+         printf("C[%d] = %4d :  i=%d  |", i, (int)C[i]-(int)C, i);
+         for (j=0; j&lt;COLSIZE; ++j)
+            printf("%6d", (int)(&amp;C[i][j])-(int)C);
+         printf(" |\n");
+      }
+      printf("                    +-------------------------------+\n");
+
+      printf("\nArray D\n");
+      D = (int **)malloc(ROWSIZE * sizeof(int *));
+      for (i=0; i&lt;ROWSIZE; ++i)
+         D[i] = (int *)malloc(COLSIZE * sizeof(int));
+      printf("sizeof(*D) = %d\n",sizeof(*D));
+      printf("                        j=0   j=1   j=2   j=3   j=4\n");
+      printf("                    +-------------------------------+\n");
+      for (i=0; i&lt;ROWSIZE; ++i) {
+         printf("D[%d] = %4d :  i=%d  |", i, (int)D[i]-(int)D, i);
+         for (j=0; j&lt;COLSIZE; ++j)
+            printf("%6d", (int)(&amp;D[i][j])-(int)D);
+         printf(" |\n");
+      }
+      printf("                    +-------------------------------+\n");
+   }
+</code></pre>
+<p>
+A sample output of this program executed in my machine follows:
+</p><pre><code>   Array A
+   sizeof(*A) = 20
+                           j=0   j=1   j=2   j=3   j=4
+                       +-------------------------------+
+   A[0] =    0 :  i=0  |     0     4     8    12    16 |
+   A[1] =   20 :  i=1  |    20    24    28    32    36 |
+   A[2] =   40 :  i=2  |    40    44    48    52    56 |
+   A[3] =   60 :  i=3  |    60    64    68    72    76 |
+                       +-------------------------------+
+
+   Array B
+   sizeof(*B) = 20
+                           j=0   j=1   j=2   j=3   j=4
+                       +-------------------------------+
+   B[0] =    0 :  i=0  |     0     4     8    12    16 |
+   B[1] =   20 :  i=1  |    20    24    28    32    36 |
+   B[2] =   40 :  i=2  |    40    44    48    52    56 |
+   B[3] =   60 :  i=3  |    60    64    68    72    76 |
+                       +-------------------------------+
+
+   Array C
+   sizeof(*C) = 4
+                           j=0   j=1   j=2   j=3   j=4
+                       +-------------------------------+
+   C[0] = 1004 :  i=0  |  1004  1008  1012  1016  1020 |
+   C[1] = 1028 :  i=1  |  1028  1032  1036  1040  1044 |
+   C[2] = 1052 :  i=2  |  1052  1056  1060  1064  1068 |
+   C[3] = 1076 :  i=3  |  1076  1080  1084  1088  1092 |
+                       +-------------------------------+
+
+   Array D
+   sizeof(*D) = 4
+                           j=0   j=1   j=2   j=3   j=4
+                       +-------------------------------+
+   D[0] =   24 :  i=0  |    24    28    32    36    40 |
+   D[1] =   48 :  i=1  |    48    52    56    60    64 |
+   D[2] =   72 :  i=2  |    72    76    80    84    88 |
+   D[3] =   96 :  i=3  |    96   100   104   108   112 |
+                       +-------------------------------+
+</code></pre>
+
+  <div class="navigator">
+    <a href="structure.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Structures</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="exer3.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Exercise set III</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

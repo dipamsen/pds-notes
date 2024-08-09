@@ -1,0 +1,512 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Assignments | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+<h1 align="center">Assignments</h1>
+<h2 align="left">Assignments and imperative programming</h2>
+<p>
+Initialization during declaration helps one store <i>constant</i> values
+in memory allocated to variables. Later one typically does a sequence
+of the following:
+</p><ul>
+<li>Read the values stored in variables.
+</li><li>Do some operations on these values.
+</li><li>Store the result back in some variable.
+</li></ul>
+This three-stage process is effected by an <b>assignment operation</b>.
+A generic assignment operation looks like:
+<pre>   <i>variable</i> = <i>expression</i>;
+</pre>
+<p>
+Here <tt><i>expression</i></tt> consists of variables and constants combined using
+arithmetic and logical operators. The equality sign (<tt>=</tt>) is the
+<b>assignment operator</b>. To the left of this operator resides the name
+of a variable. All the variables present in <tt><i>expression</i></tt> are loaded to
+the CPU. The ALU then evaluates the expression on these values. The
+final result is stored in the location allocated to <tt><i>variable</i></tt>.
+The semicolon at the end is mandatory and denotes that the particular
+statement is over. It is a statement <i>delimiter</i>, <u>not</u> a statement
+<i>separator</i>.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr><td>
+<h3 align="left"><a href="https://cse.iitkgp.ac.in/pds/notes/swf/assign.html" id="noul" target="_blank">Animation example : expression evaluation</a></h3>
+</td></tr></tbody></table>
+</p><p>
+A C program typically consists of a sequence of statements. They are
+executed one-by-one from top to bottom (unless some explicit jump instruction
+or function call is encountered). This sequential execution of statements
+gives C a distinctive <b>imperative</b> flavor. This means that the
+sequence in which statements are executed decides the final values stored
+in variables. Let us illustrate this using an example:
+</p><pre><code>   int x = 43, y = 15;   /* Two integer variables are declared and initialized */
+
+   x = y + 5;  /* The value 15 of y is fetched and added to 5.
+                  The sum 20 is stored in the memory location for x. */
+   y = x;      /* The value stored in x, i.e., 20 is fetched and stored
+                  back in y. */
+</code></pre>
+<p>
+After these statements are executed both the memory locations for x and y
+store the integer value 20.
+</p><p>
+Let us now switch the two assignment operations.
+</p><pre><code>   int x = 43, y = 15;   /* Two integer variables are declared and initialized */
+
+   y = x;      /* The value stored in x, i.e., 43 is fetched and stored
+                  back in y. */
+   x = y + 5;  /* The value 43 of y is fetched and added to 5.
+                  The sum 48 is stored in the memory location for x. */
+</code></pre>
+<p>
+For this sequence, x stores the value 48 and y the value 43, after the two
+assignment statements are executed.
+</p><p>
+The right side of an assignment operation may contain multiple occurrences
+of the same variable. For each such occurrence the same value stored in
+the variable is substituted. Moreover, the variable in the left side of
+the assignment operator may appear in the right side too. In that case,
+each occurrence in the right side refers to the older (pre-assignment) value
+of the variable. After the expression is evaluated, the value of the variable
+is updated by the result of the evaluation.  For example, consider the
+following:
+</p><pre><code>  int x = 5;
+
+  x = x + (x * x);
+</code></pre>
+<p>
+The value 5 stored in x is substituted for each occurrence of x in the right
+side, i.e., the expression 5 + (5 * 5) is evaluated. The result is 30 and
+is stored back to x. Thus, this assignment operation causes the value of x
+to change from 5 to 30. The equality sign in the assignment statement is
+not a mathematical equality, i.e., the above statement does <u>not</u>
+refer to the equation <tt>x&nbsp;=&nbsp;x&nbsp;+&nbsp;x<sup>2</sup></tt>
+(which happens to have a single root, namely <tt>x&nbsp;=&nbsp;0</tt>).
+It similarly makes sense to write
+</p><pre><code>   z = z + 2;
+</code></pre>
+<p>
+to imply an assignment (increment the value of z by 2). Mathematically,
+it makes little sense, since no numbers you know seem to satisfy the equation
+<tt>z&nbsp;=&nbsp;z&nbsp;+&nbsp;2</tt>. (But I know some of them!)
+Notice that in C there is a different way for checking equality of two
+expressions. The single equality sign is not that.
+</p><p>
+Floating point numbers, characters and array locations may also be used
+in assignment operations.
+</p><pre><code>   float a = 2.3456, b = 6.5432, c[5];  /* Declare float variables and arrays */
+   char d, e[4];                        /* Declare character variables and arrays */
+
+   c[0] = a + b;         /* c[0] is assigned 2.3456 + 6.5432, i.e., 8.8888 */
+   c[1] = a - c[0];      /* c[1] is assigned 2.3456 - 8.8888, i.e., -6.5432 */
+   c[2] = b - c[0];      /* c[2] is assigned 6.5432 - 8.8888, i.e., -2.3456 */
+   a = c[1] + c[2];      /* a is assigned (-6.5432) + (-2.3456), i.e., -8.8888 */
+
+   d = 'A' - 1;          /* d is assigned the character ('@') one less than 'A' in the ASCII chart */
+   e[0] = d + 1;         /* e[0] is assigned the character next to '@', i.e., 'A' */
+   e[1] = e[0] + 1;      /* e[1] is assigned the character next to 'A', i.e., 'B' */
+   e[2] = e[0] + 2;      /* e[2] is assigned the character second next to 'A', i.e., 'C' */
+   e[3] = e[2] + 1;      /* e[3] is assigned the character next to 'C', i.e., 'D' */
+</code></pre>
+<p>
+An assignment does an implicit type conversion, if its left side turns out
+to be of a different data type than the type of the expression evaluated.
+</p><pre><code>   float a = 7.89, b = 3.21;
+   int c;
+
+   c = a + b;
+</code></pre>
+<p>
+Here the right side involves the floating point operation
+7.89&nbsp;+&nbsp;3.21. The result is the floating point value 11.1.
+The assignment plans to store this result in an integer variable.
+The value 11.1 is first truncated and subsequently the integer value
+11 is stored in <tt>c</tt>. One can explicitly mention this typecasting
+command as:
+</p><pre><code>   float a = 7.89, b = 3.21;
+   int c;
+
+   c = (int)(a + b);
+</code></pre>
+<p>
+The parentheses around the expression <tt>a&nbsp;+&nbsp;b</tt> implies
+that the typecasting is to be done after the evaluation of the
+expression. The following variant has a different effect:
+</p><pre><code>   float a = 7.89, b = 3.21;
+   int c;
+
+   c = (int)a + b;
+</code></pre>
+<p>
+Here a is first converted to 7 and then added to 3.21. The resulting
+value (10.21) is truncated and stored in c. That is, now c is assigned
+the value 10.
+</p><p>
+In C, an assignment operation also <i>returns</i> a value. It is precisely
+the value that is assigned. This value can again be used in an expression.
+</p><pre><code>   int a, b, c;
+
+   c = (a = 8) + (b = 13);
+</code></pre>
+<p>
+Here <tt>a</tt> is assigned the value 8 and <tt>b</tt> the value 13.
+The values (8 and 13) returned by these assignments are then added
+and the sum 21 is stored in c. The assignment of c also returns a
+value, i.e., 21. Here we have ignored this value. Assignment is
+<i>right associative</i>. For example,
+</p><pre><code>   a = b = c = 0;
+</code></pre>
+<p>
+is equivalent to
+</p><pre><code>   a = (b = (c = 0));
+</code></pre>
+<p>
+Here <tt>c</tt> is first assigned the value 0. This value is returned
+to assign <tt>b</tt>, i.e., <tt>b</tt> also gets the value 0. The value
+returned from this second assignment is then assigned to <tt>a</tt>.
+Thus after this statement all of <tt>a</tt>, <tt>b</tt> and <tt>c</tt>
+are assigned the value 0.
+</p><h2 align="left">Built-in operators</h2>
+<p>
+Now that we know how to assign values to variables, what remains is a
+discussion on how expressions can be generated. Here are the rules:
+</p><ul>
+<li>A constant is an expression.
+</li><li>A (defined) variable is an expression.
+</li><li>If E is an expression, then so also is (E).
+</li><li>If E is an expression and <i>op</i> a unary operator defined in C,
+then <i>op</i>&nbsp;E is again an expression.
+</li><li>If E<sub>1</sub> and E<sub>2</sub> are expressions and <i>op</i> is
+a binary operator defined in C, then E<sub>1</sub>&nbsp;<i>op</i>&nbsp;E<sub>2</sub>
+is again an expression.
+</li><li>If V is a variable and E is an expression, then V&nbsp;=&nbsp;E is
+also an expression.
+</li></ul>
+<p>
+These rules do not exhaust all possibilities for generating expressions,
+but form a handy set to start with.
+</p><p>
+<b>Examples:</b>
+</p><pre><code>   53                  /* constant */
+   -3.21               /* constant */
+   'a'                 /* constant */
+   x                   /* variable */
+   -x[0]               /* unary negation on a variable */
+   x + 5               /* addition of two subexpressions */
+   (x + 5)             /* parenthesized expression */
+   (x) + (((5)))       /* another parenthesized expression */
+   y[78] / (x + 5)     /* more complex expression */
+   y[78] / x + 5       /* another complex expression */
+   y / (x = 5)         /* expression involving assignment */
+   1 + 32.5 / 'a'      /* expression involving different data types */
+</code></pre>
+<p>
+<b>Non-examples:</b>
+</p><pre><code>   5 3                 /* space is not an operator and integer constants may not contain spaces */
+   y *+ 5              /* *+ is not a defined operator */
+   x (+ 5)             /* badly placed parentheses */
+   x = 5;              /* semi-colons are not allowed in expressions */
+</code></pre>
+<p>
+We now list the basic operators defined in C and the interpretations of these
+operators.
+
+</p>
+<h3 align="left">Arithmetic operators</h3>
+<p>
+Arithmetic operators include negation, addition, subtraction, multiplication
+and division. The result of the operation depends on which type of data
+the arithmetic operator operates on. The following table summarizes the
+relevant information.
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Operator</th><th>Meaning</th><th>Description
+</th></tr><tr><td align="center">-</td><td align="center">unary<br>negation</td><td><p>Applicable
+for integers and real numbers. Does not make enough sense for unsigned
+operands.
+</p></td></tr><tr><td align="center">+</td><td align="center">(binary)<br>addition</td><td><p>Applicable
+for integers and real numbers.
+</p></td></tr><tr><td align="center">-</td><td align="center">(binary)<br>subtraction</td><td><p>Applicable
+for integers and real numbers.
+</p></td></tr><tr><td align="center">*</td><td align="center">(binary)<br>multiplication</td><td><p>Applicable
+for integers and real numbers.
+</p></td></tr><tr><td align="center">/</td><td align="center">(binary)<br>division</td><td><p>For integers
+division means "quotient", whereas for real numbers division means "real
+division". If both the operands are integers, the integer quotient is
+calculated, whereas if (one or both) the operands are real numbers,
+real division is carried out.
+</p></td></tr><tr><td align="center">%</td><td align="center">(binary)<br>remainder</td><td><p>Applicable
+only for integer operands.
+</p></td></tr></tbody></table>
+</center>
+<p>
+<b>Examples:</b>
+Here are examples of integer arithmetic:
+</p><pre><code>   55 + 21 evaluates to 76.
+   55 - 21 evaluates to 34.
+   55 * 21 evaluates to 1155.
+   55 / 21 evaluates to 2.
+   55 % 21 evaluates to 13.
+</code></pre>
+<p>
+Here are some examples of floating point arithmetic:
+</p><pre><code>   55.0 + 21.0 evaluates to 76.0.
+   55.0 - 21.0 evaluates to 34.0.
+   55.0 * 21.0 evaluates to 1155.0.
+   55.0 / 21.0 evaluates to 2.6190476 (approximately).
+   55.0 % 21.0 is not defined.
+</code></pre>
+<p>
+<b>Note:</b> C does <u>not</u> provide a built-in exponentiation operator.
+</p><h3 align="left">Bitwise operators</h3>
+<p>
+Bitwise operations apply to unsigned integer operands and work on
+each individual bit. Bitwise operations on signed integers give
+results that depend on the compiler used, and so are not recommended
+in good programs. The following table summarizes the bitwise operations.
+For illustration we use two <tt>unsigned char</tt> operands <tt>a</tt>
+and <tt>b</tt>. We assume that <tt>a</tt> stores the value
+237&nbsp;=&nbsp;(11101101)<sub>2</sub> and that <tt>b</tt> stores
+the value 174&nbsp;=&nbsp;(10101110)<sub>2</sub>.
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Operator</th><th>Meaning</th><th>Example
+</th></tr><tr>
+<td align="center"><tt>&amp;</tt>
+</td><td align="center">AND
+</td><td align="center"><table cellpadding="5" cellspacing="0" border="0">
+                   <tbody><tr><td align="center"><tt>a&nbsp;=&nbsp;237</tt></td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1
+                   </td></tr><tr><td align="center"><tt>b&nbsp;=&nbsp;174</tt></td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0
+                   </td></tr><tr><td align="center"><tt>a&nbsp;&amp;&nbsp;b&nbsp;is&nbsp;172</tt></td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0
+                   </td></tr></tbody></table>
+</td></tr><tr>
+<td align="center"><tt>|</tt>
+</td><td align="center">OR
+</td><td align="center"><table cellpadding="5" cellspacing="0" border="0">
+                   <tbody><tr><td align="center"><tt>a&nbsp;=&nbsp;237</tt></td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1
+                   </td></tr><tr><td align="center"><tt>b&nbsp;=&nbsp;174</tt></td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0
+                   </td></tr><tr><td align="center"><tt>a&nbsp;|&nbsp;b&nbsp;is&nbsp;239</tt></td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1
+                   </td></tr></tbody></table>
+</td></tr><tr>
+<td align="center"><tt>^</tt>
+</td><td align="center">EXOR
+</td><td align="center"><table cellpadding="5" cellspacing="0" border="0">
+                   <tbody><tr><td align="center"><tt>a&nbsp;=&nbsp;237</tt></td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1
+                   </td></tr><tr><td align="center"><tt>b&nbsp;=&nbsp;174</tt></td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0
+                   </td></tr><tr><td align="center"><tt>a&nbsp;^&nbsp;b&nbsp;is&nbsp;67&nbsp;</tt></td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1
+                   </td></tr></tbody></table>
+</td></tr><tr>
+<td align="center"><tt>~</tt>
+</td><td align="center">Complement
+</td><td align="center"><table cellpadding="5" cellspacing="0" border="0">
+                   <tbody><tr><td align="center"><tt>a&nbsp;=&nbsp;237</tt></td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1
+                   </td></tr><tr><td align="center"><tt>&nbsp;&nbsp;~a&nbsp;is&nbsp;18&nbsp;&nbsp;</tt></td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0
+                   </td></tr></tbody></table>
+</td></tr><tr>
+<td align="center"><tt>&gt;&gt;</tt>
+</td><td align="center">Right-shift
+</td><td align="center"><table cellpadding="5" cellspacing="0" border="0">
+                   <tbody><tr><td align="center"><tt>a&nbsp;=&nbsp;237</tt></td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1
+                   </td></tr><tr><td align="center"><tt>a&nbsp;&gt;&gt;&nbsp;2&nbsp;is&nbsp;59</tt></td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1
+                   </td></tr></tbody></table>
+</td></tr><tr>
+<td align="center"><tt>&lt;&lt;</tt>
+</td><td align="center">Left-shift
+</td><td align="center"><table cellpadding="5" cellspacing="0" border="0">
+                   <tbody><tr><td align="center"><tt>b&nbsp;=&nbsp;174</tt></td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0
+                   </td></tr><tr><td align="center"><tt>b&nbsp;&lt;&lt;&nbsp;1&nbsp;is&nbsp;92</tt></td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0
+                   </td></tr></tbody></table>
+</td></tr></tbody></table>
+</center>
+<h3 align="left">Some shorthand notations</h3>
+<p>
+C provides some shorthand notations for some particular kinds of operations.
+For example, if the variable to be assigned is the first operand in the
+expression on the right side, then this variable may be omitted in the
+expression and the operator comes <i>before</i> the equality sign.
+More precisely, the assignment
+</p><pre>   <i>var</i> = <i>var</i> <i>op</i> <i>expression</i>;
+</pre>
+<p>
+is equivalent to
+</p><pre>   <i>var</i> <i>op</i>= <i>expression</i>;
+</pre>
+<p>
+Here the operator <i>op</i> can be any binary operator described above,
+namely, <tt>+,-,*,/,%,&amp;,|,^,&gt;&gt;,&lt;&lt;</tt>.
+Some specific examples are:
+</p><pre><code>   a = a + 10.43;        is equivalent to   a += 10.43;
+   a = a % 43;           is equivalent to   a %= 43;
+   c = c * (a + b - c);  is equivalent to   c *= a + b - c;
+   a = a &gt;&gt; 3;           is equivalent to   a &gt;&gt;= 3;
+   b = b ^ (a &lt;&lt; 3);     is equivalent to   b ^= (a &lt;&lt; 3);
+</code></pre>
+<p>
+A special case of this can be shortened further: increment/decrement by 1.
+</p><pre><code>   a = a + 1; is equivalent to a += 1; which is also equivalent to ++a;
+   b = b - 1; is equivalent to b -= 1; which is also equivalent to --b;
+</code></pre>
+<p>
+These increment/decrement operators (<tt>++</tt> and <tt>--</tt>) are called
+<b>pre-increment</b> and <b>pre-decrement</b> operators. C also provides
+<b>post-increment</b> and <b>post-decrement</b> operators. These operators
+are same (<tt>++</tt> and <tt>--</tt>) but are written <i>after</i> the
+variable being incremented/decremented. The isolated statements
+</p><pre><code>   a++;
+   b--;
+</code></pre>
+<p>
+are respectively equivalent to
+</p><pre><code>   ++a;
+   --b;
+</code></pre>
+<p>
+However, there is a subtle difference between the two. Recall that every
+assignment returns a value. The increment (or decrement) expressions
+<tt>++a</tt> and <tt>a++</tt> are also assignment expressions. Both stand
+for "increment the value of <tt>a</tt> by 1". But then which value of
+<tt>a</tt> is returned by this expression? We have the following rules:
+</p><ul>
+<li>For <tt>a++</tt> the older value of <tt>a</tt> is returned and then
+the value of <tt>a</tt> is incremented. This is why it is called the
+post-increment operation.
+</li><li>For <tt>++a</tt> the value of <tt>a</tt> is first incremented and
+this new (incremented) value of <tt>a</tt> is returned. This is why it is
+called the pre-increment operation.
+</li></ul>
+<p>
+A similar argument holds for the decrement operations. The following examples
+illustrate the differences:
+</p><pre><code>   a = 43;
+   b = 15;
+   c = (++a) * (--b);
+</code></pre>
+<p>
+Here <tt>a</tt> is first incremented and the value 44 is returned. Also
+<tt>b</tt> is decremented and the value 14 is returned. Then these two
+values are multiplied and the product 44*14&nbsp;=&nbsp;616 is assigned to <tt>c</tt>.
+</p><pre><code>   a = 43;
+   b = 15;
+   c = (++a) * (b--);
+</code></pre>
+<p>Now <tt>a</tt> is first incremented and the value 44 is returned.
+But the value of <tt>b</tt> is first returned (15) and then decremented.
+Thus <tt>c</tt> gets the value 44*15&nbsp;=&nbsp;660. Similarly, after
+the execution of the following statements
+</p><pre><code>   a = 43;
+   b = 15;
+   c = (a++) * (b--);
+</code></pre>
+<tt>a</tt>, <tt>b</tt> and <tt>c</tt> respectively hold the values
+44, 14 and 43*15&nbsp;=&nbsp;645.
+<h3 align="left">Precedence of operators</h3>
+<p>
+An explicitly parenthesized arithmetic (and/or logical) expression
+clearly indicates the sequence of operations to be performed on its
+arguments. However, it is quite common that we do not write all the
+parentheses in such expressions. Instead, we use some rules of
+precedence and associativity, that make the sequence clear. For example,
+the expression
+</p><pre><code>   a + b * c
+</code></pre>
+<p>
+conventionally stands for
+</p><pre><code>   a + (b * c)
+</code></pre>
+<p>
+and not for
+</p><pre><code>   (a + b) * c
+</code></pre>
+<p>
+The reason is that the multiplication operator has higher <i>precedence</i>
+than the addition operator. This means that <tt>*</tt> attracts the
+<i>common</i> operand <tt>b</tt> more forcibly than <tt>+</tt> does.
+As a result, <tt>b</tt> becomes an operand for <tt>*</tt> and not for
+<tt>+</tt>. Note that in general these two expressions evaluate to different
+values. For example, 40&nbsp;+&nbsp;(15&nbsp;*&nbsp;7) equals 145,
+whereas (40&nbsp;+&nbsp;15)&nbsp;*&nbsp;7 evaluates to 385. It is,
+therefore, necessary that when we write 40&nbsp;+&nbsp;15&nbsp;*&nbsp;7,
+we precisely understand which way we plan to resolve the ambiguity.
+</p><p>
+In order to explain another source of ambiguity, let us look at the expression
+</p><pre><code>   a - b - c
+</code></pre>
+<p>
+Now the <i>common</i> operand <tt>b</tt> belongs to two same operators
+(subtraction). They have the same precedence. Now we can evaluate this as
+</p><pre><code>   (a - b) - c
+</code></pre>
+<p>
+or as
+</p><pre><code>   a - (b - c)
+</code></pre>
+<p>
+Again the two expressions may evaluate to different values. For example,
+(40&nbsp;-&nbsp;15)&nbsp;-&nbsp;7 is 18, whereas
+40&nbsp;-&nbsp;(15&nbsp;-&nbsp;7) is 32. The convention is that the
+first interpretation is correct. In other words, the subtraction
+operator is <i>left-associative</i>.
+</p><p>
+C is no exception to these conventional interpretations. You need not
+fully parenthesize a composite expression. C applies the standard
+precedence rules for evaluating the expression. The following table
+describes the precedence and associativity rules for all the arithmetic
+and bitwise operators introduced so far. The table lists operators
+from higher to lower precedences, i.e., operators at later rows have
+lower precedences than operators at earlier rows.
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Operator(s)</th><th>Type</th><th>Associativity
+</th></tr><tr><td align="center"><pre><code>++  --</code></pre></td><td align="center">unary</td><td align="center">non-associative
+</td></tr><tr><td align="center"><pre><code>-  ~</code></pre></td><td align="center">unary</td><td align="center">right
+</td></tr><tr><td align="center"><pre><code>*  /  %</code></pre></td><td align="center">binary</td><td align="center">left
+</td></tr><tr><td align="center"><pre><code>+  -</code></pre></td><td align="center">binary</td><td align="center">left
+</td></tr><tr><td align="center"><pre><code>&lt;&lt;  &gt;&gt;</code></pre></td><td align="center">binary</td><td align="center">left
+</td></tr><tr><td align="center"><pre><code>&amp;</code></pre></td><td align="center">binary</td><td align="center">left
+</td></tr><tr><td align="center"><pre><code>|  ^</code></pre></td><td align="center">binary</td><td align="center">left
+</td></tr><tr><td align="center"><pre><code>=  +=  -=  *= etc.</code></pre></td><td align="center">binary</td><td align="center">right
+</td></tr></tbody></table>
+</center>
+
+
+
+  <div class="navigator">
+    <a href="datatype.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Variables and simple data types</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="io.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Input/Output</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

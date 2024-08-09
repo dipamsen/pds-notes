@@ -1,0 +1,1086 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Performance analysis of programs | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+<h1 align="center">Performance analysis of programs</h1>
+<p>
+There may exist many algorithms to solve a given problem. Moreover,
+the same algorithm may be implemented in a variety of ways. It is now
+time to analyze the relative merits and demerits of different algorithms
+and of different implementations. We are shortly going to introduce a set
+of theoretical tools that make this analysis methodical. In
+order to solve a problem, it is not sufficient to design an algorithm and
+provide a correct (bug-free) implementation of the algorithm. One should also
+understand how good his/her program is. Here "goodness" is measured by relative
+performance of a program compared to other algorithms and implementations.
+This is where the true "computer science" starts. Being able to program
+does not qualify one to be a computer scientist or engineer. A good
+programmer is definitely a need for every modern society and it requires
+time and patience to master the art of good programming. Computer science
+goes beyond that by providing formal treatment of programs and algorithms.
+Consider that an airplane pilot is not required to know any aerospace
+engineering and an aerospace engineer need not know how to run an airplane.
+We need both pilots and aerospace engineers for our society.
+</p><p>
+In short, when you write (and perhaps sell) your programs or when you
+buy others' programs, you should exercise your ability to compare the
+apparent goodness of available programs. The task is not always easy.
+Here are some guidelines for you.
+
+</p><h2 align="left">Resource usage of a program</h2>
+<p>
+You may feel tempted to treat a small and compact program as good.
+That is usually not a criterion for goodness. Most users execute precompiled
+binaries. It does not matter how the source code looked like. What is more
+important is how <i>efficiently</i> a program solves a problem. Efficiency,
+in turn, is measured by the resource usage of a program (or algorithm).
+The two most important general resources are:
+</p><ul>
+<li>Running time
+</li><li>Space requirement
+</li></ul>
+<p>
+Here <i>running time</i> refers to the amount of time taken by a program
+for a given input. The time is expected to vary according to what input the
+program processes. For example, a program that does matrix multiplication
+should take more running time for bigger matrices. It is, therefore, customary
+to view the running time as a function of the input. In order to simplify
+matters, we assume that the size of the input is the most important thing
+(instead of the actual input). For instance, a standard matrix multiplication
+routine performs a number of operations (additions and multiplications of
+elements) that is dependent only on the dimensions of the input matrices
+and not on the actual elements of the matrices.
+</p><p>
+A standard practice is to measure the size of the input by the number
+of bits needed to represent the input. However, this simple convention is
+sometimes violated. For example, when an array of integers need be sorted,
+it is customary to take the size of the array (number of integers in the array)
+as the input size. Under the assumption that each integer is represented
+by a word of a fixed size (e.g. 32 bits), the bit-size of the input is
+actually a constant multiple of the array size, and so this new definition
+of input size is not much of a deviation from the standard convention.
+(We will soon see that constant multipliers are neglected in the theory.)
+However, when the integers to be sorted may be arbitrarily large (multiple
+precision integers), this naive negligence of the sizes of the operands
+is certainly not a good idea. One should in this case consider the actual
+sizes (in bits or words) of each individual element of the array.
+</p><p>
+Poorer measures of input size are also sometimes adopted. An <tt>nxn</tt>
+matrix contains n<sup>2</sup> elements and even if each element is of fixed
+size (like <tt>int</tt> or <tt>float</tt>), one requires a number of bits
+proportional to n<sup>2</sup> for the complete specification of the matrix.
+However, when we plan to multiply two <tt>nxn</tt> matrices or invert an
+<tt>nxn</tt> matrix, it is seemigly more human to treat n (instead of
+n<sup>2</sup>) as the input size parameter. In other words, the running time
+is expressed as a function of n and not as a function of the technically
+correct input size n<sup>2</sup> (though they essentially imply the same
+thing).
+</p><p>
+Space (memory) requirement of a program is the second important criterion
+for measuring the performance of a program. Obviously, a program requires
+space to store (and subsequently process) the input. What matters is the
+additional amount of memory (static and dynamic) used by the
+program. This extra storage is again expressed as a function of the input
+size.
+</p><p>
+It is often advisable to reduce the space requirement of a program. Earlier,
+semiconductor memory happenned to be a costly resource and so programs
+requiring smaller amount of extra memory are prefered to programs having larger
+space requirements. Nowadays, the price of semiconductor memory has gone
+down quite dramatically. Still, a machine comes with only a finite amount
+of memory. This means that a program having smaller space requirement can
+handle bigger inputs given any limited amount of memory. The
+essential argument in favor of reducing the space requirement of a program
+continues to make sense today and will do so in any foreseeable future.
+</p><p>
+Some other measures of performance of a program may be conceived of, like
+ease of use (the user interface), features, security, etc. These requirements
+are usually application-specific. We will not study them in a general forum
+like this chapter.
+</p><p>
+Palatable and logical as it sounds, it is difficult to express the running
+time and space usage of a program as functions of the input size. The
+biggest difficulty is to choose a unit of time (or space). Since machines
+vary widely in speed and memory management issues, the same program running
+on one machine may have markedly different performance figures on another
+machine. A supercomputer is expected to multiply two given matrices much
+faster than a PC. There is no standard machine for calibrating the relative
+performances of different programs. Comparison results on a particular machine
+need not tally with the results on a different machine. Since different
+machines have different CPU and memory organizations and support widely
+varying instruction sets, results from one machine cannot, in general, be used
+to predict program behaviors on another machine. That's a serious limitation
+of machine-dependent performance figures.
+</p><p>
+There is a hell lot of other factors that lead to variations in the running
+time (and space usage) of a program, even when the program runs on the same
+machine. These variations are caused by off-line factors (like the compiler
+used to compile the program), and also by many run-time factors (like
+the current load of the CPU, the current memory usage, availability of
+cache memory and swap memory).
+</p><p>
+To sum up, neither seconds (or its fractions like microseconds) nor machine
+cycles turn out to be a faithful measure of the running time of a program.
+Similarly, memory usage cannot be straightaway measured in bits or words.
+We must invent some kind of abstractions. The idea is to get rid of the
+dependence on the run-time environment (including hardware). A second
+benefit is that we don't have to bother about specific implementations.
+An argument in the algorithmic level would help us solve our problem of
+performance measurement.
+</p><p>
+The abstraction is based on the measurement of time by numbers. Such a
+number signifies the count of basic operations performed by the program
+(or algorithm). A definition of what is basic will lead to controversies.
+In order to avoid that, we will adopt our own conventions. An arithmetic
+operation (addition, subtraction, multiplication, division, comparison, etc.
+of integers or floating point numbers) will be treated as a basic operation.
+So will be a logical and a bitwise operation (AND, OR, shift etc.). We
+will count (in terms of the input size) how many such basic operations
+are performed by the program. That number will signify the abstract running
+time of the program. Usually, the actual running times of different programs
+are closely proportional to these counts. The constant of proportionality
+depends on the factors mentioned above and vary from machine to machine
+(and perhaps from time to time on the same machine). We will simply ignore
+these constants. This practice will bring under the
+same umbrella two programs doing n<sup>2</sup> and 300n<sup>2</sup> basic
+operations respectively for solving the same problem. Turning blind to
+constants of proportionality is not always a healthy issue. Nonetheless,
+the solace is that these abstract measures have stood the taste of time
+in numerous theoretical and practical situations.
+</p><p>
+The space requirement of a program can be quantified along similar lines,
+namely, by the number of basic units (integers or floating-point numbers
+or characters) used by a program. Again we ignore proportionality constants
+and do not talk about the requirement of memory in terms of bits.
+</p><p>
+We will call the above abstract running time and space usage of a program
+to be its <i>time complexity</i> and <i>space complexity</i> respectively.
+In the rest of this chapter, we will concentrate mostly on time complexity.
+
+</p><h2 align="left">The order notation</h2>
+<p>
+The order notation captures the idea of time and space complexities in
+precise mathematical terms. Let us start with the following important
+definition:
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><td><p>Let <tt>f</tt> and <tt>g</tt> be two positive real-valued functions
+on the set <b>N</b> of natural numbers. We call <tt>g(n)</tt> to be of the
+order of <tt>f(n)</tt> if there exist a positive real constant <tt>c</tt>
+and a natural number <tt>n<sub>0</sub></tt> such that
+<tt>g(n)&nbsp;&lt;=&nbsp;cf(n)</tt> for all
+<tt>n&nbsp;&gt;=&nbsp;n<sub>0</sub></tt>. In this case we write
+<tt>g(n)&nbsp;=&nbsp;O(f(n))</tt> and also say that <tt>g(n)</tt> is
+<i>big-Oh</i> of <tt>f(n)</tt>.
+</p></td></tr></tbody></table>
+</center>
+<p>
+The following figure illustrates the big-Oh notation. In this example,
+we take <tt>c=2</tt>.
+</p><center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/order.gif" alt="order notation" border="0">
+<br>
+Figure: Explaining the big-Oh notation
+</center>
+
+<p><b>Examples</b>
+</p><ul>
+<li>Take <tt>f(n)&nbsp;=&nbsp;n</tt> and <tt>g(n)&nbsp;=&nbsp;2n&nbsp;+&nbsp;3</tt>. For <tt>n&nbsp;&gt;=&nbsp;3</tt>
+we have <tt>2n&nbsp;+&nbsp;3&nbsp;&lt;=&nbsp;3n</tt>. Thus taking the constants <tt>c&nbsp;=&nbsp;3</tt>
+and <tt>n<sub>0</sub>&nbsp;=&nbsp;3</tt> shows that <tt>2n&nbsp;+&nbsp;3&nbsp;=&nbsp;O(n)</tt>.
+Conversely, for any <tt>n&nbsp;&gt;=&nbsp;1</tt> we have <tt>n&nbsp;&lt;=&nbsp;2n&nbsp;+&nbsp;3</tt>, i.e.,
+<tt>n&nbsp;=&nbsp;O(2n&nbsp;+&nbsp;3)</tt> too.
+</li><li>Since <tt>100n&nbsp;&lt;=&nbsp;n<sup>2</sup></tt> for all <tt>n&nbsp;&gt;=&nbsp;100</tt>,
+we have <tt>100n&nbsp;=&nbsp;O(n<sup>2</sup>)</tt>. Now I will show that <tt>n<sup>2</sup></tt>
+is <i>not</i> of the order of <tt>100n</tt>. Assume otherwise, i.e.,
+<tt>n<sup>2</sup>&nbsp;=&nbsp;O(100n)</tt>, i.e., there exist constants <tt>c</tt> and
+<tt>n<sub>0</sub></tt> such that <tt>n<sup>2</sup>&nbsp;&lt;=&nbsp;100cn</tt> for all
+<tt>n&nbsp;&gt;=&nbsp;n<sub>0</sub></tt>. This implies that <tt>n&nbsp;&lt;=&nbsp;100c</tt> for
+all <tt>n&nbsp;&gt;=&nbsp;n<sub>0</sub></tt>. This is clearly absurd, since <tt>c</tt>
+is a finite positive real number.
+</li><li>The last two examples can be easily generalized. Let <tt>f(n)</tt>
+be a polynomial in <tt>n</tt> of degree <tt>d</tt>. It can be easily shown
+that <tt>f(n)&nbsp;=&nbsp;O(n<sup>d</sup>)</tt>. In other words, the highest degree
+term in a polynomial determines its order. That is intuitively clear,
+since as <tt>n</tt> becomes sufficiently large, the largest degree
+term dominates over other terms.
+<p>
+Now let <tt>g(n)</tt> be another polynomial in <tt>n</tt> of degree <tt>e</tt>.
+Assume that <tt>d &lt;= e</tt>. Then it can be shown that <tt>f(n) = O(g(n))</tt>.
+If <tt>d&nbsp;=&nbsp;e</tt>, then <tt>g(n)&nbsp;=&nbsp;O(f(n))</tt> too. However, if <tt>d&nbsp;&lt;&nbsp;e</tt>, then
+<tt>g(n)</tt> is not <tt>O(f(n))</tt>.
+</p><p>
+Any function that is <tt>O(n<sup>d</sup>)</tt> for some positive integral constant <tt>d</tt> is said
+to be of <i>polynomial order</i>. A function which is <tt>O(n)</tt> is said
+to be of <i>linear order</i>. We can analogously define functions of
+<i>quadratic order</i> (<tt>O(n<sup>2</sup>)</tt> functions),
+<i>cubic order</i> (<tt>O(n<sup>3</sup>)</tt> functions), and so on.
+</p></li><li>A distinguished case of polynomial order <tt>O(n<sup>d</sup>)</tt>
+corresponds to the value <tt>d = 0</tt>. A function <tt>f(n)</tt> of this
+order is an <tt>O(1)</tt> function. For all sufficiently big <tt>n</tt>,
+<tt>f(n)</tt> is by definition bounded from above by a constant value and so is
+said to have <i>constant order</i>.
+</li><li>I will now show <tt>n&nbsp;=&nbsp;O(2<sup>n</sup>)</tt>. We prove by induction
+on <tt>n</tt> that <tt>n&nbsp;&lt;=&nbsp;2<sup>n</sup></tt> for all <tt>n&nbsp;&gt;=&nbsp;1</tt>.
+This is certainly true for <tt>n&nbsp;=&nbsp;1</tt>. So assume that <tt>n&nbsp;&gt;=&nbsp;2</tt> and
+that <tt>n&nbsp;-&nbsp;1&nbsp;&lt;=&nbsp;2<sup>n-1</sup></tt>. We also have <tt>1&nbsp;&lt;=&nbsp;2<sup>n-1</sup></tt>.
+Adding the two inequalities gives <tt>n&nbsp;&lt;=&nbsp;2<sup>n</sup></tt>.
+<p>
+The converse of the last order relation is not true, i.e., <tt>2<sup>n</sup></tt>
+is not of the order of <tt>n</tt>. We prove this by contradiction. Assume
+that <tt>2<sup>n</sup>&nbsp;=&nbsp;O(n)</tt>, i.e., <tt>2<sup>n</sup>&nbsp;&lt;=&nbsp;cn</tt>
+for all <tt>n&nbsp;&gt;=&nbsp;n<sub>0</sub></tt>. Simple calculus shows that the
+function <tt>2<sup>x</sup>&nbsp;/&nbsp;x</tt> on a real variable <tt>x</tt> tends to
+infinity as <tt>x</tt> tends to infinity. In particular, <tt>c</tt> cannot
+be a bounded constant in this case.
+</p><p>
+A function which is <tt>O(a<sup>n</sup>)</tt> for some real constant
+<tt>a&nbsp;&gt;&nbsp;1</tt> is said to be of <i>exponential order</i>. It can be
+shown that for any <tt>a&nbsp;&gt;&nbsp;1</tt> and <tt>d&nbsp;&gt;=&nbsp;1</tt> we have
+<tt>n<sup>d</sup>&nbsp;=&nbsp;O(a<sup>n</sup>)</tt>, but <tt>a<sup>n</sup></tt>
+is <i>not</i> of the order of <tt>n<sup>d</sup></tt>. In other words,
+any polynomial function grows more slowly than a (truly) exponential function.
+</p></li><li>A similar comparison holds between logarithmic and polynomial
+functions. For any positive integers <tt>d</tt> and <tt>e</tt>, the
+function <tt>(log n)<sup>d</sup></tt> is <tt>O(n<sup>e</sup>)</tt>,
+but <tt>n<sup>e</sup></tt> is <i>not</i> <tt>O((log n)<sup>d</sup>)</tt>.
+Functions of polynomial, exponential and logarithmic orders are most
+widely used for analyzing algorithms.
+</li></ul>
+<p>
+We now explain how the order notation is employed to characterize the
+time and space complexities of a program. We count the number of basic
+operations performed by an algorithm and express that count as having
+the order of a <i>simple</i> function. For example, if an algorithm
+performs <tt>2n<sup>2</sup> - 3n + 1</tt> operations on an input of
+size <tt>n</tt>, we say that the algorithm runs in <tt>O(n<sup>2</sup>)</tt>
+time, i.e., in quadratic time, or that it is a quadratic time algorithm.
+Any algorithm that runs in polynomial time is said to be a <i>polynomial-time
+algorithm</i>. An algorithm that does not run in polynomial time, but in
+exponential time, is called an <i>exponential-time algorithm</i>. An
+exponential function (like <tt>2<sup>n</sup></tt>) grows so rapidly (compared
+to polynomial functions) with the input <tt>n</tt> that exponential-time
+algorithms are usually much slower compared to polynomial-time algorithms,
+even when the input is not too big. By an efficient solution of a problem,
+one typically means devising an algorithm for that problem, that runs in
+some polynomial time <tt>O(n<sup>d</sup>)</tt> with <tt>d</tt> as small as
+possible.
+
+</p><p><b>Examples</b>
+</p><p>
+We now analyze the complexities of some popular algorithms discussed
+earlier in the notes.
+</p><ul>
+<li><b>Computation of factorials</b>
+<p>
+In this case we express the running-time as a function of the integer
+<tt>n</tt> whose factorial is to be computed. Let us first look at the
+following iterative algorithm:
+</p><pre><code>   int factorialIter ( int n )
+   {
+      int prod, i;
+
+      if (n &lt;= 1) return 1;
+      prod = 1;
+      for (i=2; i&lt;=n; ++i) prod *= i;
+      return prod;
+   }
+</code></pre>
+<p>
+The function first compares <tt>n</tt> with 1. If <tt>n</tt> is indeed less
+than or equal to 1, the constant value 1 is returned. Thus for <tt>n = 0,1</tt>
+the algorithm does only one basic operation (comparison). Here we neglect
+the cost of returning a value. If <tt>n &gt; 2</tt>, then <tt>prod</tt>
+is first initialized to 1. Then the loop starts. The loop contains an initialization
+of <tt>i</tt>, exactly <tt>n-1</tt> increments of <tt>i</tt> and exactly
+<tt>n</tt> comparisons of <tt>i</tt> with <tt>n</tt>. Inside the function
+body the variable <tt>prod</tt> is multiplied by <tt>i</tt>. The loop is
+executed <tt>n-1</tt> times. This accounts for a total of <tt>n-1</tt>
+multiplications. Thus the total number of basic operations done by this
+iterative function is
+</p><pre><code>   1 + 1 + 1 + (n-1) + n + (n-1) = 3n + 1.
+</code></pre>
+<p>
+Since <tt>3n + 1</tt> is <tt>O(n)</tt>, it follows that the above algorithm
+runs in linear time.
+</p><p>
+Next consider the following recursive function for computing factorials:
+</p><pre><code>   int factorialRec ( int n )
+   {
+      if (n &lt;= 1) return 1;
+      return n * factorialRec(n-1);
+   }
+</code></pre>
+<p>
+Let <tt>T(n)</tt> denote the running time of this recursive algorithm for
+the input <tt>n</tt>. If <tt>n = 0,1</tt>, then <tt>T(n) = 1</tt>, since
+computation in these cases involves only a single comparison. If
+<tt>n &gt;= 2</tt>, then in addition to this comparison, <tt>factorialRec</tt>
+is called on input <tt>n-1</tt> and then the return value is multiplied
+by <tt>n</tt>. To sum up, we have:
+</p><pre><code>   T(0) = 1,
+   T(1) = 1,
+   T(n) = 1 + T(n-1) + 1 = T(n-1) + 2 for n &gt;= 2.
+</code></pre>
+<p>
+This is not a closed-form expression for <tt>T(n)</tt>. A formula for
+<tt>T(n)</tt> can be derived by repeatedly using the last relation until the argument
+becomes too small (0 or 1) so that the constant value 1 can be substitued
+for it.
+</p><pre><code>   T(n) = T(n-1) + 2
+        = (T(n-2) + 2) + 2 = T(n-2) + 4
+        = T(n-3) + 6
+          ...
+        = T(1) + 2(n-1)
+        = 1 + 2(n-1)
+        = 2n - 1.
+</code></pre>
+Therefore,
+<pre><code>   T(0) = 1,
+   T(n) = 2n - 1 for n &gt;= 1.
+</code></pre>
+<p>
+It follows that the recursive function also runs in linear time. Note that
+both the iterative and recursive versions run in <tt>O(n)</tt> time.
+But the actual running times are respectively <tt>3n + 1</tt> and
+<tt>2n - 1</tt>. It may appear to the reader that the recursive function
+is faster (since 2 is smaller than 3). But in the analysis, we have neglected
+the cost of function calls and returns. The iterative version makes no
+recursive calls, whereas the recursive version makes <tt>n-1</tt> recursive
+calls. It depends on the compiler and the run-time system whether <tt>n-1</tt>
+recursive calls is slower or faster than the overhead associated with the
+loop in the iterative version. Still, we should feel happy to end the story by
+rephrasing the fact that both the two versions are equally efficient --
+as efficient as an <tt>O(n)</tt> function.
+
+</p></li><li><b>Computation of Fibonacci numbers</b>
+<p>
+With Fibonacci numbers, the iterative and recursive versions exhibit
+marked difference in running times. We start with the iterative version.
+</p><pre><code>   int fibIter ( int n )
+   {
+      int i, p1, p2, F;
+
+      if (n &lt;= 1) return n;
+      i = 1; F = 1; p1 = 0;
+      while (i &lt; n) {
+         ++i;
+         p2 = p1;
+         p1 = F;
+         F = p1 + p2;
+      }
+      return F;
+   }
+</code></pre>
+<p>
+The function initially makes a comparison and if <tt>n = 0,1</tt> the value
+<tt>n</tt> is returned. For <tt>n&nbsp;&gt;=&nbsp;2</tt>, it proceeds further down.
+First, three variables (<tt>i,F,p1</tt>) are initialized. The subsequent
+<tt>while</tt> loop is executed exactly <tt>n-1</tt> times. The body of
+the loop involves four basic operations (one increment, two copies and
+one addition). Moreover, the loop continuation condition is checked <tt>n</tt>
+times. So the number of basic operations performed by this iterative algorithm
+is
+</p><pre><code>   1 + 3 + 4(n-1) + n = 5n.
+</code></pre>
+<p>
+In particular, <tt>fibIter</tt> runs in linear time.
+</p><p>
+Let us now investigate the recursive version:
+</p><pre><code>   int fibRec ( int n )
+   {
+      if (n &lt;= 1) return n;
+      return fibRec(n-1) + fibRec(n-2);
+   }
+</code></pre>
+<p>
+Let <tt>T(n)</tt> denote the running time of this recursive function on
+input <tt>n</tt>. Simple investigation of the function shows that:
+</p><pre><code>   T(0) = 1,
+   T(1) = 1,
+   T(n) = T(n-1) + T(n-2) + 2 for n &gt;= 2.
+</code></pre>
+<p>
+Now it is somewhat complicated to find a closed-form formula for <tt>T(n)</tt>.
+We instead give an upper bound and a lower bound on <tt>T(n)</tt>. To that
+effect let us first introduce a new function <tt>S(n)</tt> as:
+</p><pre><code>   S(n) = T(n) + 2 for all n.
+</code></pre>
+<p>
+We then have:
+</p><pre><code>   S(0) = 3,
+   S(1) = 3,
+   S(n) = S(n-1) + S(n-2) for n &gt;= 2.
+</code></pre>
+<p>
+Denote by <tt>F(n)</tt> the <tt>n</tt>-th Fibonacci number and use
+induction on <tt>n</tt>. <tt>S(0) &lt;= F(4)</tt> and <tt>S(1) &lt;= F(5)</tt>.
+Moreover, <tt>S(n) = S(n-1) + S(n-2) &lt;= F(n+3) + F(n+2) = F(n+4)</tt>.
+A lower bound on <tt>S(n)</tt> can be derived by induction on <tt>n</tt> as:
+<tt>S(0) &gt;= F(3)</tt> and <tt>S(1) &gt;= F(4)</tt>.
+Moreover, <tt>S(n) = S(n-1) + S(n-2) &gt;= F(n+2) + F(n+1) = F(n+3)</tt>.
+It follows that:
+</p><pre><code>   F(n+3) - 2 &lt;= T(n) &lt;= F(n+4) - 2 for all n &gt;= 0.
+</code></pre>
+<p>
+The next question is to find a closed form formula for the Fibonacci
+numbers. We will not do it here, but present the well-known result:
+</p><pre>   F(n) = [1/sqrt(5)]<big><big>[</big></big><big>(</big>(1+sqrt(5))/2<big>)</big><sup>n</sup> - <big>(</big>(1-sqrt(5))/2<big>)</big><sup>n</sup><big><big>]</big></big>.
+</pre>
+<p>
+The number <tt>r = (1+sqrt(5))/2 = 1.61803...</tt> is called the
+<i>golden ratio</i>. Also <tt>(1-sqrt(5))/2 = -0.61803...</tt> is the
+negative of the reciprocal of the golden ratio and has absolute value
+less than 1. The powers <tt>[(1-sqrt(5))/2]<sup>n</sup></tt> become very
+small for large values of <tt>n</tt> and so
+</p><pre>   F(n) is approximately equal to [1/sqrt(5)]r<sup>n</sup>.
+</pre>
+<p>
+For all sufficiently large <tt>n</tt>, we then have
+</p><pre>   [1/sqrt(5)]r<sup>n+3</sup> - 2 &lt;= T(n) &lt;= [1/sqrt(5)]r<sup>n+4</sup> - 2
+</pre>
+<p>
+The first inequality shows that <tt>T(n)</tt> cannot have polynomial order,
+whereas the second inequality shows that <tt>T(n)</tt> is of exponential
+order.
+</p><p>
+To sum up, recursion <i>helped</i> us convert a polynomial-time (in fact,
+linear) algorithm to a truly exponential algorithm. This teaches you two
+lessons.  First, use recursion judiciously. Second, different algorithms
+(or implementations) for the same problem may have widely different
+complexities. Performance analysis of programs is really important then!
+
+</p></li><li><b>Linear search</b>
+<p>
+We are given an array <tt>A</tt> of <tt>n</tt> integers and another integer
+<tt>x</tt>. The task is to locate the existence of <tt>x</tt> in <tt>A</tt>.
+Here <tt>n</tt> is taken to be the input size.
+We assume that <tt>A</tt> is not sorted, i.e., we will do linear search in
+the array. Here is the code:
+</p><pre><code>   int linSearch ( int A[] , int n , int x )
+   {
+      int i;
+
+      for (i=0; i&lt;n; ++i) if (A[i] == x) return 1;
+      return 0;
+   }
+</code></pre>
+<p>
+The time complexity of the above function depends on whether <tt>x</tt>
+is present in <tt>A</tt> and if so at which location. Clearly, the worst case
+(longest running time) occurs when <tt>x</tt> is not present in the array
+and the last statement (<tt>return&nbsp;0;</tt>) is executed. In this case
+the loop requires one initialization of <tt>i</tt>, <tt>n</tt> increments
+of <tt>i</tt> and <tt>n+1</tt> comparisons of <tt>i</tt> with <tt>n</tt>.
+Inside the loop body there is a single comparison which fails in all of
+the <tt>n</tt> iterations of the loop in the worst-case scenario. Thus
+the total time needed by this function is:
+</p><pre><code>   1 + n + (n+1) + n = 3n + 2.
+</code></pre>
+<p>
+This is <tt>O(n)</tt>, i.e., the linear search is a linear time algorithm.
+
+</p></li><li><b>Binary search</b>
+<p>
+In order to curtail the running time of linear search, one uses the binary
+search algorithm. This requires the array <tt>A</tt> to be sorted
+<i>a&nbsp;priori</i>. We do not compute the running time for sorting now,
+but look at the running time of binary search in a sorted array.
+</p><pre><code>   int binSearch ( int A[] , int n , int x )
+   {
+      int L, R, M;
+
+      L = 0; R = n-1;
+      while (L &lt; R) {
+         M = (L + R) / 2;
+         if (x &gt; A[M]) L = M+1; else R = M;
+      }
+      return (A[L] == x);
+   }
+</code></pre>
+<p>
+For simplicity assume that the array size <tt>n</tt> is a power of 2,
+i.e., <tt>n = 2<sup>k</sup></tt> for some integer <tt>k &gt;= 0</tt>.
+Initially, the boundaries <tt>L</tt> and <tt>R</tt> are adjusted
+to the leftmost and rightmost indices of the entire array. After each
+iteration of the <tt>while</tt> loop the central index <tt>M</tt>
+of the current search window is computed. Depending on the result of comparison
+of <tt>x</tt> with <tt>A[M]</tt>, the boundaries <tt>(L,R)</tt> is
+changed either to <tt>(L,M)</tt> or to <tt>(M+1,R)</tt>. In either
+case, the size of the search window (i.e., the subarray delimited by <tt>L</tt> and <tt>R</tt>)
+is reduced to half. Thus after <tt>k</tt> iterations of the <tt>while</tt>
+loop the search window reduces to a subarray of size 1, and <tt>L</tt>
+and <tt>R</tt> become equal. After the loop terminates, a comparison is made between
+<tt>x</tt> and an array element. So the number of basic operations done
+by this algorithm equals:
+</p><pre><code>     2   +    (k+1)     +      k       x    (2 + 1 + 1)     +        1        
+  (Init)   (Loop condn)   (No of iter)   (ops in loop body)   (last comparison)
+
+   = 5k + 4.
+</code></pre>
+<p>
+But <tt>k = log<sub>2</sub>n</tt>, so the running time of binary search
+is <tt>O(log n)</tt>, i.e., logarithmic. This is far better than the linear
+running time of the linear search algorithm.
+
+</p></li><li><b>Bubble sort</b>
+<p>
+It is interesting to look at the running times of different sorting
+algorithms. Let us start with a non-recursive sorting algorithm. Here is
+the code that bubble sorts an array of size <tt>n</tt>.
+</p><pre><code>   void bubbleSort ( int A[] , int n )
+   {
+      for (i=n-2; i&gt;=0; --i) {
+         for (j=0; j&lt;=i; ++j) {
+            if (A[j] &gt; A[j+1]) {
+               t = A[j];
+               A[j] = A[j+1];
+               A[j+1] = t;
+            }
+         }
+      }
+   }
+</code></pre>
+<p>
+This is an example of a nested for loop. The outer loop runs over <tt>i</tt>
+for the values <tt>n-2,n-3,...,0</tt> and for a value of <tt>i</tt>
+the inner loop is executed <tt>i+1</tt> times. This means that the
+inner loop is executed a total number of
+</p><pre><code>   (n-1) + (n-2) + ... + 2 + 1 = n(n-1)/2
+</code></pre>
+<p>
+times. Each iteration of the inner loop involves a comparison and conditionally
+a set of three assignment operations. Thus the inner loop performs at most
+</p><pre><code>   4 x n(n-1)/2 = 2n(n-1)
+</code></pre>
+<p>
+basic operations. This quantity is <tt>O(n<sup>2</sup>)</tt>. We should also
+add the costs associated with the maintenance of the loops. The outer loop 
+requires <tt>O(n)</tt> time, whereas for each <tt>i</tt> the inner loop
+requires <tt>O(i)</tt> time. The <tt>n-1</tt> iterations of the
+outer loop then leads to a total of <tt>O((n-1) + (n-2) + ... + 1)</tt>,
+i.e., <tt>O(n<sup>2</sup>)</tt>, basic operations for maintaining
+all of the inner loops. To sum up, we conclude that the bubble sort
+algorithm runs in <tt>O(n<sup>2</sup>)</tt> time.
+
+</p></li><li><b>Matrix multiplication</b>
+<p>
+Here is the straightforward code for multiplying two <tt>n&nbsp;x&nbsp;n</tt>
+matrices. We take <tt>n</tt> as the input size parameter.
+</p><pre><code>   /* Multiply two n&nbsp;x&nbsp;n matrices A and B and store the product in C */
+   void matMul ( int C[SIZE][SIZE] , int A[SIZE][SIZE] , int B[SIZE][SIZE] , int n )
+   {
+      int i, j, k;
+
+      for (i=0; i&lt;n; ++i) {
+         for (j=0; j&lt;n; ++j) {
+            C[i][j] = 0;
+            for (k=0; k&lt;n; ++k) C[i][j] += A[i][k] * B[k][j];
+         }
+      }
+   }
+</code></pre>
+<p>
+This is another example of nested loops with an additional level of nesting
+(compared to bubble sort). The outermost and the intermediate loops run
+independently over the values of <tt>i</tt> and <tt>j</tt> in the range
+<tt>0,1,...,n-1</tt>. For each of these <tt>n<sup>2</sup></tt> possible
+values of <tt>i,j</tt>, the element <tt>C[i][j]</tt> is first initialized and then
+the innermost loop on <tt>k</tt> is executed exactly <tt>n</tt> times.
+Each iteration in the innermost loop involves one multiplication and one
+addition. Therefore, for each <tt>i,j</tt> the innermost loop takes
+<tt>O(n)</tt> running time. This is also the cost associated with maintaining
+the loop on <tt>k</tt>. Thus each execution of the body of the intermediate loop takes a total
+of <tt>O(n)</tt> time and this body is executed <tt>n<sup>2</sup></tt>
+times leading to a total running time of <tt>O(n<sup>3</sup>)</tt>.
+It is easy to argue that the cost for maintaining the loop on
+<tt>i</tt> is <tt>O(n)</tt> and that for maintaining all of the <tt>n</tt>
+executions of the intermediate loop is <tt>O(n<sup>2</sup>)</tt>.
+</p><p>
+So two <tt>n&nbsp;x&nbsp;n</tt> matrices can be multiplied in
+<tt>O(n<sup>3</sup>)</tt> time. Can we make any better than that?
+The answer is: yes. There are algorithms that multiply two
+<tt>n&nbsp;x&nbsp;n</tt> matrices in time <tt>O(n<sup>w</sup>)</tt> time,
+where <tt>w&nbsp;&lt;&nbsp;3</tt>. One example is Straßen's algorithm
+that takes time <tt>O(n<sup>log<sub>2</sub>(7)</sup>)</tt>, i.e.,
+<tt>O(n<sup>2.807...</sup>)</tt>. The best known matrix multiplication
+algorithm is due to Coppersmith and Winograd. Their algorithm has a running
+time of <tt>O(n<sup>2.376</sup>)</tt>. It is clear that for setting the
+value of all <tt>C[i][j]</tt>'s one must perform at least
+<tt>n<sup>2</sup></tt> basic operations. It is still an open question
+whether <tt>O(n<sup>2</sup>)</tt> running time suffices for matrix
+multiplication.
+
+</p></li><li><b>Stack ADT operations</b>
+<p>
+Look at the two implementations of the stack ADT
+<a href="https://cse.iitkgp.ac.in/pds/notes/stackqueue.html#stackimpl" id="noul" target="_blank">detailed earlier</a>.
+It is easy to argue that each function (except <tt>print</tt>) performs
+only a constant number of operations irrespective of the current size
+of the stack and so has a running time of <tt>O(1)</tt>. This is the
+reason why we planned to write seperate routines for the stack and
+queue ADTs instead of using the routines for the
+<a href="https://cse.iitkgp.ac.in/pds/notes/ADT.html#ADTexmp" id="noul" target="_blank">ordered list ADT</a>. Insertion
+or deletion in the ordered list ADT may require <tt>O(n)</tt> time,
+where <tt>n</tt> is the current size of the list.
+
+</p></li><li><b>Partitioning in quick sort</b>
+<p>
+This example illustrates the space complexity of a program (or function).
+We concentrate only on the partitioning stage of the quick sort algorithm.
+The following function takes the first element of the array as the pivot
+and returns the last index of the smaller half of the array.
+The pivot is stored at this index.
+</p><pre><code>   int partition1 ( int A[] , int n )
+   {
+      int *L, *R, lIdx, rIdx, i, pivot;
+
+      L = (int *)malloc((n-1) * sizeof(int));
+      R = (int *)malloc((n-1) * sizeof(int));
+      pivot = A[0];
+      lIdx = rIdx = 0;
+      for (i=1; i&lt;n; ++i) {
+         if (A[i] &lt;= pivot) L[lIdx++] = A[i];
+         else R[rIdx++] = A[i];
+      }
+      for (i=0; i&lt;lIdx; ++i) A[i] = L[i];
+      A[lIdx] = pivot;
+      for (i=0; i&lt;rIdx; ++i) A[lIdx + 1 + i] = R[i];
+      free(L); free(R);
+      return lIdx;
+   }
+</code></pre>
+<p>
+Here we collect elements of <tt>A[]</tt> smaller than or equal to the pivot
+in the array <tt>L</tt> and those that are larger than the pivot in the
+array <tt>R</tt>. We allocate memory for these additional arrays. Since the
+sizes of <tt>L</tt> and <tt>R</tt> are not known <i>a&nbsp;priori</i>, we
+have to prepare for the maximum possible size (<tt>n-1</tt>) for both.
+In addition, we use a constant number (six) of variables. The total
+additional space requirement for this function is therefore
+</p><pre><code>   2(n-1) + 6 = 2n + 4,
+</code></pre>
+<p>
+which is <tt>O(n)</tt>.
+</p><p>
+Let us plan to reduce this space requirement. A possible first approach
+is to store <tt>L</tt> and <tt>R</tt> in a single array <tt>LR</tt> of size <tt>n-1</tt>.
+Though each of <tt>L</tt> and <tt>R</tt> may be individually as big as
+having a size of <tt>n-1</tt>, the total size of these two arrays must
+be <tt>n-1</tt>. We store elements of <tt>L</tt> from the beginning
+and those of <tt>R</tt> from the end of <tt>LR</tt>. The following code snippet incorporates
+this strategy:
+</p><pre><code>   int partition2 ( int A[] , int n )
+   {
+      int *LR, lIdx, rIdx, i, pivot;
+
+      LR = (int *)malloc((n-1) * sizeof(int));
+      pivot = A[0];
+      lIdx = 0; rIdx = n-1;
+      for (i=1; i&lt;n; ++i) {
+         if (A[i] &lt;= pivot) LR[lIdx++] = A[i];
+         else LR[rIdx--] = A[i];
+      }
+      for (i=0; i&lt;lIdx; ++i) A[i] = LR[i];
+      A[lIdx] = pivot;
+      for (i=rIdx+1; i&lt;n; ++i) A[i] = LR[i];
+      free(LR);
+      return lIdx;
+   }
+</code></pre>
+<p>
+The total amount of extra memory used by this function is
+</p><pre><code>   (n-1) + 5 = n + 4,
+</code></pre>
+<p>
+which, though about half of the space requirement for <tt>partition1</tt>,
+is still <tt>O(n)</tt>.
+</p><p>
+We want to reduce the space complexity further. Using one or more additional
+arrays will always incur <tt>O(n)</tt> space overhead. So we would avoid
+using any such extra array, but partition <tt>A</tt> in <tt>A</tt> itself.
+This is called <i>in-place partitioning</i>. The function <tt>partition3</tt>
+below implements in-place partitioning. It works as follows. It maintains
+the loop invariant that at all time the array <tt>A</tt> is maintained
+as a concatenation <tt>LUR</tt> of three regions. The leftmost region
+<tt>L</tt> contains elements smaller than or equal the pivot. The rightmost
+region <tt>R</tt> contains elements bigger than the pivot. The intermediate
+region <tt>U</tt> consists of yet unprocessed elements. Initially, <tt>U</tt>
+is the entire array <tt>A</tt> (or <tt>A</tt> without the first element
+which is taken to be the pivot), and finally <tt>U</tt> should be empty.
+The region <tt>U</tt> is delimited by two indices <tt>lIdx</tt> and
+<tt>rIdx</tt> indicating respectively the first and last indices of <tt>U</tt>.
+During each iteration, the element at <tt>lIdx</tt> is compared with the pivot,
+and depending on the comparison result this element is made part of <tt>L</tt>
+or <tt>R</tt>.
+</p><pre><code>   int partition3 ( int A[] , int n )
+   {
+      int lIdx, rIdx, pivot, t;
+
+      pivot = A[0];
+      lIdx = 1; rIdx = n-1;
+
+      while (lIdx &lt;= rIdx) {
+         if (A[lIdx] &lt;= pivot) {
+            /* The region L grows */
+            ++lIdx;
+         } else {
+            /* Exchange A[lIdx] with the element at the U-R boundary. */
+            t = A[lIdx];
+            A[lIdx] = A[rIdx];
+            A[rIdx] = t;
+            /* The region R grows */
+            --rIdx;
+         }
+      }
+
+      /* Place the pivot A[0] in the correct place by exchanging it
+         with the last element of L */
+      A[0] = A[rIdx];
+      A[rIdx] = pivot;
+
+      return rIdx;
+   }
+</code></pre>
+<p>
+The function <tt>partition3</tt> uses only four extra variables and so its
+space complexity is <tt>O(1)</tt>. That is a solid improvement over the
+earlier versions.
+</p><p>
+It is easy to check that the time complexity of each of these three
+partition routines is <tt>O(n)</tt>.
+</p></li></ul>
+
+<h2 align="left">Worst-case versus average complexity</h2>
+<p>
+Our basic aim is to provide complexity figures (perhaps in the <tt>O</tt>
+notation) in terms of the input size, and not as a function of any
+particular input. So far we have counted the maximum possible number of
+basic operations that need be executed by a program or function. As an
+example, consider the linear search algorithm. If the element <tt>x</tt>
+happens to be the first element in the array, the function <tt>linSearch</tt>
+returns after performing only few operations. The farther <tt>x</tt> can be
+located down the array, the bigger is the number of operations.
+Maximum possible effort is required, when <tt>x</tt> is not at all present
+in the array. We argued that this maximum value is <tt>O(n)</tt>. We
+call this the <i>worst-case complexity</i> of linear search.
+</p><p>
+There are situations where the worst-case complexity is not a good
+picture of the practical situation. On an average, a program may perform
+much better than what it does in the worst case. <i>Average complexity</i> refers to
+the complexity (time or space) of a program (or function) that pertains
+to a random input. It turns out that average complexities
+for some programs are markedly better than their worst-case complexities.
+There are even examples where the worst-case complexity is exponential,
+whereas the average complexity is a (low-degree) polynomial. Such an
+algorithm may take a huge amount of time in certain esoteric situations, but
+for most inputs we expect the program to terminate soon.
+</p><p>
+We provide a concrete example now: the quick sort algorithm.
+By <tt>partition</tt> we mean a partition function for an array of <tt>n</tt>
+integers with respect to the first element of the array as the pivot. One
+may use any one of the three implementations discussed above.
+</p><pre><code>   void quickSort ( int A[] , int n )
+   {
+      int i;
+
+      if (n &lt;= 1) return;
+      i = partition(A,n);        /* Partition with respect to A[0] */
+      quickSort(A,i);            /* Recursively sort the left half excluding the pivot */
+      quickSort(&amp;A[i+1],n-i-1);  /* Recursively sort the right half */
+   }
+</code></pre>
+<p>
+Let <tt>T(n)</tt> denote the running time of <tt>quickSort</tt> for an array
+of <tt>n</tt> integers. The running time of the partition function is
+<tt>O(n)</tt>. It then follows that:
+</p><pre><code>   T(n) &lt;= T(i) + T(n-i-1) + cn + d
+</code></pre>
+<p>
+for some constants <tt>c</tt> and <tt>d</tt> and for some <tt>i</tt>
+depending on the input array <tt>A</tt>. The presence of <tt>i</tt> on the right
+side makes the analysis of the running time somewhat difficult. We
+cannot treat <tt>i</tt> as a constant for all recursive invocations.
+Still, some general assumptions lead to easily derivable closed-form
+formulas for <tt>T(n)</tt>.
+</p><p>
+An algorithm like quick sort (or merge sort) is called a
+<i>divide-and-conquer</i> algorithm. The idea is to break the input into
+two or more parts, recursively solve the problem on each part and
+subsequently combine the solutions for the different parts. For the
+quick sort algorithm the first step (breaking the array into two subarrays)
+is the partition problem, whereas the combining stage after the return of
+the recursive calls involves doing nothing. For the merge sort, on the other
+hand, breaking the array is trivial -- just break it in two nearly equal
+halves. Combining the solutions involves the non-trivial merging process.
+</p><p>
+It follows intuitively that the smaller the size of each subproblem is,
+the easier it is to solve each subproblem. For any superlinear function
+<tt>f(n)</tt> the sum
+</p><pre><code>   f(k) + f(n-k-1) + g(n)
+</code></pre>
+<p>
+(with <tt>g(n)</tt> a linear function) is large when the breaking
+of <tt>n</tt> into <tt>k,n-k-1</tt> is very skew, i.e., when one of
+the parts is very small and the other nearly equal to <tt>n</tt>.
+For example, take <tt>f(n)&nbsp;=&nbsp;n<sup>2</sup></tt>.
+Consider the function of a real variable <tt>x</tt>:
+</p><pre>   y = x<sup>2</sup> + (n-x-1)<sup>2</sup> + g(n)
+</pre>
+<p>
+Differentiation shows that the minimum value of <tt>y</tt> is attained
+at <tt>x&nbsp;=&nbsp;n/2</tt> approximately. The value of <tt>y</tt>
+increases as we move more and more away from this point in either direction.
+</p><p>
+So <tt>T(n)</tt> is maximized when <tt>i&nbsp;=&nbsp;0</tt> or <tt>n-1</tt>
+in all recursive calls, for example, when the input array is already
+sorted either in the increasing or in the decreasing order.
+This situation yields the worst-case complexity of quick sort:
+</p><pre><code>   T(n) &lt;= T(n-1) + T(0) + cn + d
+        =  T(n-1) + cn + d + 1
+        &lt;= (T(n-2) + c(n-1) + d + 1) + cn + d + 1
+        =  T(n-2) + c[n + (n-1)] + 2d + 2
+        &lt;= T(n-3) + c[n + (n-1) + (n-2)] + 3d + 3
+        &lt;= ...
+        &lt;= T(0) + c[n + (n-1) + (n-2) + ... + 1] + nd + n
+        =  cn(n-1)/2 + nd + n + 1,
+</code></pre>
+<p>
+which is <tt>O(n<sup>2</sup>)</tt>, i.e., the worst-case time complexity
+of quick sort is quadratic.
+</p><p>
+But what about its average complexity? Or a better question is how to characterize
+an average case here. The basic idea of partitioning is to choose a pivot and subsequently
+break the array in two halves, the lesser mortals stay on one side,
+the greater mortals on the other. A randomly chosen pivot is expected
+to be somewhere near the middle of the eventual sorted sequence. If
+the input array <tt>A</tt> is assumed to be random, its first element
+<tt>A[0]</tt> is expected to be at a random location in the sorted
+sequence. If we assume that all the possible locations are equally likely,
+it is easy to check that the expected location of the pivot is near the middle of
+the sorted sequence. Thus the average case behavior of quick sort
+corresponds to
+</p><pre><code>   i = n-i-1 = n/2 approximately.
+</code></pre>
+<p>
+We than have:
+</p><pre><code>   T(n) &lt;= 2T(n/2) + cn + d.
+</code></pre>
+<p>
+For simplicity let us assume that <tt>n</tt> is a power of
+2, i.e., <tt>n&nbsp;=&nbsp;2<sup>t</sup></tt> for some positive integer
+<tt>t</tt>. But then
+</p><pre>   T(n) =  T(2<sup>t</sup>)
+        &lt;= 2T(2<sup>t-1</sup>) + c2<sup>t</sup> + d
+        &lt;= 2(2T(2<sup>t-2</sup>) + c2<sup>t-1</sup> + d) + c2<sup>t</sup> + d
+        =  2<sup>2</sup>T(2<sup>t-2</sup>) + c(2<sup>t</sup>+2<sup>t</sup>) + (2+1)d
+        &lt;= 2<sup>3</sup>T(2<sup>t-3</sup>) + c(2<sup>t</sup>+2<sup>t</sup>+2<sup>t</sup>) + (2<sup>2</sup>+2+1)d
+        &lt;= ...
+        &lt;= 2<sup>t</sup>T(2<sup>0</sup>) + ct2<sup>t</sup> + (2<sup>t-1</sup>+2<sup>t-2</sup>+...+2+1)d
+        =  2<sup>t</sup> + ct2<sup>t</sup> + (2<sup>t</sup>-1)d
+        =  cnlog<sub>2</sub>n + n(d+1) - d.
+</pre>
+<p>
+The first term in the last expression dominates over the other terms and
+consequently the average complexity of quick sort is <tt>O(nlog&nbsp;n)</tt>.
+</p><p>
+Recall that bubble sort has a time complexity of <tt>O(n<sup>2</sup>)</tt>.
+The situation does not improve even if we assume an average scenario, since
+we anyway have to make <tt>O(n<sup>2</sup>)</tt> comparisons in the nested
+loop. Insertion and selection sorts attain the same complexity figure.
+With quick sort, the worst-case complexity is equally poor. But in
+practice a random array tends to follow the average behavior more closely
+than the worst-case behavior. That is reasonable improvement over quadratic
+time. The quick sort algorithm turns out to be one of the practically fastest
+general-purpose comparison-based sorting algorithm.
+</p><p>
+We will soon see that even the worst-case complexity of merge sort is
+<tt>O(nlog&nbsp;n)</tt>. It is an interesting theoretical result that
+a comparison-based sorting algorithm cannot run in time faster than
+<tt>O(nlog&nbsp;n)</tt>. Both quick sort and merge sort achieve this
+lower bound, the first on an average, the second always. Historically,
+this realization provided a massive impetus to promote and exploit
+recursion. Tony Hoare invented quick sort and popularized recursion.
+We cannot think of a modern compiler without this facility.
+</p><p>
+Also, do you see the significance of the coinage <i>divide-and-conquer</i>?
+</p><p>
+We illustrated above that recursion made the poly-time Fibonacci routine
+exponentially slower. That's the darker side of recursion. Quick sort and
+merge sort highlight the brighter side. When it is your time to make a
+decision to accept or avoid recursion, what will you do? Analyze the
+complexity and then decide.
+
+</p><h2 align="left">How to compute the complexity of a program?</h2>
+<p>
+The final question is then how to derive the complexity of a program.
+So far you have seen many examples. But what is a standard procedure for
+deriving those divine functions next to the big-Oh? Frankly speaking, there
+is none. (This is similar to the situation that there is no general procedure
+for integrating a function.) However, some common patterns can be identified
+and prescription solutions can be made available for those patterns. (For
+integration too, we have method of substitution, integration by parts, and
+some such standard rules. They work fine only in presence of definite
+patterns.) The theory is deep and involved and well beyond the scope of
+this introductory course. We will again take help of examples to illustrate
+the salient points.
+</p><p>
+First consider a non-recursive function. The function is
+a simple top-to-bottom set of instructions with loops embedded at some places
+in the sequence. One has to carefully study the behavior of the loops and
+add up the total overhead associated with each loop. The final complexity
+of the function is the sum of the complexities of each individual instruction
+(including loops). The counting process is not always straighforward. There
+is a deadly branch of mathematics, called combinatorics, that deals with
+counting principles.
+</p><p>
+We have already deduced the time complexity of several non-recursive
+functions. Let us now focus our attention to recursive functions. As we
+have done in connection with <tt>quickSort</tt>, we write the running time
+of an invocation of a recursive function by <tt>T(n)</tt>, where <tt>n</tt> denotes
+the size of the input. If <tt>n</tt> is of a particular form (for example,
+if <tt>n</tt> has a small value), then no recursive calls are made. Some
+fixed computation is done instead and the result is returned. In this case the
+techniques for non-recursive functions need be employed.
+</p><p>
+Finally, assume that the function makes recursive calls on inputs of sizes
+<tt>n<sub>1</sub>,n<sub>2</sub>,...,n<sub>k</sub></tt> for some
+<tt>k&gt;=1</tt>. Typically each <tt>n<sub>i</sub></tt> is smaller than
+<tt>n</tt>. These calls take respective times
+<tt>T(n<sub>1</sub>),T(n<sub>2</sub>),...,T(n<sub>k</sub>)</tt>.
+We add these times. Furthermore, we compute the time taken by
+the function without the recursive calls. Let us denote this time by
+<tt>g(n)</tt>. We then have:
+</p><pre>   T(n) = T(n<sub>1</sub>) + T(n<sub>2</sub>) + ... + T(n<sub>k</sub>) + g(n).
+</pre>
+<p>
+Such an equation is called a <i>recurrence relation</i>. There are tools
+by which we can solve recurrence relations of some particular types. This
+is again part of the deadly combinatorics. We will not go to the details,
+but only mention that a recurrence relation for <tt>T(n)</tt> together with a set of initial
+conditions (e.g.&nbsp;<tt>T(n)</tt> for some small values of <tt>n</tt>)
+may determine a closed-form formula for <tt>T(n)</tt> which can be
+expressed by the Big&nbsp;<tt>O</tt> notation. It is often not necessary to
+compute an exact formula for <tt>T(n)</tt>. Proving a lower and an upper
+bound may help us determine the order of <tt>T(n)</tt>.
+Recall how we have analyzed the complexity of the recursive Fibonacci
+function.
+</p><p>
+We end this section with two other examples of complexity analysis of
+recursive functions.
+</p><p>
+<b>Examples</b>
+</p><ul>
+<li><b>Computing determinants</b>
+<p>
+The following function computes the determinant of an <tt>n&nbsp;x&nbsp;n</tt>
+matrix using the expand-at-the-first-row method. It recursively computes
+<tt>n</tt> determinants of <tt>(n-1)&nbsp;x&nbsp;(n-1)</tt> sub-matrices and
+then does some simple manipulation of these determinant values.
+</p><pre><code>   int determinant ( int A[SIZE][SIZE] , int n )
+   {
+      int B[SIZE][SIZE], i, j, k, l, s;
+
+      if (n == 1) return A[0][0];
+      s = 0;
+      for (j=0; j&lt;n; ++j) {
+         for (i=1; i&lt;n; ++i) {
+            for (l=k=0; k&lt;n; ++k) if (k != j) B[i-1][l++] = A[i][k];
+         }
+         if (j % 2 == 0) s += A[0][j] * determinant(B,n-1);
+         else s -= A[0][j] * determinant(B,n-1);
+      }
+   }
+</code></pre>
+<p>
+I claim that this algorithm is an extremely poor choice for computing
+determinants. If <tt>T(n)</tt> denotes the running of the above function,
+we clearly have:
+</p><pre><code>   T(1) = 1, and
+   T(n) &gt;= n T(n-1) for n &gt;= 2.
+</code></pre>
+<p>
+Multiple substitution of the second inequality then implies that:
+</p><pre><code>   T(n) &gt;= n T(n-1)
+        &gt;= n(n-1) T(n-2)
+        &gt;= n(n-1)(n-2) T(n-3)
+        ...
+        &gt;= n(n-1)(n-2)...2 T(1)
+        = n!
+</code></pre>
+<p>
+How big is <tt>n!</tt> (factorial n)? Since <tt>i&nbsp;&gt;=&nbsp;2</tt> for
+<tt>i&nbsp;=&nbsp;2,3,...,n</tt>, it follows that
+<tt>n!&nbsp;&gt;=&nbsp;2<sup>n-1</sup></tt>. Thus the running-time of the
+above function is at least exponential.
+</p><p>
+Polynomial-time algorithms exist for computing determinants. One may use
+elementary row operations in order to reduce the given matrix to a triangular
+matrix having the same determinant. For a triangular matrix,
+the determinant is the product of the elements on the main diagonal.
+We urge the students to exploit this idea in order to design an
+<tt>O(n<sup>3</sup>)</tt> algorithm for computing determinants.
+</p></li><li><b>Merge sort</b>
+<p>
+The merge sort algorithm on an array of size <tt>n</tt> is depicted below:
+</p><pre><code>   void mergeSort ( int A[] , int n )
+   {
+      if (n &lt;= 1) return;
+      mergeSort(A,n/2);
+      mergeSort(&amp;A[n/2],n-(n/2));
+      merge(A,0,n/2-1,n/2,n-1);
+   }
+</code></pre>
+<p>
+For simplicity, assume that <tt>n = 2<sup>t</sup></tt> for some <tt>t</tt>.
+The merge step on two arrays of size <tt>n/2</tt> can be easily seen to be
+doable in <tt>O(n)</tt> time. It then follows that:
+</p><pre><code>   T(1) = 1, and
+   T(n) &lt;= 2 T(n/2) + cn + d
+</code></pre>
+<p>
+for some constants <tt>c</tt> and <tt>d</tt>. As in the average case of
+quick sort, one can deduce the running time of merge sort to be
+<tt>O(nlog&nbsp;n)</tt>.
+</p></li></ul>
+
+  <div class="navigator">
+    <a href="exer4.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Exercise set IV</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="exer5.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Exercise set V</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

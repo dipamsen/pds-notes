@@ -1,0 +1,759 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise set II | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+
+<h1 align="center">Exercise set II</h1>
+<p><b>Note:</b>
+<i>Students are encouraged to solve as many problems from this set as possible.
+Some of these will be solved during the lectures, if time permits. We have
+made attempts to classify the problems based on the difficulty level of
+solving them. An unmarked exercise is of low to moderate difficulty. Harder
+problems are marked by H, H<sup>2</sup> and H<sup>3</sup> meaning "just hard",
+"quite hard" and "very hard" respectively. Exercises marked by M have
+mathematical flavor (as opposed to computational). One requires elementary
+knowledge of number theory or algebra or geometry or combinatorics in order
+to solve these mathematical exercises.</i>
+
+</p><ol>
+
+<li>
+Write functions to compute the following:
+<ol type="a">
+<li>The area of a circle whose diameter is supplied as an argument.
+</li><li>The volume of a 3-dimensional sphere whose surface area is given as an argument.
+</li><li>The area of an ellipse for which the lengths of the major and minor axes
+are given as arguments.
+</li><li>Given the coordinates of three distinct points in the x-y plane,
+the radius of the circle circumscribing the three points. Your function
+should return <tt>-</tt>1 if the three given points are collinear.
+</li><li>Given a positive integer n, the sum of squares of all (positive) proper
+divisors of n.
+</li><li>Given integers n&gt;=0 and b&gt;1, the expansion of n in base b.
+(Example: (987654321)_10 = (4,38,92,23,114)_123.)
+</li><li>Given n and an array of n positive floating point numbers, the geometric
+mean of the elements of the array.
+</li></ol>
+
+</li><li>Write functions to perform the following tasks: 
+<ul>
+<li>Check if a positive integer (provided as parameter) is prime.
+</li><li>Check if a positive integer (provided as parameter) is composite.
+</li><li>Return the sum <tt>S<sub>7</sub>(n)</tt> of the 7-ary digits of
+a positive integer n (supplied as parameter).
+</li></ul>
+<p>
+Use the above functions to find out the smallest positive integer i
+for which <tt>S<sub>7</sub>(p<sub>i</sub>)</tt> is composite, where
+<tt>p<sub>i</sub></tt> is the i-th prime. Also print the prime
+<tt>p<sub>i</sub></tt>.
+</p><p>
+<b>Note:</b>
+1 is neither prime nor composite. The sequence of primes is denoted by
+<tt>p<sub>1</sub>=2, p<sub>2</sub>=3, p<sub>3</sub>=5, p<sub>4</sub>=7,
+p<sub>5</sub>=11, ...</tt>
+</p><p>
+As an illustrative example for this exercise consider the 31-st prime
+<tt>p<sub>31</sub></tt> = 127 that expands in base 7 as
+</p><pre>   127 = 2 x 7<sup>2</sup> + 4 x 7 + 1, 
+</pre>
+<p>
+i.e., the 7-ary expansion of 127 is 241 and therefore
+</p><pre>   S<sub>7</sub>(127) = 2 + 4 + 1 = 7, 
+</pre>
+which is prime.
+
+</li><li>Write a function that, given two points (x1,y1) and (x2,y2) in the
+plane, returns the distance between the points.
+<p>
+Write another function that computes the radius of the circle
+</p><pre>   x<sup>2</sup> + y<sup>2</sup> + ax + by + c
+</pre>
+defined by the triple (a,b,c). Note that for some values of (a,b,c) this
+radius is not defined. In that case your function should return some
+negative value.
+<p>
+Input two triples (a1,b1,c1) and (a2,b2,c2) so as to define two circles.
+Use the above two functions to determine which of the following cases occurs:
+</p><ul>
+<li>One or both of the circles is/are undefined.
+</li><li>The two circles touch (i.e., meet at exactly one point).
+</li><li>The two circles intersect (at two points).
+</li><li>The two circles do not intersect at all.
+</li></ul>
+
+</li><li>[M] Use the principle of mathematical induction to prove the following
+assertions:
+<ol type="a">
+<li>x<sup>2n+1</sup>+y<sup>2n+1</sup> is divisible by x+y for all n in
+<b>N<sub>0</sub></b>.
+</li><li>1/sqrt(1) + 1/sqrt(2) + <tt>...</tt> + 1/sqrt(n) &gt; 2(sqrt(n+1) - 1) for
+all n in <b>N</b>.
+</li><li>F<sub>1</sub><sup>2</sup> + F<sub>2</sub><sup>2</sup> + <tt>...</tt> +
+F<sub>n</sub><sup>2</sup> = F<sub>n</sub>F<sub>n+1</sub> for all n in
+<b>N<sub>0</sub></b>, where F<sub>n</sub> denotes the n-the Fibonacci
+number.
+</li><li>H<sub>1</sub> + H<sub>2</sub> + <tt>...</tt> + H<sub>n</sub> =
+(n+1)H<sub>n</sub> - n for all n in <b>N<sub>0</sub></b>, where H<sub>n</sub>
+denotes the n-th harmonic number.
+</li></ol>
+
+</li><li>[M]
+Find the flaw in the following proof:
+<p>
+<b>Theorem:</b>&nbsp;&nbsp;All horses are of the same color.
+</p><p>
+<i>Proof</i>&nbsp;&nbsp;Let there be n horses. We proceed by induction on n.
+If n=1, there is nothing to prove. So assume that n&gt;1 and that the theorem
+holds for any group of n<tt>-</tt>1 horses. From the given n horses discard one,
+say the first one. Then all the remaining n<tt>-</tt>1 horses are of the same
+color by the induction hypothesis. Now put the first horse back
+and discard another, say the last one. Then the first n<tt>-</tt>1 horses
+have the same color again by the induction hypothesis. So all the
+n horses must have the same color as the ones that were not
+discarded either time.&nbsp;QED
+
+</p></li><li>
+Find a loop invariant for each of the following loops:
+<pre><code>a.  int n, x, y, t;
+
+    n = 0;
+    x = 1 + rand() % 9;
+    y = 1 + rand() % 9;
+    while (n &lt; 10) {
+       t = 1 + rand() % 9;
+       x *= t;
+       y /= t;
+       ++n;
+    }
+
+b.  #define NITER 100
+
+    double x, s, t;
+    int i;
+
+    i = 0; s = t = 1;
+    do {
+      ++i;
+      t /= (double)i;
+      s += t;
+    } while (i &lt; NITER);
+
+c.  #define NITER 10
+    int i;
+    double A[NITER] = {1.0/2, 1.0/3, 1.0/5, 1.0/7, 1.0/11,
+                       1.0/13, 1.0/17, 1.0/19, 1.0/23, 1.0/29};
+
+    for (i=1; i&lt;NITER; ++i) A[i] += A[i-1];
+</code></pre>
+
+</li><li>[HM]
+Consider the following puzzle given in pseudocode:
+<pre>   Let n be an <i>odd</i> positive integer.
+   Initialize C to the collection of integers 1,2,<tt>...</tt>,2n.
+   while (C contains two or more elements) {
+      Randomly choose two elements from the collection, call them a and b.
+      Remove these elements from C.
+      Add the absolute difference |a-b| to C.
+   }
+</pre>
+<p>
+For every iteration of the loop, two elements are removed and one element is
+added, so the size of the collection reduces by 1. After 2n<tt>-</tt>1
+iterations the collection contains a single integer, call it t, and the loop
+terminates. Prove that t is odd. (Hint: Try to locate a delicate loop
+invariant.)
+
+</p></li><li>
+Determine what each of the following foomatic functions computes:
+<pre><code>a.  unsigned int foo1 ( unsigned int n )
+    {
+       unsigned int t = 0;
+
+       while (n &gt; 0) {
+          if (n % 2 == 1) ++t;
+          n = n / 2;
+       }
+       return t;
+    }
+
+b.  unsigned int foo2 ( unsigned int n )
+    {
+       unsigned int t = 0;
+
+       while (n &gt; 0) {
+          if (n &amp; 1) ++t;
+          n &gt;&gt;= 1;
+       }
+       return t;
+   }
+
+c.  double foo3 ( double a , unsigned int n )
+    {
+       double s, t;
+
+       s = 0;
+       t = 1;
+       while (n &gt; 0) {
+          s += t;
+          t *= a;
+          --n;
+       }
+       return s;
+    }
+
+d.  double foo4 ( float A[] , int n )
+    {
+       float s, t;
+
+       s = t = 0;
+       for (i=0; i&lt;n; ++i) {
+          s += A[i];
+          t += A[i] * A[i];
+       }
+       return (t/n)-(s/n)*(s/n);
+    }
+
+e.  int foo5 ( unsigned int n )
+    {
+       if (n == 0) return 0;
+       return 3*n*(n-1) + foo5(n-1) + 1;
+    }
+
+f.  int foo6 ( char A[] , unsigned int n )
+    {
+       int t;
+
+       if (n == 0) return 0;
+       t = foo6(A,n-1);
+       if ( ((A[n-1]&gt;='a') &amp;&amp; (A[n-1]&lt;='z')) ||
+            ((A[n-1]&gt;='A') &amp;&amp; (A[n-1]&lt;='Z')) ||
+            ((A[n-1]&gt;='0') &amp;&amp; (A[n-1]&lt;='9')) )
+          ++t;
+       return t;
+    }
+
+g.  int foo7 ( unsigned int a , unsigned int b )
+    {
+       if ((a == 0) || (b == 0)) return 0;
+       return a * b / bar7(a,b);
+    }
+
+    int bar7 ( unsigned int a , unsigned int b )
+    {
+       if (b == 0) return a;
+       return bar7(b,a%b);
+    }
+
+h.  int foo8 ( unsigned int n )
+    [
+       if (n == 0) return 0;
+       if (n &amp; 1) return -1;
+       return 1 + bar8(n-1);
+    }
+
+    int bar8 ( int n )
+    {
+       if (!(n &amp; 1)) return -2;
+       return 2 + foo8(n-1);
+    }
+</code></pre>
+
+</li><li>[HM] Prove that the following function correctly computes the
+number of trailing 0's in the decimal representation of n! (factorial n).
+<pre><code>   int bar ( unsigned int n )
+   {
+      int t = 0;
+
+      while (n &gt; 0) {
+         n /= 5;
+         t += n;
+      }
+      return t;
+   }
+</code></pre>
+
+</li><li>For k in <b>N</b> we have
+<pre>   a<sup>2k&nbsp;&nbsp;</sup> = (a<sup>k</sup>)<sup>2</sup>, and
+   a<sup>2k+1</sup> = (a<sup>k</sup>)<sup>2</sup> x a.
+</pre>
+<p>
+Use this observation to write a recursive function that, given a real
+number <tt>a</tt> and a non-negative integer <tt>n</tt>, computes the
+power <tt>a<sup>n</sup></tt>.
+
+</p></li><li>Write a recursive function that computes the binomial coefficient
+C(n,r) using the inductive definition:
+<pre><code>   C(n,r) = C(n-1,r) + C(n-1,r-1)
+</code></pre>
+for suitable values of n and r. Supply appropriate boundary conditions.
+
+</li><li>
+Define a sequence G<sub>n</sub> as:
+<table cellpadding="0" cellapscing="0" border="0" id="nobd">
+<tbody><tr><td rowspan="4" id="nobd" valign="middle"><tt>&nbsp;&nbsp;&nbsp;G<sub>n</sub>&nbsp;=&nbsp;
+</tt></td><td id="nobd">
+<pre>0
+1
+2
+G<sub>n-1</sub> + G<sub>n-2</sub> + G<sub>n-3</sub>
+</pre>
+</td><td id="nobd">
+<pre><code>  if n = 0,
+  if n = 1,
+  if n = 2,
+  if n &gt;= 3.
+</code></pre></td></tr></tbody></table>
+<ol type="a">
+<li>Write an iterative function for the computation of G<sub>n</sub> for a given n.
+</li><li>Write a recursive function for the computation of G<sub>n</sub> for a given n.
+</li><li>[H] Write an efficient recursive function for the computation of
+G<sub>n</sub> for a given n. Here efficiency means recursive invocation of the
+function for no more than n times.
+</li></ol>
+
+</li><li>Consider the sequence of integers given by:
+<pre>   a<sub>1</sub> = 1,
+   a<sub>2</sub> = 1,
+   a<sub>n</sub> = 6a<sub>n-2</sub> - a<sub>n-1</sub> for n &gt;= 3.
+</pre>
+<ol type="a">
+<li>Write a recursive function to compute a<sub>20</sub>.
+</li><li>Write an iterative function to compute a<sub>20</sub>.
+</li><li>Suppose that a mathematician tells you that
+<pre>   a<sub>n</sub> = <big>(</big>2<sup>n+1</sup> + (-3)<sup>n-1</sup><big>)</big>/5 for all n&gt;=1.
+</pre>
+<p>Use this formula to compute a<sub>20</sub>.
+</p><p>Compare the timings of these three approaches for computing a<sub>20</sub>.
+In order to measure time, use the built-in function <tt>clock()</tt> defined
+in <tt>&lt;time.h&gt;</tt>.
+</p></li></ol>
+
+</li><li>Consider three sequences of integers defined recursively as follows:
+<pre>   a<sub>0</sub> = 0
+   a<sub>1</sub> = 1
+   a<sub>n</sub> = a<sub>[n/3]</sub> - 2b<sub>n-2</sub> + c<sub>n</sub>  for n &gt;= 2
+
+   b<sub>0</sub> = -1
+   b<sub>1</sub> = 0
+   b<sub>2</sub> = 1
+   b<sub>n</sub> = n - a<sub>n-1</sub> + c<sub>n-2</sub> - b<sub>n-3</sub>  for n &gt;= 3
+
+   c<sub>0</sub> = 1
+   c<sub>n</sub> = b<sub>n</sub> - 3c<sub>[n/2]</sub> + 5  for n &gt;= 1
+</pre>
+<p>
+Here for a real number <tt>x</tt> the notation <tt>[x]</tt> stands for
+the largest integer less than or equal to <tt>x</tt>.
+For example, <tt>[3]=3</tt>, <tt>[3.1416]=3</tt>, <tt>[0.1416]=0</tt>,
+<tt>[-1.1416]=-2</tt>, <tt>[-3]=-3</tt>, <tt>[5/3]=1</tt>, <tt>[-5/3]=-2</tt>,
+etc. For this exercise you need consider <tt>x&gt;=0</tt> only, in which
+case <tt>[x]</tt> can be viewed as the integral part of <tt>x</tt>.
+</p><ol type="a">
+<li>Write three mutually recursive functions for computing a<sub>n</sub>,
+b<sub>n</sub> and c<sub>n</sub>.
+</li><li>Compute a<sub>25</sub>. Count the total number of times
+a<sub>i</sub>, b<sub>i</sub> and c<sub>i</sub> are computed
+for <tt>i=0,...,25</tt> (that is, the corresponding functions
+are called with argument i) during the computation of a<sub>25</sub>.
+</li><li>Compute b<sub>25</sub>. Count the total number of times
+a<sub>i</sub>, b<sub>i</sub> and c<sub>i</sub> are computed
+for <tt>i=0,...,25</tt> during the computation of b<sub>25</sub>.
+</li><li>Compute c<sub>25</sub>. Count the total number of times
+a<sub>i</sub>, b<sub>i</sub> and c<sub>i</sub> are computed
+for <tt>i=0,...,25</tt> during the computation of c<sub>25</sub>.
+</li><li>Write an iterative version of the mutually recursive procedure.
+Maintain three arrays a, b and c each of size 26. Use the
+boundary conditions (values for a<sub>0</sub>, a<sub>1</sub>,
+b<sub>0</sub> etc.) to initialize. Then use the recursive
+definition to update the a, b and c values "simultaneously".
+In this method if some value (say, a<sub>i</sub>) is
+once computed, it is stored in the appropriate array location for
+all subsequent uses. This saves the time for recalculating the
+same value again and again.
+</li><li>
+Compute the values a<sub>25</sub>, b<sub>25</sub> and c<sub>25</sub>
+using the iterative procedure.
+</li></ol>
+
+</li><li>[M] What is wrong in the following mutually recursive definition
+of three sequences a<sub>n</sub>, b<sub>n</sub> and c<sub>n</sub>?
+<pre>   a<sub>0</sub> = 1.
+   a<sub>n</sub> = a<sub>n-1</sub> + b<sub>n</sub> for n &gt;= 1.
+
+   b<sub>0</sub> = 2.
+   b<sub>n</sub> = b<sub>n-1</sub> + c<sub>n</sub> for n &gt;= 1.
+
+   c<sub>0</sub> = -3.
+   c<sub>n</sub> = c<sub>n-1</sub> + a<sub>n</sub> for n &gt;= 1.
+</pre>
+
+</li><li>
+Two frogs are sitting at the bottom of a flight of 10 steps and debating in how
+many ways then can jump up the stairs. They can jump one, two or three steps
+at once. For example, they can cover the 10 steps by jumping (3,3,3,1) or
+(2,3,2,1,2) or other suitable combinations of steps. Their mathematics is
+not very strong and they approach you for help in order to find out the total
+number of possibilities they have to reach the top. Please provide them with
+a general solution (not only for 10 but for general n steps) in the form of
+a C function. Note that the order of the steps is important here, i.e.,
+(3,3,3,1) is treated distinct from (1,3,3,3) for example.
+
+</li><li>
+Suppose we want to compute the product
+a<sub>0</sub>&nbsp;x&nbsp;a<sub>1</sub>&nbsp;x&nbsp;<tt>...</tt>&nbsp;x&nbsp;a<sub>n</sub>
+of n+1 numbers. Since multiplication is associative, we can insert parentheses
+in any order in order to completely specify the sequence of multiplications.
+For example, for n=3 we can parenthesize
+a<sub>0</sub>&nbsp;x&nbsp;a<sub>1</sub>&nbsp;x&nbsp;a<sub>2</sub>&nbsp;x&nbsp;a<sub>3</sub>
+in the following five ways:
+<pre>   a<sub>0</sub>&nbsp;x&nbsp;(a<sub>1</sub>&nbsp;x&nbsp;(a<sub>2</sub>&nbsp;x&nbsp;a<sub>3</sub>))
+   a<sub>0</sub>&nbsp;x&nbsp;((a<sub>1</sub>&nbsp;x&nbsp;a<sub>2</sub>)&nbsp;x&nbsp;a<sub>3</sub>)
+   (a<sub>0</sub>&nbsp;x&nbsp;a<sub>1</sub>)&nbsp;x&nbsp;(a<sub>2</sub>&nbsp;x&nbsp;a<sub>3</sub>)
+   (a<sub>0</sub>&nbsp;x&nbsp;(a<sub>1</sub>&nbsp;x&nbsp;a<sub>2</sub>))&nbsp;x&nbsp;a<sub>3</sub>
+   ((a<sub>0</sub>&nbsp;x&nbsp;a<sub>1</sub>)&nbsp;x&nbsp;a<sub>2</sub>)&nbsp;x&nbsp;a<sub>3</sub>
+</pre>
+<p>
+The number of ways in which n+1 numbers can be multiplied is denoted by
+C<sub>n</sub> and is called the n-th <b>Catalan number</b>.
+</p><ol type="a">
+<li>[HM] Show that Catalan numbers can be recursively defined as follows:
+<pre>   C<sub>0</sub> = 1,
+   C<sub>1</sub> = 1, and
+   C<sub>n</sub> = C<sub>0</sub>C<sub>n-1</sub> + C<sub>1</sub>C<sub>n-2</sub> + ... + C<sub>n-2</sub>C<sub>1</sub> + C<sub>n-1</sub>C<sub>0</sub> for n&gt;=2.
+</pre>
+(Hint: Classify a multiplication sequence based on the last multiplication.)
+</li><li>Write an iterative function to compute C<sub>n</sub> for a given n.
+(Remark: The computation of C<sub>n</sub> requires all the previous
+values C<sub>0</sub>,C<sub>1</sub>,<tt>...</tt>,C<sub>n-1</sub>. So
+you are required to store Catalan numbers in an array.)
+</li><li>Write a recursive function to compute C<sub>n</sub>.
+</li><li>[H] Write an efficient recursive function to compute C<sub>n</sub>.
+Here efficiency means that each C<sub>i</sub> is to be computed only once in the
+entire sequence of recursive calls.
+</li></ol>
+
+</li><li>[HM]
+In this exercise we work with <b>permutations</b> of 1,2,<tt>...</tt>,n.
+<ol type="a">
+<li>Write a recursive function that prints all permutations of
+1,2,<tt>...</tt>,n with each permutation printed only once.
+</li><li>[H<sup>2</sup>] Write an iterative function that prints all permutations of
+1,2,<tt>...</tt>,n with each permutation printed only once.
+</li><li>A permutation p&nbsp;=&nbsp;a<sub>1</sub>,a<sub>2</sub>,<tt>...</tt>,a<sub>n</sub>
+of 1,2,<tt>...</tt>,n can be treated as a function
+<pre>   p : {1,2,<tt>...</tt>,n} --&gt; {1,2,<tt>...</tt>,n}
+</pre>
+with p(i)=a<sub>i</sub> for all i=1,2,<tt>...</tt>,n.
+If p(b<sub>1</sub>)=b<sub>2</sub>, p(b<sub>2</sub>)=b<sub>3</sub>,
+<tt>...</tt>, p(b<sub>k-1</sub>)=b<sub>k</sub> and
+p(b<sub>k</sub>)=b<sub>1</sub>, we say that
+(b<sub>1</sub>,b<sub>2</sub>,<tt>...</tt>,b<sub>k</sub>) is a <b>cycle</b>
+of length k in p. A permutation can be written as a collection of pairwise
+disjoint cycles. For example, consider the permutation p of
+1,2,<tt>...</tt>,10:
+<pre><code>   i    :   1  2  3  4  5  6  7  8  9 10
+   p(i) :   5  3  6  4 10  7  9  1  2  8
+</code></pre>
+<p>The cycle decomposition of this p is (1,5,10,8)(2,3,6,7,9)(4). Write a
+function that, given a positive integer n and an array holding a permutation
+p of 1,2,<tt>...</tt>,n, prints the cycle decomposition of p.
+</p></li><li>Let p be a permutation of 1,2,<tt>...</tt>,n. If p(i)=i, then i is
+called a <b>fixed point</b> of p. A permutation p without any fixed point
+is called a <b>derangement</b>. Write a function that, upon input n,
+computes the number of derangements of 1,2,<tt>...</tt>,n.
+</li></ol>
+
+</li><li><p>[H] <b>Tower of Hanoi</b>: There are three pegs A,B,C. Initially,
+Peg A contains n disks (with holes at their centers). The
+disks have radiuses 1,2,3,<tt>...</tt>,n and are arranged in
+Peg A in increasing sizes from top to bottom, i.e., the disk of radius
+1 is at the top, the disk of radius 2 is just below it, <tt>...</tt>, the
+disk of radius n is at the bottom. Your task is to move the disks from
+Peg A to Peg B in such a way that you are never allowed to move a larger
+disk on the top of a smaller disk. You may use Peg C as an auxiliary
+location for the transfer. Write a recursive function by which you can
+perform this transfer. Your function should print all disk movements.
+</p><p>
+(Hint: First move the top n-1 disks from Peg A to Peg C using Peg B
+as an auxiliary location. Then move the largest disk from Peg A to
+Peg B. Finally, move the n-1 disks from Peg C to Peg B using Peg A
+as an auxiliary location.)
+
+</p></li><li>In this exercise you are asked to build a function library on
+polynomial arithmetic. Assume that polynomials with real coefficients
+need only be considered.
+<ol type="a">
+<li>First chalk out a way to represent a polynomial in an array. You may
+restrict the degree of a polynomial to be less than some bound, say 100.
+</li><li>Write functions to perform the following operations on polynomials.
+All the input and output polynomials should be passed as arguments to the
+functions. Each function is allowed to return nothing or an integer value.
+Your functions should allow the possibility to store the output in one
+of the input polynomials.
+<ul>
+<li>Initialization of a polynomial to the zero polynomial.
+</li><li>Addition of two polynomials.
+</li><li>Difference of two polynomials.
+</li><li>Multiplication of two polynomials.
+</li><li>Evaluation of a polynomial at an integer point.
+</li><li>Derivative of a polynomial.
+</li><li>Integral of a polynomial. Fix the constant of integration using two
+real values a,b, where b specifies the value that the output
+polynomial would assume if evaluated at a.
+</li><li>Scanning of a polynomial.
+</li><li>Printing of a polynomial.
+</li></ul>
+</li></ol>
+
+</li><li>The built-in random number generator <tt>rand()</tt> returns an
+integer value between 0 and <tt>RAND_MAX</tt>. You may assume that all
+these values are equally likely (uniform distribution). Use this built-in
+random number generator to generate the following:
+<ol type="a">
+<li>A signed random integer between <tt>-RAND_MAX</tt> and <tt>RAND_MAX</tt>.
+</li><li>A random integer between 0 and 999.
+</li><li>A random integer between 100 and 999.
+</li><li>A random integer between -999 and 999.
+</li><li>A random floating point number between 0 and 1.
+</li><li>[HM] On input n (a positive integer) and p (a real number between
+0 and 1), a random integer t between 0 and n with probability
+<pre>   C(n,t)p<sup>t</sup>(1-p)<sup>n-t</sup>,
+</pre>
+where <tt>C(n,t)</tt> stands for the binomial coefficient.
+</li><li>[H<sup>2</sup>M] A random floating point number t between 0 and 1
+following the continuous probability density function
+<table cellpadding="0" cellspacing="0" border="0" id="nobd">
+<tbody><tr>
+<td id="nobd" valign="middle"><tt>&nbsp;&nbsp;&nbsp;p(t)&nbsp;=&nbsp;&nbsp;</tt></td>
+<td id="nobd" valign="middle"><tt>4t<br>4&nbsp;-&nbsp;4t</tt></td>
+<td id="nobd" valign="middle"><tt>&nbsp;&nbsp;if 0&nbsp;&lt;=&nbsp;t&nbsp;&lt;=&nbsp;1/2,<br>&nbsp;&nbsp;if 1/2&nbsp;&lt;&nbsp;t&nbsp;&lt;=&nbsp;1.</tt></td>
+</tr></tbody></table>
+</li><li>[H<sup>3</sup>M] A random non-negative floating point number t with
+the continuous probability density function
+<pre>   e<sup>-t</sup> for all t &gt;= 0.
+</pre>
+</li></ol>
+
+</li><li>[H] Write an efficient program to sort a file of integers. The input file
+is a large piece of data (say 100,000 integers), whereas the maximum size of
+an array that can be used inside the program is 1000 (one thousand) integers.
+Note that you are not allowed to read from and write to the same file
+simultaneously. Generate the input file of numbers using the built-in random
+number generator <tt>rand()</tt>.
+
+</li><li>[M]
+Formally establish the correctness of the sorting algorithms discussed in
+the notes (bubble, insertion, selection, merge and quick sort).
+(Hint: Use induction on the length of the array.)
+
+</li><li><b>Counting sort:</b> Assume that you want to sort an array
+A of n integers each known to be in the range 0,1,<tt>...</tt>,99. Use
+an array B of size 100 to count how many times each k in the range
+0,1,<tt>...</tt>,99 occurs in A. Then use these counts to rewrite the
+array A in the sorted order. Your program should use only a number of
+operations proportional to the size n of A.
+
+</li><li><b>Odd-even merging:</b> This exercise explores a recursive
+method of merging two sorted arrays
+<tt>A&nbsp;=&nbsp;(a<sub>0</sub>,a<sub>1</sub>,...,a<sub>n-1</sub>)</tt> and
+<tt>B&nbsp;=&nbsp;(b<sub>0</sub>,b<sub>1</sub>,...,b<sub>n-1</sub>)</tt>.
+For simplicity assume that n is a power of 2. If n=1, then comparing
+<tt>a<sub>0</sub></tt> with <tt>b<sub>0</sub></tt> suffices. So assume
+that n&gt;1. Recursively merge the sorted subarrays
+<tt>A<sub>odd</sub>&nbsp;=&nbsp;(a<sub>1</sub>,a<sub>3</sub>,a<sub>5</sub>,...)</tt> and
+<tt>B<sub>odd</sub>&nbsp;=&nbsp;(b<sub>1</sub>,b<sub>3</sub>,b<sub>5</sub>,...)</tt>.
+Also recursively merge the subarrays
+<tt>A<sub>even</sub>&nbsp;=&nbsp;(a<sub>0</sub>,a<sub>2</sub>,a<sub>4</sub>,...)</tt> and
+<tt>B<sub>even</sub>&nbsp;=&nbsp;(b<sub>0</sub>,b<sub>2</sub>,b<sub>4</sub>,...)</tt>.
+Call the resulting sorted arrays
+<tt>X&nbsp;=&nbsp;(x<sub>0</sub>,x<sub>1</sub>,...,x<sub>n-1</sub>)</tt> and
+<tt>Y&nbsp;=&nbsp;(y<sub>0</sub>,y<sub>1</sub>,...,y<sub>n-1</sub>)</tt> respectively.
+<ol type="a">
+<li>Argue that X and Y can be merged by comparing <tt>x<sub>i</sub></tt>
+with <tt>y<sub>i+1</sub></tt> for i=0,1,<tt>...</tt>,n-2.
+</li><li>Write a recursive function implementing this odd-even merging step.
+</li></ol>
+
+</li><li>Write a program for printing the elements of a two-dimensional array
+(not necessarily square) in each of the following orders:
+<ol type="a">
+<li>To-and-fro row-major order.
+</li><li>Diagonal-major order.
+</li><li>Spiral order.
+</li></ol>
+<p>
+Notice that the diagonal-major order makes enough sense for square matrices.
+For general mxn matrices, take the length of each diagonal to be m and treat
+the elements as organized in a wrap-around fashion. For example, consider
+the 4x5 matrix:
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><td align="center">1</td><td align="center">2</td><td align="center">3</td><td align="center">4</td><td align="center">5
+</td></tr><tr><td align="center">6</td><td align="center">7</td><td align="center">8</td><td align="center">9</td><td align="center">10
+</td></tr><tr><td align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15
+</td></tr><tr><td align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td align="center">20
+</td></tr></tbody></table>
+</center>
+<p>
+The listing of its elements in the to-and-fro row-major order is:
+</p><pre><code>   1 2 3 4 5 10 9 8 7 6 11 12 13 14 15 20 19 18 17 16
+</code></pre>
+<p>
+The listing of the elements in the diagonal-major order is:
+</p><pre><code>   1 7 13 19 2 8 14 20 3 9 15 16 4 10 11 17 5 6 12 18
+</code></pre>
+<p>
+The listing of the elements in the spiral order is:
+</p><pre><code>   1 2 3 4 5 10 15 20 19 18 17 16 11 6 7 8 9 14 13 12
+</code></pre>
+
+</li><li><b>Stirling numbers s(n,k) of the first kind</b> are non-negative
+integers defined recursively as:
+<pre><code>   s(0,0) = 1,
+   s(n,0) = 0 for n &gt; 0,
+   s(n,k) = 0 for k &gt; n,
+   s(n,k) = (n-1)s(n-1,k) + s(n-1,k-1) for n &gt; 0 and 0 &lt; k &lt;= n.
+</code></pre>
+<ol type="a">
+<li>Write a recursive function to compute s(n,k).
+</li><li>Write an iterative function to compute s(n,k). You should better
+    maintain a two-dimensional array and compute the values s(n,k)
+    in a particular order of the pair (n,k).
+</li></ol>
+
+</li><li><b>Stirling numbers S(n,k) of the second kind</b> are non-negative
+integers defined recursively as:
+<pre><code>   S(0,0) = 1,
+   S(n,0) = 0 for n &gt; 0,
+   S(n,k) = 0 for k &gt; n,
+   S(n,k) = k S(n-1,k) + S(n-1,k-1) for n &gt; 0 and 0 &lt; k &lt;= n.
+</code></pre>
+<ol type="a">
+<li>Write a recursive function to compute S(n,k).
+</li><li>Write an iterative function to compute S(n,k).
+</li></ol>
+
+</li><li>A <i>run</i> in a permutation is a maximal monotonic increasing
+sequence of adjacent elements in the permutation. For example, the runs in
+<pre><code>   257183496
+</code></pre>
+<p>
+are
+</p><pre><code>   257, 18, 349, 6.
+</code></pre>
+<p>
+Every run (except the last) is followed by a <i>descent</i>
+(also called a <i>fall</i>). For example, in the above permutation the
+descents are 71, 83 and 96. If a permutation has exactly k+1 runs, then
+it has exactly k descents, and conversely. Let us denote by the notation
+</p><pre><code>   &lt;n,k&gt;
+</code></pre>
+<p>
+the number of permutations of 1,<tt>...</tt>,n with exactly k descents.
+The numbers &lt;n,k&gt; are called <b>Eulerian numbers</b>. All permutations
+of 1,2,3 and the runs in each permutation are shown below.
+This list gives us the values of &lt;3,k&gt;.
+</p><pre><code>   Permutation      Runs     Number of runs     Number of descents
+       123          123             1                   0
+       132          13,2            2                   1
+       213          2,13            2                   1
+       231          23,1            2                   1
+       312          3,12            2                   1
+       321          3,2,1           3                   2
+
+   &lt;3,0&gt; = 1
+   &lt;3,1&gt; = 4
+   &lt;3,2&gt; = 1
+</code></pre>
+<p>
+It is known that the Eulerian numbers satisfy the following recurrence
+relation:
+</p><pre><code>   &lt;n,0&gt; = 1.
+   &lt;n,k&gt; = 0, if k &gt;= n.
+   &lt;n,k&gt; = (k+1)&lt;n-1,k&gt; + (n-k)&lt;n-1,k-1&gt;, otherwise.
+</code></pre>
+<ol type="a">
+<li>Write a recursive function to compute &lt;n,k&gt;.
+</li><li>Write an iterative function to compute &lt;n,k&gt;.
+</li></ol>
+
+</li><li>In this exercise you are asked to build a function library on matrix
+arithmetic. Consider matrices (not necessarily square) with real entries.
+<ol type="a">
+<li>First chalk out a way to represent a matrix in a two-dimensional array.
+You may restrict the dimension of a matrix to be less than some bound, say 20.
+</li><li>Write functions to perform the following operations on matrices.
+All the input and output matrices should be passed as arguments to the
+functions. Each function is allowed to return nothing or an integer value.
+You should also check that the dimensions of the input matrices are consistent
+for the operation. Your functions should allow the provision for the output
+matrix being the same as one of the input matrices.
+<ul>
+<li>Initialization of a matrix to the zero matrix of a given dimension.
+</li><li>Initialization of a matrix to the (square) identity matrix of a given dimension.
+</li><li>Addition of two matrices.
+</li><li>Difference of two matrices.
+</li><li>Multiplication of two matrices.
+</li><li>Inverse of a (square) matrix.
+</li><li>Rank of a matrix.
+</li><li>Scanning of a matrix.
+</li><li>Printing of a matrix.
+</li></ul>
+</li></ol>
+
+</li><li>Use your library of the previous exercise to solve a square system
+of linear equations. If the system is underdefined or inconsistent, your
+program should report failure.
+
+</li><li>[M] A square matrix <tt>A = (a<sub>ij</sub>)</tt> is called
+<i>symmetric</i> if <tt>a<sub>ij</sub>&nbsp;=&nbsp;a<sub>ji</sub></tt>
+for all indices <tt>i,j</tt>. A is called <i>skew-symmetric</i> if
+<tt>a<sub>ij</sub>&nbsp;=&nbsp;-a<sub>ji</sub></tt> for all indices
+<tt>i,j</tt> with <tt>i&nbsp;!=&nbsp;j</tt>. Write a function that, given
+a square matrix A, computes a symmetric matrix B and a skew-symmetric matrix
+C satisfying A&nbsp;=&nbsp;B&nbsp;+&nbsp;C.
+
+</li></ol>
+
+
+  <div class="navigator">
+    <a href="array.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Arrays</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="structure.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Structures</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

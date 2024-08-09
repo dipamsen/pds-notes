@@ -1,0 +1,1327 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Functions and recursion | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+<h1 align="center">Functions and recursion</h1>
+<p>
+Imagine a hotel with infinitely many rooms 0,1,2,<tt>...</tt> On a rainy
+night all the rooms numbered 1,2,3,<tt>...</tt> are occupied by tenants.
+Room number 0 is used as the reception, it being opposite to the entrance.
+Every tenant was enjoying TV and waiting for a sumptuous dinner being
+prepared in the adjacent restaurant.
+</p><p>
+All of a sudden a bus carrying another infinite number of passengers
+arrives in front of the hotel's entrance. The chauffeur meets the manager
+and requests him to give rooms to all the passengers. It was a stormy
+night and there were no other hotels in the vicinity. So the manager devises a
+plan. He first relocates the existing tenants, so that the tenant at
+room no m goes to room no 2m-1 for all m=1,2,3,<tt>...</tt> He numbers
+the new guests -1,-2,-3,<tt>...</tt> and allocates the room 2m for passenger
+-m. He then writes a small computer program that notifies people of the
+new room allotment. He uses the following function:
+</p><pre><code>          0        if n = 0,
+   f(n) = 2m - 1   if n = m &gt; 0,
+          2m       if n = -m for some m &gt; 0.
+</code></pre>
+<p>
+Everybody seems happy at this. Only the boarder of room no
+2<sup>24,036,583</sup>-1 (the largest known prime number of today,
+a 7235733-digit number) raises an objection indicating that he has
+to move too many rooms ahead. He insists that the current occupant of
+room number n should not be asked to shift by more than n/2 rooms.
+The manager complies and comes up with a second function:
+</p><p>
+<table cellpadding="0" cellspacing="0" border="0" id="nobd">
+<tbody><tr>
+<td valign="middle" id="nobd"><tt>&nbsp;&nbsp;&nbsp;g(n)&nbsp;=&nbsp;</tt></td>
+<td valign="middle" id="nobd">
+<pre><code>0        if n = 0,
+3m - 2   if n = 2m - 1 for some m &gt; 0,
+3m - 1   if n = 2m for some m &gt; 0,
+3m       if n = -m for some m &gt; 0.
+</code></pre>
+</td>
+</tr></tbody></table>
+</p><p>
+The manager allegedly wrote a C program. His initial program looked like:
+</p><pre><code>   #include &lt;stdio.h&gt;
+
+   int f ( int n )
+   {
+      if (n == 0) return (0);
+      else if (n &gt; 0) return (2*n-1);
+      else return (-2*n);
+   }
+
+   int main ()
+   {
+      int n;
+
+      while (1) {
+         printf("Input n : "); scanf("%d",&amp;n);
+         printf("Room number for %d is %d.\n", n, f(n));
+      }
+   }
+</code></pre>
+<p>
+After the request of Mr.&nbsp;Mersenne the XLI, the manager changed his program to:
+</p><pre><code>   #include &lt;stdio.h&gt;
+
+   int g ( int n )
+   {
+      int m;
+
+      if (n == 0) return (0);
+      else if (n &lt; 0) return (-3*n);
+      else {
+         m = (n + 1)/2;
+         if (n % 2 == 0) return (3*m-1);
+         else return(3*m-2);
+      }
+   }
+
+   int main ()
+   {
+      int n;
+
+      while (1) {
+         printf("Input n : "); scanf("%d",&amp;n);
+         printf("Room number for %d is %d.\n", n, g(n));
+      }
+   }
+</code></pre>
+<p>
+There is a technical problem here. Though the hotel in the story has
+infinitely many rooms and the bus carried infinitely many passengers,
+C's integers are limited in size (32 or 64 bits). But then since this
+is a story, we may take liberty to imagine about a fabulous C compiler
+that supports integers of any size!
+
+</p><h2 align="left">Translating mathematical functions in C</h2>
+<p>
+The above example illustrates how we can write functions in C. A function
+is expected to carry out a specific job depending on the argument values
+passed to it. After the job is accomplished, the function returns some
+value to the caller. In the above example, the function f (or g)
+accepts as an argument the number of the tenant, computes the
+room number of the tenant and returns this value to the place
+where it is called.
+</p><p>
+The basic syntax of writing a function goes like this:
+</p><pre>   <i>return_type</i> function_name ( <i>list_of_arguments</i> )
+   {
+      function body
+   }
+</pre>
+<p>
+The argument list should be a comma-separated list of type-name
+pairs, where type is any valid data type and name is any legal
+formal name of a variable. Argument values can be accessed inside
+the function body using these names.
+</p><p>
+The return type of a function should again be a valid data type
+(like <tt>int</tt>, <tt>float</tt>, <tt>char *</tt>). A function may
+even choose to return no explicit values in which case its return
+type is to be mentioned as <tt>void</tt>.
+</p><p>
+The function body starts with a declaration of <b>local variables</b>.
+These variables together with the function arguments are accessible
+only in the function body and not outside it.
+</p><p>
+After the declarations one writes the C statements that compute the
+specific task that the function is meant for. The function returns
+a value using the statement:
+</p><pre>   return (<i>return_value</i>);
+</pre>
+<p>
+The parentheses around <i>return_value</i> are optional.
+In case a function is expected to return nothing (i.e., <tt>void</tt>),
+the return statement looks like:
+</p><pre><code>   return;
+</code></pre>
+<p>
+The return statement not only returns a value (possibly <tt>void</tt>)
+to the caller, but also returns the control back to the place where it
+is called. In case no explicit return statements are present in the
+function body, control goes back to the caller after the entire body
+of the function is executed.
+</p><p>
+Calling a function uses the following syntax:
+</p><pre>   function_name ( <i>argument_values</i> )
+</pre>
+<p>
+Here argument values are provided as a comma-separated list of expressions.
+The formal names of the function arguments have absolutely nothing to do
+with the expressions passed during the call. However, the number of
+arguments and their respective types in a function call <i>must</i> match
+with those that are declared in the function header. In some cases
+data of different types are implicitly typecast when passed to functions,
+but it is advisable that you do not rely too much on C's automatic
+typecasting mechanism. That may lead to unwelcome run-time errors.
+</p><p>
+Functions may call other functions in the function body. In fact, a function
+call can be treated as an <i>expression</i>. It is like referring to
+<tt>a+b</tt> as <tt>add(a,b)</tt>. Just because your keyboard does
+not support enough symbols, you have to call your functions by special
+names.
+</p><p>
+A function is regarded as an isolated entity that can perform a specific
+job. Therefore, if that specific job is to be carried out several times
+(possibly) with different argument values, functions prove to be useful.
+Functions also add to the legibility and modularity of programs, thereby
+enhancing simpler debugging. It is a bad practice to write long monolithic
+programs. We encourage you to break up the monolithic structure into
+logically coherent parts and implement each part as a function.
+</p><p>
+Functions (like loops) provide a way in which the standard sequential
+top-to-bottom flow of control is disturbed. This is the reason why
+functions may pose some difficulty to an inexperienced programmer. But
+the benefits they provide far outweigh one's efforts to master
+them. Guess what, you too must master them!
+</p><p>
+<b>Example:</b>
+If a program requires computation of several gcd's, it is advisable to
+write a function and call it with appropriate parameters as and when
+a gcd is to be calculated.
+</p><pre><code>   #include &lt;stdio.h&gt;
+
+   int gcd ( int a , int b )
+   {
+      int r;
+
+      /* Check for errors : gcd(0,0) is undefined */
+      if ((a==0) &amp;&amp; (b==0)) return (0);
+
+      /* Make the arguments non-negative */
+      if (a &lt; 0) a = -a;
+      if (b &lt; 0) b = -b;
+
+      /* Special case : gcd(a,0) = a */
+      if (b == 0) return (a);
+
+      /* The Euclidean gcd loop */
+      while (1) {
+         r = a % b;
+         if (r == 0) return (b);
+         a = b;
+         b = r;
+      }
+   }
+
+   int main ()
+   {
+      int i, j, s;
+
+      s = 0;
+      for (i=1; i&lt;=20; ++i) {
+         for (j=i; j&lt;=20; ++j) {
+            s += gcd(j,i);
+         }
+      }
+      printf("The desired sum = %d\n", s);
+   }
+</code></pre>
+
+<p><b>Example:</b>
+In all the previous examples we have made the function call at only one
+place. One may replace this call by an explicit code carried out in the
+function. However, if the same function is called multiple times,
+inserting an equivalent code at all call locations increases the
+size of the code and calls for separate maintenance of the different
+copies. This is your first tangible benefit of using functions.
+</p><p>
+Think of a situation when a committee of n members need be formed.
+The committee must have a core team consisting of at least two
+members and no more than one-third of the entire committee. In how
+many ways the core committee may be selected?
+</p><p>
+Here is a program that computes this number:
+<a href="https://cse.iitkgp.ac.in/pds/notes/prog/function1.c" target="_blank">function1.c</a>
+</p><pre><code>   #include &lt;stdio.h&gt;
+
+   int factorial ( int n )
+   {
+      int prod = 1, i;
+
+      for (i=2; i&lt;=n; ++i) prod *= i;
+      return(prod);
+   }
+
+   int binomial ( int n , int r )
+   {
+      return(factorial(n)/(factorial(r)*factorial(n-r)));
+   }
+
+   int main ()
+   {
+      int n, i, s = 0;
+
+      printf("Total number of members : ");
+      scanf("%d",&amp;n);
+      for (i=2; i&lt;=n/3; ++i) s += binomial(n,i);
+      printf("Total number of ways = %d\n", s);
+   }
+</code></pre>
+
+<p><b>Example:</b>
+Here is a more complicated example. Suppose we want to print the square root
+of an integer truncated after the third digit following the decimal point.
+We use the standard algorithm taught in the school. The algorithm finds
+successive digits in the square root. The following example illustrates
+a typical computation of a square root:
+</p><pre><code>          153 | 12.369
+          1   |
+         +----+
+      22 | 53
+         | 44
+         +---
+     243 |  900
+         |  729
+         +-----
+    2466 |  17100
+         |  14796
+         +-------
+   24729 |   230400
+         |   222561
+         +---------
+               7839
+</code></pre>
+Here is the complete source code: <a href="https://cse.iitkgp.ac.in/pds/notes/prog/function2.c" target="_blank">function2.c</a>
+<pre><code>   #include &lt;stdio.h&gt;
+
+   int nextDigit ( int r , int s , int grp )
+   /* Here r is whatever remains, s is the sqrt found so far, and grp is the
+      next two digits to be considered. */
+   {
+      int d = 0;
+
+      /* Keep on searching for the next digit in the square root */
+      while ((20*s+d)*d &lt;= 100*r+grp) ++d;
+      /* Here d is just one bigger than the correct digit */
+      return(d-1);
+   }
+
+   void printSqrt ( int n )
+   {
+      int s,       /* Square root found so far */
+          r,       /* Whatever remains */
+          d,       /* next digit */
+          nl,      /* Number of digits to the left of the decimal point */
+          nr = 3,  /* Number of digits to the right of the decimal point */
+          grp[8],  /* 2-digit groups */
+          sgn,     /* Sign of n */
+          i;       /* An index */
+
+      if (n &lt; 0) { sgn = 1; n = -n; } else sgn = 0;
+      if (n == 0) { nl = 1; grp[0] = 0; }
+      else {
+         nl = 0;
+         while (n != 0) {
+            grp[nl] = n % 100;  /* Save next 2-digit group */
+            n /= 100;
+            ++nl;
+         }
+      }
+
+      /* Initialize */
+      s = 0; r = 0;
+
+      /* First print the digits to the left of the decimal point */
+      for (i=nl-1; i&gt;=0; --i) {
+         d = nextDigit(r,s,grp[i]);
+         printf("%d",d);
+         r = (100 * r + grp[i]) - (20 * s + d) * d;
+         s = 10 * s + d;
+      }
+
+      /* Print the decimal point */
+      printf(".");
+
+      /* Print digits after the decimal point */
+      for (i=0; i&lt;nr; ++i) {
+         d = nextDigit(r,s,0);
+         printf("%d",d);
+         r = 100 * r - (20 * s + d) * d;
+         s = 10 * s + d;
+      }
+
+      /* Square root of negative numbers should be imaginary */
+      if (sgn) printf("i");
+
+      printf("\n");
+   }
+
+   int main ()
+   {
+      int n;
+
+      printf("Enter an integer : ");
+      scanf("%d",&amp;n);
+      printSqrt(n);
+   }
+</code></pre>
+<p>
+<b>Example:</b> C provides many built-in functions. For example,
+the main function is a built-in function and must be present in any
+executable program. It returns an <tt>int</tt> value. It may also
+accept arguments. Here is the complete prototype of main:
+</p><pre><code>   int main ( int argc , char *argv[] )
+   {
+      ...
+   }
+</code></pre>
+<p>
+One cannot call the main function from any other function in a program.
+If that is the case, who calls it and who uses its return value? The
+external world! When you run your program from a shell (possibly by
+typing <tt>./a.out</tt>), you can pass (command-line) arguments to main.
+Moreover, when the program terminates, the return value of main is returned
+to the shell. You may choose to use the value for doing something useful.
+</p><p>
+Think of a call like this:
+</p><pre><code>   ./a.out -5 3.1416 foo.txt
+</code></pre>
+<p>
+When the main function starts execution, its argc parameter receives
+the value 4, because the total number of arguments including <tt>./a.out</tt>
+is 4. The other argument <tt>argv</tt> is actually an array of arrays of
+characters. <tt>argv[0]</tt> gets the string <tt>"./a.out"</tt>,
+<tt>argv[1]</tt> the string <tt>"-5"</tt>, <tt>argv[2]</tt> the string
+<tt>"3.1416"</tt>, and <tt>argv[3]</tt> the string <tt>"foo.txt"</tt>.
+You can process these values from inside the main function. For example,
+you may supply a file name, some initial values, etc. via command-line
+arguments.
+</p><p>
+Some other built-in C functions include <tt>printf</tt> and <tt>scanf</tt>.
+A queer thing about these functions is that they support variable number
+of parameters. You can also write functions with this property, but we
+won't discuss it here.
+
+</p><h2 align="left">Function prototypes</h2>
+<p>
+As long as a function is defined earlier (in the program) than it is called,
+there seems to be no problem. However, if the C compiler meets a function
+call before seeing its definition, it assumes that the function returns
+an <tt>int</tt>. Eventually the compiler must encounter the actual
+definition of the function. If the compiler then discovers that the
+function returns a value of type other than <tt>int</tt>, it issues
+a mild warning message. Compilation then proceeds successfully. However,
+when you run this program, you may find awkward run-time errors. That
+happens because the run-time system typecasts data of another type to
+<tt>int</tt>. That may create troubles in esoteric situations.
+</p><p>
+The way out is to always define a function earlier than it is called.
+Unfortunately, there is a situation where this cannot be done, namely,
+when a function <tt>egg()</tt> calls a function <tt>chicken()</tt>
+and the function <tt>chicken()</tt> also calls <tt>egg()</tt>. Which
+function will then be defined earlier?
+</p><p>
+The most graceful way to tackle this problem is to define the prototype
+of a function towards the beginning of your program. The prototype only
+mentions the return type and parameter types. The body may be (and must
+be) defined somewhere else, even after it is called. A function prototype
+looks like the first line of the function followed by a semicolon (instead
+of its body surrounded by curly braces).
+</p><pre>   <i>return_type</i> function_name ( <i>argument_list</i> );
+</pre>
+<p>
+For example, the gcd, nextDigit and printSqrt functions defined above
+have the following prototypes:
+</p><pre><code>   int gcd ( int a , int b );
+   int nextDigit ( int r , int s , int grp );
+   void printSqrt ( int n );
+</code></pre>
+<p>
+During a prototype declaration the names of the variables play no roles.
+It is the body that is expected to make use of them, and the prototype
+has no body at all. So these names may be blissfully omitted. That is,
+it is legal to write:
+</p><pre><code>   int gcd ( int , int );
+   int nextDigit ( int , int , int );
+   void printSqrt ( int );
+</code></pre>
+<p>
+When you actually define the function, its header must faithfully match
+with the prototype found earlier.
+</p>
+<h3 align="left">Archiving C functions</h3>
+<p>
+Function prototypes are also useful during packaging of C functions in
+libraries. We explain the concept with an example. Assume that you are
+writing a set of useful tools to be used by foobarnautic scientists
+and engineers. The subject deals with two topics: foomatics and bargodics.
+You plan to write your foomatic functions in two files <tt>foo1.c</tt>
+and <tt>foo2.c</tt>, the first containing the basic tools and the second
+some advanced tools. For bargodics too you plan to write two C sources
+<tt>bar1.c</tt> and <tt>bar2.c</tt>. Later you realize that some bargodic
+topics are so advanced that they may better be called esoteric and should
+be placed in a third file <tt>bar3.c</tt>. All these five files have
+C functions, each meant for doing some specific job, like computing
+fooctorials, barnomial coefficients etc. However, none of these files
+should have a <tt>main</tt> function. A future user of your library will
+write the <tt>main</tt> function in her program, call your foobarnautic
+functions from her program and finally compile and run her program to unveil
+foobarnautic mysteries.
+</p><p>
+You first write the would-be useful functions in five files as mentioned
+above. You then compile each such file to an <u>object file</u> (not an
+executable file, since no file has a <tt>main</tt>).
+</p><pre><code>   cc -c -o foo1.o foo1.c
+   cc -c -o foo2.o foo2.c
+   cc -c -o bar1.o bar1.c
+   cc -c -o bar2.o bar2.c
+   cc -c -o bar3.o bar3.c
+</code></pre>
+<p>
+Five object files <tt>foo1.o</tt>, <tt>foo2.o</tt>, <tt>bar1.o</tt>,
+<tt>bar2.o</tt> and <tt>bar3.o</tt> are obtained after successful
+compilation. You then join these object files to an archive (library):
+</p><pre><code>   ar rc libfoobar.a foo1.o foo2.o bar1.o bar2.o bar3.o
+</code></pre>
+<p>
+The archive command (<tt>ar</tt>) creates the library <tt>libfoobar.a</tt>.
+You may optionally run the following utility on this archive in order to add
+some book-keeping information in the archive:
+</p><pre><code>   ranlib libfoobar.a
+</code></pre>
+<p>
+Now your library is ready. Copy it to a system directory if you have write
+permission there, else store it somewhere else, say, in the directory
+<tt>/tmp/foobar/lib</tt>.
+</p><p>
+Now when the future user plans to use your library, she simply compiles
+her program <tt>fooexplore.c</tt> (with <tt>main</tt>) as:
+</p><pre><code>   cc fooexplore.c -lfoobar
+</code></pre>
+<p>
+if the library <tt>libfoobar.a</tt> resides in a system directory. If not,
+she should specifically mention the directory of the library and compile
+her program as:
+</p><pre><code>   cc fooexplore.c -L/tmp/foobar/lib -lfoobar
+</code></pre>
+<p>
+But<tt>...</tt> Something goes wrong, may be terribly wrong. Her compilation
+attempt issues a hell lot of warning messages. In fact, <tt>cc</tt> may even
+refuse to compile <tt>fooexplore.c</tt>. That was your fault, not the user's.
+You have missed to do some vital things. As soon as the frustrated programmer
+rings you up, you realize your fault. Now do the remaining things.
+</p><p>
+Create <u>header files</u> <tt>foo1.h</tt>, <tt>foo2.h</tt>, <tt>bar1.h</tt>,
+<tt>bar2.h</tt> and <tt>bar3.h</tt>. These files should contain only the
+following:
+</p><ul>
+<li>All new type definitions that you used in your library.
+</li><li>All global variables and constants you used in your library.
+</li><li>Prototypes of all functions defined in the library.
+</li></ul>
+For example, <tt>foo1.h</tt> may look like:
+<pre><code>   /**************************************************************************
+    * foo1.h : Header file for basic foomatic utilities                      *
+    * Created by : 04FB1331 Foolan Barik                                     *
+    * Last updated : January 08, 2005                                        *
+    * Copyright 2005 by the Dept of Foobarnautic Engg, IIT Kharagpur, India  *
+    **************************************************************************/
+
+   /* Prevent accidental multiple #inclusion of this header file */
+   #ifndef _FOO1_H
+   #define _FOO1_H
+
+   /* New type definitions */
+   typedef unsigned long int fooint;
+   typedef long double fooreal;
+   typedef unsigned char foochar;
+
+   ...
+
+   /* Macros */
+   #define _FOO_BAR_TRUE 1
+   #define _FOO_BAR_FALSE 0
+   #define _FOO_BAR_PI 3.141592653589793238462643383
+
+   ...
+
+   /* Global constants */
+   static const fooint foorams[8] =
+         { 0xf00ba000, 0xf002ba00, 0xf0046ba0, 0xf008acba,
+           0xba0f0000, 0xba01f000, 0xba035f00, 0xba079bf0 };
+   ...
+
+   /* Function prototypes.                                 */
+   /* These functions are external to the user's programs. */
+   /* So use the extern keyword.                           */
+   extern fooint fooctorial ( fooint ) ;
+   extern fooreal fooquation ( fooreal , fooint * , foochar ) ;
+
+   ...
+
+   #endif
+</code></pre>
+<p>
+If the source <tt>foo1.c</tt> contains these definitions, remove them
+from the C file and instead <tt>#include&nbsp;"foo1.h"</tt> towards
+the beginning of <tt>foo1.c</tt>. <u>Do not define any function in
+a header file.</u>
+</p><p>
+Do the above for all sources. Recompile your library, copy the new
+<tt>libfoobar.a</tt> once again to an appropriate directory.
+</p><p>
+Then choose a suitable directory for putting the headers. If you have
+permission to write in the system's include directory (usually
+<tt>/usr/include</tt>), create a directory <tt>foobar</tt> under this
+directory and copy your five header files to this new directory.
+If you do not have permission to write in <tt>/usr/include</tt>, create
+the directory <tt>/tmp/foobar/include</tt> and copy the header files
+there. Call back the user and notify her of these new developments.
+</p><p>
+The user then adds the following lines to her source code
+<tt>fooexplore.c</tt>.
+</p><pre><code>   #include &lt;foobar/foo1.h&gt;
+   #include &lt;foobar/foo2.h&gt;
+   #include &lt;foobar/bar1.h&gt;
+   #include &lt;foobar/bar2.h&gt;
+   #include &lt;foobar/bar3.h&gt;
+</code></pre>
+or
+<pre><code>   #include "/tmp/foobar/include/foo1.h"
+   #include "/tmp/foobar/include/foo2.h"
+   #include "/tmp/foobar/include/bar1.h"
+   #include "/tmp/foobar/include/bar2.h"
+   #include "/tmp/foobar/include/bar3.h"
+</code></pre>
+<p>
+depending on where you put the header files. Eureka! Her program now
+compiles and churns out unthinkably sublime foobarnautic data. She
+immediately rings you up again. You are afraid if any other thing
+went wrong. But you receive by your bewildered ears that she is
+thanking you profusely and inviting you for a tasty dinner in a posh
+downtown restaurant!
+</p>
+
+<h2 align="left">Built-in libraries</h2>
+<p>
+Well, you don't always have to write libraries. You can use libraries
+written by others. Think of the square root printer we have designed
+earlier. If you have to write every such basic function yourself,
+when will you write programs that solve your own problems?
+</p><p>
+Fortunately, many libraries are available in the standard C developer's
+distribution. Here we describe some of the most useful ones.
+
+</p>
+<h3 align="left">The math library</h3>
+<p>
+One useful library is the C math library. In order to use the library
+you should include the header file <tt>&lt;math.h&gt;</tt>. Do it after you
+include <tt>&lt;stdio.h&gt;</tt>. But that's not all. This inclusion makes accessible
+to your program only the function prototypes and some constant declarations.
+In order to link the function definitions you should also use the <tt>-lm</tt>
+flag during compilation time.
+</p><pre><code>   cc myMathHeavyProg.c -lm
+</code></pre>
+<p>
+Once you are given a library, the designer of the library should also
+specify in a document how to use the library, i.e., what new data types
+and constants are defined in it and what each function defined in the
+archive does. Here follows a high-level description of some useful
+mathematical functions defined in the C math library.
+</p><dl>
+<dt><tt>double sqrt (double x);</tt>
+</dt><dd>Returns the square root of the real number <tt>x</tt>.
+</dd><dt><tt>double pow (double x, double y);</tt>
+</dt><dd>Returns the real number <tt>x<sup>y</sup></tt>.
+</dd><dt><tt>double floor (double x);</tt>
+</dt><dd>Returns the largest integer smaller than or equal to <tt>x</tt>.
+</dd><dt><tt>double ceil (double x);</tt>
+</dt><dd>Returns the smallest integer larger than or equal to <tt>x</tt>.
+</dd><dt><tt>double fabs (double x);</tt>
+</dt><dd>Returns the absolute value |<tt>x</tt>| of <tt>x</tt>.
+</dd><dt><tt>double exp (double x);</tt>
+</dt><dd>Returns e<sup>x</sup>, where e = 2.7182818284<tt>...</tt> =
+1+(1/1!)+(1/2!)+(1/3!)+<tt>...</tt> is the famous number you encountered
+in your calculus course.
+</dd><dt><tt>double log (double x);</tt>
+</dt><dd>Returns the natural logarithm of <tt>x</tt>, i.e., the real logarithm
+of <tt>x</tt> to the base e.
+</dd><dt><tt>double log10 (double x);</tt>
+</dt><dd>Returns the real logarithm of <tt>x</tt> to the base 10.
+</dd><dt><tt>double sin (double x);<br>double cos (double x);<br>double tan (double x);</tt>
+</dt><dd>The standard trigonometric functions. The argument should be specified in radians.
+</dd><dt><tt>double asin (double x);<br>double acos (double x);<br>double atan (double x);<br>double atan2 (double x, double y);</tt>
+</dt><dd>The inverse trigonometric functions. <tt>acos</tt> returns a value in the
+range [0,pi], <tt>asin</tt> and <tt>atan</tt> in the range [-pi/2,+pi/2],
+and <tt>atan2</tt> in the range [-pi,+pi].
+</dd><dt><tt>double sinh (double x);<br>double cosh (double x);<br>double tanh (double x);</tt>
+</dt><dd>The standard hyperbolic trigonometric functions.
+</dd></dl>
+<p>
+In addition to the above functions, <tt>math.h</tt> also defines the
+following useful constants:
+</p><pre><code>   #define M_E            2.7182818284590452354   /* e */
+   #define M_LOG2E        1.4426950408889634074   /* log_2 e */
+   #define M_LOG10E       0.43429448190325182765  /* log_10 e */
+   #define M_LN2          0.69314718055994530942  /* log_e 2 */
+   #define M_LN10         2.30258509299404568402  /* log_e 10 */
+   #define M_PI           3.14159265358979323846  /* pi */
+   #define M_PI_2         1.57079632679489661923  /* pi/2 */
+   #define M_PI_4         0.78539816339744830962  /* pi/4 */
+   #define M_1_PI         0.31830988618379067154  /* 1/pi */
+   #define M_2_PI         0.63661977236758134308  /* 2/pi */
+   #define M_2_SQRTPI     1.12837916709551257390  /* 2/sqrt(pi) */
+   #define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
+   #define M_SQRT1_2      0.70710678118654752440  /* 1/sqrt(2) */
+</code></pre>
+<h3 align="left">The ctype library</h3>
+<p>
+Include the header <tt>&lt;ctype.h&gt;</tt> in order to access several
+character-related functions. You don't have to link any special library
+during compilation time. Many of these functions return Boolean values
+(true and false). However, C does not have a default Boolean data type.
+Here the Boolean value is returned as an integer (<tt>int</tt>) with
+the convention that 0 means "false" and any non-zero value means "true".
+</p><dl>
+<dt><tt>int isalpha (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is an alphabetic character
+(<tt>'A'-'Z' and 'a'-'z'</tt>).
+</dd><dt><tt>int isupper (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is an upper-case alphabetic
+character (<tt>'A'-'Z'</tt>);
+</dd><dt><tt>int islower (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is a lower-case alphabetic
+character (<tt>'a'-'z'</tt>);
+</dd><dt><tt>int isdigit (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is a decimal digit (<tt>'0'-'9'</tt>);
+</dd><dt><tt>int isxdigit (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is a hexadecimal digit
+(<tt>'0'-'9', 'A'-'F' and 'a'-'f'</tt>).
+</dd><dt><tt>int isalnum (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is an alphanumeric character
+(<tt>'A'-'Z', 'a'-'z' and '0'-'9'</tt>).
+</dd><dt><tt>int isspace (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is a white space character
+(space, tab, new-line, form-feed, carriage-return).
+</dd><dt><tt>int isprint (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is a printable character
+(<tt>0x20-0x7e</tt>).
+</dd><dt><tt>int ispunct (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is a printable character
+other than space, letter and digit.
+</dd><dt><tt>int isgraph (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is a graphical character
+(<tt>0x21-0x7e</tt>).
+</dd><dt><tt>int iscntrl (int c);</tt>
+</dt><dd>Returns true if and only if <tt>c</tt> is a control character
+(<tt>0x00-0x1f and 0x7f</tt>).
+</dd><dt><tt>int tolower (int c);</tt>
+</dt><dd>If c is an upper-case letter, the corresponding lower-case letter
+is returned. Otherwise, c itself is returned.
+</dd><dt><tt>int toupper (int c);</tt>
+</dt><dd>If c is a lower-case letter, the corresponding upper-case letter
+is returned. Otherwise, c itself is returned.
+</dd></dl>
+<h3 align="left">The stdlib library</h3>
+<p>
+The standard library may be included by including the header
+<tt>&lt;stdlib.h&gt;</tt>. No separate libraries need be linked during
+compilation time.
+</p><dl>
+<dt><tt>int atoi (const char *s);</tt>
+</dt><dd>Returns the integer corresponding to the string <tt>s</tt>. For example,
+the string <tt>"243"</tt> corresponds to the integer <tt>243</tt>.
+</dd><dt><tt>long atol (const char *s);</tt>
+</dt><dd>Returns the long integer corresponding to the string <tt>s</tt>.
+For example, the string <tt>"243576809"</tt> corresponds to the integer
+<tt>243576809L</tt>.
+</dd><dt><tt>double atof (const char *s);</tt>
+</dt><dd>Returns the floating point number corresponding to the string <tt>s</tt>.
+For example, the string <tt>"243576.809"</tt> corresponds to the floating-point
+number <tt>2.43576809e05</tt> (in the scientific notation).
+</dd><dt><tt>int rand ();</tt>
+</dt><dd>Returns a random integer between 0 and <tt>RAND_MAX</tt>. In our lab
+<tt>RAND_MAX</tt> is 2<sup>31</sup><tt>-</tt>1.
+</dd><dt><tt>void srand (unsigned int s);</tt>
+</dt><dd>Seed the random number generator by the integer <tt>s</tt>. A natural
+seed is the current system time. The following statement does this.
+<pre><code>   srand((unsigned int)time(NULL));
+</code></pre>
+<p>
+In order to use the <tt>time</tt> function, you should
+<tt>#include&nbsp;&lt;time.h&gt;</tt>.
+</p></dd><dt><tt>int abs (int n);</tt>
+</dt><dd>Returns the absolute value <tt>|n|</tt>of the integer <tt>n</tt>.
+</dd><dt><tt>long labs (long n);</tt>
+</dt><dd>Returns the absolute value <tt>|n|</tt>of the long integer <tt>n</tt>.
+</dd><dt><tt>int system (const char *s);</tt>
+</dt><dd>Passes the string argument <tt>s</tt> to be executed by the shell.
+For example, <tt>system("clear");</tt> clears the screen.
+</dd></dl>
+
+
+<h2 align="left">Passing parameters</h2>
+<p>
+In C all parameters are passed <b>by value</b>. This means that for a
+call like
+</p><pre><code>   u = fooquation(x+y*z,&amp;n,c);
+</code></pre>
+<p>
+the arguments are first evaluated and subsequently the values are
+<i>copied</i> to the formal parameters defined in the function header:
+</p><pre><code>   long double fooquation ( long double x , unsigned long *p , unsigned char c )
+   {
+      long double w;
+      ...
+      return(w);
+   }
+</code></pre>
+<p>
+During the call, the formal parameter <tt>x</tt> gets the value of the
+expression <tt>x+y*z</tt>, the pointer <tt>p</tt> gets the address of
+<tt>n</tt> and the formal parameter <tt>c</tt> obtains the value stored
+in the variable <tt>c</tt> during the time of the call. The formal
+arguments <tt>x,p,c</tt> are treated in <tt>fooquation</tt> as local variables.
+Any change in these values is not reflected outside the function. Thus the
+variables <tt>x,y,z,c</tt> in the caller function are unaffected by whatever
+<tt>fooquation</tt> does with the formal arguments <tt>x,p,c</tt>. The
+caller variable <tt>n</tt> is an exception. We didn't pass <tt>n</tt>
+straightaway to <tt>fooquation</tt>, we instead passed its address.
+So <tt>fooquation</tt> receives a copy of this address in its formal
+argument <tt>p</tt>. If the function modifies the pointer <tt>p</tt>,
+this does not change the address of <tt>n</tt> in the caller. However,
+<tt>fooquation</tt> may wish to write to the address passed to
+<tt>p</tt>. This modifies <tt>n</tt>, but not <tt>&amp;n</tt>.
+</p><center>
+<table cellpadding="10" cellspacing="3" border="0">
+<tbody><tr><td><p>
+<b>If you want to modify the value of some variable in a function,
+pass to the function a pointer to the variable.</b></p></td>
+</tr></tbody></table>
+</center>
+<p>
+Here is a failed attempt to swap the values of two variables:
+</p><pre><code>   void badswap ( int a , int b )
+   {
+      int t;
+
+      t = a;
+      a = b;
+      b = t;
+   }
+
+   int main ()
+   {
+      int m = 51, n = 23;
+
+      printf("m = %d, n = %d.\n", m, n);
+      badswap(m,n);
+      printf("m = %d, n = %d.\n", m, n);
+   }
+</code></pre>
+<p>
+The program prints:
+</p><pre><code>   m = 51, n = 23.
+   m = 51, n = 23.
+</code></pre>
+<p>
+The call of <tt>badswap</tt> produces no effect on <tt>m</tt> and <tt>n</tt>.
+In order to produce the desired effect, use the following strategy:
+</p><pre><code>   void swap ( int *ap , int *bp )
+   {
+      int t;
+
+      t = *ap;
+      *ap = *bp;
+      *bp = t;
+   }
+
+   int main ()
+   {
+      int m = 51, n = 23;
+
+      printf("m = %d, n = %d.\n", m, n);
+      swap(&amp;m,&amp;n);
+      printf("m = %d, n = %d.\n", m, n);
+   }
+</code></pre>
+<p>
+This time the program prints:
+</p><pre><code>   m = 51, n = 23.
+   m = 23, n = 51.
+</code></pre>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/param.html" target="_blank">Animation example : parameter passing in C</a></h3>
+</td></tr></tbody></table>
+</p><p>
+Now what should you do if you want to change a pointer? The answer is
+simple: pass a pointer to the pointer. How? We will give an answer to
+this new question later. Hold your patience.
+</p><h2 align="left">Recursive functions</h2>
+<p>
+Recall that certain functions are defined recursively, i.e., in terms of
+itself. For example, consider the function F that maps n to the n-th
+Fibonacci number, i.e., <tt>F(n)&nbsp;=&nbsp;F<sub>n</sub></tt>. (In fact,
+every sequence is a function in a natural way.) We then have:
+</p><pre><code>          0                if n = 0,
+   F(n) = 1                if n = 1,
+          F(n-1) + F(n-2)  if n &gt;= 2.
+</code></pre>
+<p>
+It is then tempting to write F as follows:
+</p><pre><code>   int F ( int n )
+   {
+      if (n == 0) return (0);
+      if (n == 1) return (1);
+      return (F(n-1)+F(n-2));
+   }
+</code></pre>
+<p>
+Does it work? The potential problem is: if <tt>F</tt> calls <tt>F</tt>
+itself with different parameter values, what would be the formal argument
+n for <tt>F</tt>. Every new invocation of <tt>F</tt> is expected to
+erase the old value of <tt>n</tt>. That would lead to error. In the
+above example, when <tt>F(n-1)</tt> returns, we have to make a second
+invocation <tt>F(n-2)</tt>. Now if by this time the value of <tt>n</tt>
+has changed, we expect to get incorrect results. So what is the way out?
+</p><p>
+The answer is: there is no way out. In fact, there has not been any problem
+at all. The above function perfectly works.
+</p><p>
+Older languages like FORTRAN (designed in the 50's) used to face a problem,
+and there was again no way out. You cannot call a function from itself.
+That is, recursion was strictly prohibited.
+</p><p>
+C A R Hoare first proposed a way to work around with this problem. He
+introduced the concept of <i>nests</i> which we nowadays refer to as
+<i>stacks</i>. Every time a function is called, its formal parameters
+and local variables are pushed to the top of the call stack. In this way
+different invocations refer to different memory locations for accessing
+variables of the same name. When a function returns, its local data
+are popped out of the stack and control returns to the caller function
+for which variables reside in the current top of the stack.
+</p><p>
+The first high-level language that supported recursion was ALGOL.
+Most languages designed after that (late sixties onward) support recursion.
+C is no exception. In fact, the latest version of FORTRAN (FORTRAN 90)
+also supports recursion.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/fibonacci.html" target="_blank">Animation example : recursive computation of Fibonacci numbers</a></h3>
+</td></tr><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/fibonacci/" target="_blank">Interactive animation : recursive computation of Fibonacci numbers</a></h3>
+</td></tr></tbody></table>
+</p><p>
+Here is another example: recursive computation of the factorial function.
+</p><pre><code>   int factorial ( int n )
+   {
+      if (n &lt; 0) return (-1);       /* Error condition */
+      if (n == 0) return (1);       /* Basis case */
+      return(n * factorial(n-1));   /* Recursive call */
+   }
+</code></pre>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/factorial.html" target="_blank">Animation example : recursive computation of the factorial function</a></h3>
+</td></tr><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/factorial/" target="_blank">Interactive animation : recursive computation of the factorial function</a></h3>
+</td></tr></tbody></table>
+</p><p>
+<b>Example:</b> [<i>Merge sort</i>]
+</p><p>
+This is a very interesting recursive sorting technique. The array to be
+sorted is first divided in two halves of nearly equal sizes. Each
+half is then recursively sorted. Two sorted subarrays are then merged
+to form the final sorted list. Recursion stops when the array is of
+size 1. Such an array is already sorted.
+</p><p>
+The correctness of this algorithm can be established by the principle
+of strong mathematical induction. The base case (arrays of size 1) is
+obvious. For the inductive step, it suffices to prove that the
+merging routine correctly merges two sorted arrays. We leave out the
+details here.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/merge.html" target="_blank">Animation example : merge sort</a></h3>
+</td><td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/mergeSort/" target="_blank">Interactive animation : merge sort</a></h3>
+</td></tr></tbody></table>
+</p><p>
+<a href="https://cse.iitkgp.ac.in/pds/notes/prog/function3.c" target="_blank">Here</a> is a recursive implementation of the
+merge sort algorithm. For simplicity, we work with a global array, so that
+we do not have to bother about passing the array as a function argument.
+</p><pre><code>   #include &lt;stdio.h&gt;
+   #include &lt;stdlib.h&gt;
+   #include &lt;time.h&gt;
+
+   #define MAXSIZE 1000
+   int A[MAXSIZE];
+
+   /* Function prototypes */
+   void mergeSort ( int, int );
+   void merge ( int, int, int );
+   void printArray ( int );
+
+   void mergeSort ( int i , int j )
+   /* i and j are the leftmost and rightmost indices of the current part
+      of the array being sorted. */
+   {
+      int mid;
+
+      if (i == j) return;       /* Base case: an array of size 1 is sorted */
+      mid = (i + j) / 2;        /* Compute the mid index */
+      mergeSort(i,mid);         /* Recursively sort the left half */
+      mergeSort(mid+1,j);       /* Recursively sort the right half */
+      merge(i,mid,j);           /* Merge the two sorted subarrays */
+   }
+
+   void merge ( int i1, int j1, int j2 )
+   {
+      int i2, k1, k2, k;
+      int tmpArray[MAXSIZE];
+
+      i2 = j1 + 1;
+      k1 = i1; k2 = i2; k = 0;
+      while ((k1 &lt;= j1) || (k2 &lt;= j2)) {
+         if (k1 &gt; j1) {               /* Left half is exhausted */
+                                      /* Copy from the right half */
+            tmpArray[k] = A[k2];
+            ++k2;
+         } else if (k2 &gt; j2) {        /* Right half is exhausted */
+                                      /* Copy from the left half */
+            tmpArray[k] = A[k1];
+            ++k1;
+         } else if (A[k1] &lt; A[k2]) {  /* Left pointer points to a smaller value */
+                                      /* Copy from the left half */
+            tmpArray[k] = A[k1];
+            ++k1;
+         } else {                     /* Right pointer points to a smaller value */
+                                      /* Copy from the right half */
+            tmpArray[k] = A[k2];
+            ++k2;
+         }
+         ++k;                         /* Advance pointer for writing */
+      }
+
+      /* Copy temporary array back to the original array */
+      --k;
+      while (k &gt;= 0) {
+         A[i1+k] = tmpArray[k];
+         --k;
+      }
+   }
+
+   void printArray ( int s )
+   {
+      int i;
+
+      for (i=0; i&lt;s; ++i) printf("%3d",A[i]);
+      printf("\n");
+   }
+
+   int main ()
+   {
+      int s, i;
+
+      srand((unsigned int)time(NULL));
+      printf("Array size : "); scanf("%d",&amp;s);
+      for (i=0; i&lt;s; ++i) A[i] = 1 + rand() % 99;
+      printf("Array before sorting : ");
+      printArray(s);
+      mergeSort(0,s-1);
+      printf("Array after sorting  : ");
+      printArray(s);
+   }
+</code></pre>
+<p>
+Here is a sample run of the program:
+</p><pre><code>   Array size : 20
+   Array before sorting :  21 74 40 94 78 75 58 91 11  7 86 77 76 20 45 56 94 32 90 51
+   Array after sorting  :   7 11 20 21 32 40 45 51 56 58 74 75 76 77 78 86 90 91 94 94
+</code></pre>
+<p>
+<b>Example:</b> [<i>Quick sort</i>]
+</p><p>
+Another recursive sorting technique is called the quick sort. For random
+arrays quick sort turns out to be one of the practically fastest
+sorting algorithms. Invented by C A R Hoare, this algorithm demonstrates
+the necessity for the facility of recursion in a high-level language.
+Inspired by this (and other) needs, Hoare himself wrote a commercial
+compiler for the language ALGOL&nbsp;60.
+</p><p>
+Here we describe a simple version of the quick sort algorithm that
+employs auxiliary storage for partitioning the array. The idea is to
+choose a pivot, typically the first element of the array. All the
+remaining elements are partitioned into two collections, the first
+containing those array elements that are less than the pivot and the
+second containing the elements not less than the pivot. Then the
+original array is replaced by the smaller part followed by the pivot
+followed by the larger part. With this partitioning the pivot is now
+in the correct position. The smaller and larger parts are then
+recursively sorted by the quick sort algorithm. Once again the correctness
+of this algorithm can be rigorously established using the principle of
+strong mathematical induction.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/quick2.html" target="_blank">Animation example : quick sort with extra storage</a></h3>
+</td></tr></tbody></table>
+</p><p>
+The complete implementation of the quick sort algorithm can be found
+<a href="https://cse.iitkgp.ac.in/pds/notes/prog/function4.c" target="_blank">here</a>.
+</p><pre><code>   #include &lt;stdio.h&gt;
+   #include &lt;stdlib.h&gt;
+   #include &lt;time.h&gt;
+
+   #define MAXSIZE 1000
+   int A[MAXSIZE];
+
+   void quickSort ( int i , int j )
+   {
+      int pivot;
+      int leftArray[MAXSIZE], rightArray[MAXSIZE];
+      int lsize, rsize;
+      int k, idx;
+
+      if (i == j) return;
+
+      pivot = A[i];
+      k = i; lsize = rsize = 0;
+
+      /* Separate out the left and right parts */
+      while (k &lt; j) {
+         ++k;
+         if (A[k] &lt; pivot) leftArray[lsize++] = A[k];
+         else rightArray[rsize++] = A[k];
+      }
+
+      /* Copy back the left part, the pivot and the right part to the original array */
+      k = i;
+      for (idx=0; idx&lt;lsize; ++idx) A[k++] = leftArray[idx];
+      A[k++] = pivot;
+      for (idx=0; idx&lt;rsize; ++idx) A[k++] = rightArray[idx];
+
+      if (lsize &gt; 0) quickSort(i,i+lsize-1);  /* Recursive call on the left part */
+      if (rsize &gt; 0) quickSort(j-rsize+1,j);  /* Recursive call on the right part */
+   }
+
+   void printArray ( int s )
+   {
+      int i;
+
+      for (i=0; i&lt;s; ++i) printf("%3d",A[i]);
+      printf("\n");
+   }
+
+   int main ()
+   {
+      int s, i;
+
+      srand((unsigned int)time(NULL));
+      printf("Array size : "); scanf("%d",&amp;s);
+      for (i=0; i&lt;s; ++i) A[i] = 1 + rand() % 99;
+      printf("Array before sorting : ");
+      printArray(s);
+      quickSort(0,s-1);
+      printf("Array after sorting  : ");
+      printArray(s);
+   }
+</code></pre>
+<p>
+The partitioning of the array can be done in-place, i.e., without using
+extra storage. We won't go to the details here. The following animation
+implements quick sort with in-place partitioning.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/swf/quick.html" target="_blank">Animation example : in-place quick sort</a></h3>
+</td></tr></tbody></table>
+</p><h2 align="left">Recursion or iteration?</h2>
+<p>
+The <u>divide-and-conquer</u> algorithms like merge sort and quick sort
+give rise to a new genre of algorithm design and analysis techniques.
+Until recursion could be realized, implementing these algorithms was
+really non-trivial.
+</p><p>However, recursion is not really an unadulterated boon. To exemplify
+this issue, let us compare the performances of the iterative version of the
+Fibonacci number generation function and of the recursive version described
+above. Computation of <tt>F<sub>n</sub></tt> by the iterative version
+(using simple loops) requires n-1 additions and some additional overheads
+proportional to n.
+</p><p>But what about the recursive version? Let <tt>S<sub>n</sub></tt>
+denote the number of additions performed by the iterative method for the
+computation of <tt>F<sub>n</sub></tt>. We evidently have:
+</p><p>
+<table cellpadding="0" cellspacing="0" border="0" id="nobd">
+<tbody><tr>
+<td id="nobd" valign="middle">
+<tt>&nbsp;&nbsp;&nbsp;S<sub>n</sub>&nbsp;=&nbsp;</tt></td>
+<td id="nobd" valign="middle">
+<pre>0                 if n = 0 or 1,
+S<sub>n-1</sub> + S<sub>n-2</sub> + 1    if n &gt;= 2.
+</pre>
+</td></tr></tbody></table>
+</p><p>Define the sequence
+</p><pre>   T<sub>n</sub> = S<sub>n</sub> + 1  for all n = 0,1,2,...
+</pre>
+<p>
+It follows that
+</p><p>
+<table cellpadding="0" cellspacing="0" border="0" id="nobd">
+<tbody><tr>
+<td id="nobd" valign="middle">
+<tt>&nbsp;&nbsp;&nbsp;T<sub>n</sub>&nbsp;=&nbsp;</tt></td>
+<td id="nobd" valign="middle">
+<pre>1                 if n = 0 or 1,
+T<sub>n-1</sub> + T<sub>n-2</sub>        if n &gt;= 2.
+</pre>
+</td></tr></tbody></table>
+</p><p>
+Thus <tt>T<sub>0</sub>&nbsp;=&nbsp;F<sub>1</sub></tt> and
+<tt>T<sub>1</sub>&nbsp;=&nbsp;F<sub>2</sub></tt>. By induction we then have
+<tt>T<sub>n</sub>&nbsp;=&nbsp;F<sub>n+1</sub></tt>, i.e.,
+</p><pre>   S<sub>n</sub> = F<sub>n+1</sub> - 1.
+</pre>
+<p>If n&nbsp;=&nbsp;25, we have S<sub>n</sub>&nbsp;=&nbsp;121392,
+whereas for n&nbsp;=&nbsp;50, we have S<sub>n</sub>&nbsp;=&nbsp;20365011073.
+Compare these figures with the very small numbers (respectively 24 and 49)
+of additions performed by the iterative method. The reason for this poor
+performance of the recursive algorithm is that many <tt>F<sub>i</sub></tt>
+are computed multiple times. For example, <tt>F<sub>n</sub></tt> computes
+both <tt>F<sub>n-1</sub></tt> and <tt>F<sub>n-2</sub></tt>, whereas
+<tt>F<sub>n-1</sub></tt> also computes <tt>F<sub>n-2</sub></tt>. It is
+absolutely unnecessary to recompute the same value again and again. But
+unless we do something, we cannot eliminate this massive amount of
+multiple computations.
+</p><p>
+It is, therefore, often advisable to replace recursion by iteration.
+If some function makes only one recursive call and does nothing after
+the recursive call returns (except perhaps forwarding the value returned
+by the recursive call), then one calls this recursion a <b>tail
+recursion</b>. Tail recursions are easy to replace by loops: since
+no additional tasks are left after the call, no book-keeping need be
+performed, i.e., there is no harm if we simply replace the local variables
+and function arguments by the new values pertaining to the recursive
+call. This leads to an iterative version with the loop continuation
+condition dictated by the function arguments.
+</p><p>
+The factorial and Fibonacci routines that we presented earlier are not
+tail-recursive. The factorial routine performs a multiplication after
+the recursive call returns, and so it feels the necessity to store the
+formal parameter n. With the following implementation this need is
+eliminated. Here we pass to the recursive function an accumulating product.
+</p><pre><code>   int facrec ( int n , int prod )
+   {
+      if (n &lt; 0) return (-1);
+      if (n == 0) return (prod);
+      return (facrec(n-1,n*prod));
+   }
+
+   int factorial ( int n )
+   {
+      return (facrec(n,1));
+   }
+</code></pre>
+<p>
+The straightforward iterative version of this is the following:
+</p><pre><code>   int faciter ( int n ) {
+      int prod;
+
+      if (n &lt; 0) return (-1);
+      prod = 1;            /* Corresponds to facrec(n,1) */
+      while (n &gt; 0) {      /* Corresponds to the sequence of recursive calls */
+         prod *= n;        /* Second argument in the recursive call */
+         n = n - 1;        /* Change the formal parameter */
+      }
+      return (prod);
+   }
+</code></pre>
+<p>
+For the Fibonacci number generator the following strategy reduces the
+overhead of recursion to something proportional to n. This function returns
+both <tt>F<sub>n</sub></tt> and <tt>F<sub>n-1</sub></tt>. But since a
+function cannot straightaway return two values simultaneously, the returning
+of <tt>F<sub>n-1</sub></tt> is effected by pointers. Since the computation
+of <tt>F<sub>n</sub></tt> requires only two previous values, the
+efficient (linear) behavior is restored by the following recursive
+implementation.
+</p><pre><code>   int F ( int n , int *Fprev )
+   {
+      int Fn_1, Fn_2;
+
+      if (n == 0) {
+         *Fprev = 1;
+         return (0);
+      }
+      if (n == 1) {
+         *Fprev = 0;
+         return (1);
+      }
+      Fn_1 = F(n-1,&amp;Fn_2);
+      *Fprev = Fn_1;
+      return (Fn_1+Fn_2);
+   }
+</code></pre>
+<p>
+This function is not tail-recursive, but that does not matter much.
+In the base case, it computes (<tt>F<sub>0</sub></tt>,<tt>F<sub>1</sub></tt>).
+From these values it computes (<tt>F<sub>1</sub></tt>,<tt>F<sub>2</sub></tt>),
+and from these the values (<tt>F<sub>2</sub></tt>,<tt>F<sub>3</sub></tt>),
+and so on. Eventually, we get (<tt>F<sub>n-1</sub></tt>,<tt>F<sub>n</sub></tt>)
+which contains the desired number <tt>F<sub>n</sub></tt>.
+</p><p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a id="noul" href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/fibonacciFast/" target="_blank">Interactive animation : fast recursive computation of Fibonacci numbers</a></h3>
+</td></tr></tbody></table>
+</p><p>
+In general, it is not an easy matter to replace recursion by iteration (or
+more ambitiously by tail-recursion). Whenever the replacement idea is
+intuitive and straightforward, one may go for it. After all, recursion has
+some overheads. In most cases, however, we have to look more deeply into
+the structure of the problem in order to devise a suitable iterative
+substitute. <i>Memoization</i> and <i>dynamic programming</i> techniques
+often help. But these topics are too advanced to be dealt with in this
+introductory course.
+</p>
+
+  <div class="navigator">
+    <a href="exer1.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Exercise set I</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="array.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Arrays</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

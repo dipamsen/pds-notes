@@ -1,0 +1,136 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 18px;
+}
+
+#container {
+  width: 90%;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+a {
+  color: #007bff;
+}
+
+pre code {
+  font-family: "Roboto Mono", monospace;
+}
+
+.navigator {
+  display: flex;
+  margin-bottom: 1em;
+  width: 100%;
+  gap: 1em;
+}
+
+.navigator > a {
+  /* display: flex; */
+  width: 100%;
+  text-decoration: none;
+  color: unset;
+  background-color: #e9ecef;
+  padding: 0.5em;
+  border-radius: 0.25em;
+  border: 2px solid #ced4da;
+  /* gap: none;/ */
+}
+
+.navigator > a:hover {
+  background-color: #ced4da;
+}
+
+.navigator > a .name {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.navigator > a .title {
+  font-size: 1em;
+  color: #6c757d;
+}
+
+.navigator > a[href="#"] {
+  color: #6c757d;
+  pointer-events: none;
+  cursor: default;
+}
+
+.navigator > a[href="#"]:hover {
+  background-color: #e9ecef;
+}
+
+.navigator a:first-child {
+  text-align: left;
+}
+
+.navigator a:last-child {
+  text-align: right;
+}
+
+.navigator a:nth-child(2) {
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 0.5em;
+}
+
+table td {
+  border: 1px solid #dee2e6;
+  padding: 0.5em;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f9fa;
+}
+
+table#nobd {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+table#nobd th {
+  border: none;
+  padding: 0.5em;
+}
+
+table#nobd td {
+  border: none;
+  padding: 0.5em;
+}
+
+ul.links {
+  list-style-type: square;
+  /* padding: 0; */
+}
+
+ul.links li {
+  margin-bottom: 0.5em;
+}
+
+ul.links li a {
+  text-decoration: none;
+  /* color: unset; */
+}
+
+ul.links li a:hover {
+  text-decoration: underline;
+}

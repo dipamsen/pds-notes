@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Conditions and branching | PDS Notes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main id="container">
+      
+<h1 align="center">Conditions and branching</h1>
+<p>
+Now we will break our impasse of monolithically executing statements after
+statements from top to bottom. We add jumps inside the program. We still
+continue with the basic top-to-bottom flow, but will now allow leaving out
+some sections conditionally.
+</p><p>
+Think about mathematical definitions like the following. Suppose we want
+to assign to y the absolute value of an integer (or real number) x.
+Mathematically, we can express this idea as:
+</p><pre><code>        0  if x = 0,
+   y =  x  if x &gt; 0,
+       -x  if x &lt; 0.
+</code></pre>
+<p>
+From a programmer's point of view this means that if <tt>x&nbsp;=&nbsp;0</tt>,
+we can blindly assign to <tt>y</tt> the constant 0. If <tt>x</tt> is non-zero
+but positive, we can simply copy <tt>x</tt> to <tt>y</tt>. Finally,
+if <tt>x</tt> is negative, we have to take the unary minus of it and assign
+that negated value to <tt>y</tt>. In other words, depending on the value of
+<tt>x</tt> we have to do different things. At a particular time, <tt>x</tt>
+can have only one value and exactly one of the three possibilities need be
+executed. However, at different times <tt>x</tt> may have different values,
+and so our program should be able to handle all possibilities. This
+exemplifies what is called a <i>selective structure</i> in a program.
+</p><p>
+As another example, let us define the famous <b>Fibonacci numbers</b>:
+</p><pre>         0           if n = 0,
+   F<sub>n</sub> =  1           if n = 1,
+         F<sub>n-1</sub> + F<sub>n-2&nbsp;&nbsp;</sub>if n &gt;= 2.
+</pre>
+<p>
+Now you are again in a similar situation. Depending on the value of n,
+you have three options. If <tt>n&nbsp;=&nbsp;0</tt> or <tt>1</tt>, you
+immediately know what the corresponding Fibonacci number is. If n is bigger
+than 1, you compute the two previous Fibonacci numbers and add them up.
+How to compute the previous two numbers? Once again you check which of
+the three given conditions hold. And then repeat. Right now we will not
+study repetitive structures, but only mention that the possibility of
+repetition is dictated by the value of <tt>n</tt>.
+</p><p>
+If your program has to work in such a conditional world, you need
+two constructs:
+</p><ul>
+<li>A way to specify conditions (like <tt>x&nbsp;&lt;&nbsp;0</tt>, or
+<tt>n&nbsp;&gt;=&nbsp;2</tt>).
+</li><li>A way to selectively choose different blocks of statements depending
+on the outcomes of the condition checks.
+</li></ul>
+<h2 align="left">Logical conditions</h2>
+Let us first look at the rendering of logical conditions in C. A logical condition
+evaluates to a <b>Boolean value</b>, i.e., either "true" or "false". For
+example, if the variable <tt>x</tt> stores the value 15, then the logical
+condition <tt>x&nbsp;&gt;&nbsp;10</tt> is true, whereas the logical
+condition <tt>x&nbsp;&gt;&nbsp;100</tt> is false.
+
+<h3 align="left">Comparing two variables</h3>
+<p>
+The usual mathematical relations comparing two expressions E<sub>1</sub> and
+E<sub>2</sub> can be implemented in C as the following table illustrates:
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Relational operator</th><th>Usage</th><th>Condition is true iff
+</th></tr><tr><td align="center"><tt>==</tt></td><td align="center">E<sub>1</sub>&nbsp;==&nbsp;E<sub>2</sub></td><td>E<sub>1</sub> and E<sub>2</sub> evaluate to the same value
+</td></tr><tr><td align="center"><tt>!=</tt></td><td align="center">E<sub>1</sub>&nbsp;!=&nbsp;E<sub>2</sub></td><td>E<sub>1</sub> and E<sub>2</sub> evaluate to different values
+</td></tr><tr><td align="center"><tt>&lt;</tt></td><td align="center">E<sub>1</sub>&nbsp;&lt;&nbsp;E<sub>2</sub></td><td>E<sub>1</sub> evaluates to a value smaller than E<sub>2</sub>
+</td></tr><tr><td align="center"><tt>&lt;=</tt></td><td align="center">E<sub>1</sub>&nbsp;&lt;=&nbsp;E<sub>2</sub></td><td>E<sub>1</sub> evaluates to a value smaller than or equal to E<sub>2</sub>
+</td></tr><tr><td align="center"><tt>&gt;</tt></td><td align="center">E<sub>1</sub>&nbsp;&gt;&nbsp;E<sub>2</sub></td><td>E<sub>1</sub> evaluates to a value larger than E<sub>2</sub>
+</td></tr><tr><td align="center"><tt>&gt;=</tt></td><td align="center">E<sub>1</sub>&nbsp;&gt;=&nbsp;E<sub>2</sub></td><td>E<sub>1</sub> evaluates to a value larger than or equal to E<sub>2</sub>
+</td></tr></tbody></table>
+</center>
+<p>
+The equality checker is <tt>==</tt> and not the single <tt>=</tt>. Recall
+that <tt>=</tt> is the assignment operator. In a place where a logical
+condition is expected, an assignment of the form
+E<sub>1</sub>&nbsp;=&nbsp;E<sub>2</sub> makes sense and could be a
+potential source of bugs.
+</p><p>
+<b>Example:</b> Let x and y be integer variables holding the values
+15 and 40 at a certain point in time. At that time, the following truth
+values hold:
+</p><pre><code>   x == y                  False
+   x != y                  True
+   y % x == 10             True
+   600 &lt; x * y             False
+   600 &lt;= x * y            True
+   'B' &gt; 'A'               True
+   x / 0.3 == 50           False (due to floating point errors)
+</code></pre>
+<h3 align="left">What is Boolean value in C?</h3>
+<p>
+A funny thing about C is that it does not support any Boolean data
+type. Instead it uses any value (integer, floating point, character,
+etc.) as a Boolean value. Any non-zero value of an expression evaluates
+to "true", and the zero value evaluates to "false". In fact, C allows
+expressions as logical conditions.
+</p><p>
+<b>Example:</b>
+</p><pre><code>   0                       False
+   1                       True
+   6 - 2 * 3               False
+   (6 - 2) * 3             True
+   0.0075                  True
+   0e10                    False
+   'A'                     True
+   '\0'                    False
+   x = 0                   False
+   x = 1                   True
+</code></pre>
+<p>
+The last two examples point out the potential danger of mistakenly
+writing <tt>=</tt> in place of <tt>==</tt>. Recall that an assignment
+returns a value, which is the value that is assigned.
+</p><h3 align="left">Logical operators</h3>
+<p>
+Logical operators are used to combine multiple logical conditions.
+In the following table <tt>C</tt>, <tt>C<sub>1</sub></tt> and <tt>C<sub>2</sub></tt> are assumed
+to be logical conditions (including expressions).
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Logical operator</th><th>Syntax</th><th>True if and only if
+</th></tr><tr><td align="center">AND</td><td align="center"><tt>C<sub>1</sub>&nbsp;&amp;&amp;&nbsp;C<sub>2</sub></tt></td><td>Both <tt>C<sub>1</sub></tt> and C<sub>2</sub> are true
+</td></tr><tr><td align="center">OR</td><td align="center"><tt>C<sub>1</sub>&nbsp;||&nbsp;C<sub>2</sub></tt></td><td>Either <tt>C<sub>1</sub></tt> or C<tt><sub>2</sub></tt> or both are true
+</td></tr><tr><td align="center">NOT</td><td align="center"><tt>!C</tt></td><td><tt>C</tt> is false
+</td></tr></tbody></table>
+</center>
+<p>
+<b>Example:</b>
+</p><pre><code>   (7*7 &lt; 50) &amp;&amp; (50 &lt; 8*8)           True
+   (7*7 &lt; 50) &amp;&amp; (8*8 &lt; 50)           False
+   (7*7 &lt; 50) || (8*8 &lt; 50)           True
+   !(8*8 &lt; 50)                        True
+   ('A' &gt; 'B') || ('a' &gt; 'b')         False
+   ('A' &gt; 'B') || ('A' &lt; 'B')         True
+   ('A' &lt; 'B') &amp;&amp; !('a' &gt; 'b')        True
+</code></pre>
+<p>
+Notice that here is yet another source of logical bug. Using a single
+&amp; and | in order to denote a logical operator actually means
+letting the program perform a bit-wise operation and possibly ending
+up in a logically incorrect answer.
+</p><p>
+Let us now review the question of precedence and associativity of
+relational and logical operators. The following table summarizes
+the relevant details with precedence decreasing downwards.
+</p><center>
+<table cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><th>Operator(s)</th><th>Type</th><th>Associativity
+</th></tr><tr><td align="center"><tt>!</tt></td><td align="center">Unary</td><td align="center">Right
+</td></tr><tr><td align="center"><tt>&lt;&nbsp;&nbsp;&lt;=&nbsp;&nbsp;&gt;&nbsp;&nbsp;&gt;=</tt></td><td align="center">Binary</td><td align="center">Left
+</td></tr><tr><td align="center"><tt>==&nbsp;&nbsp;!=</tt></td><td align="center">Binary</td><td align="center">Left
+</td></tr><tr><td align="center"><tt>&amp;&amp;</tt></td><td align="center">Binary</td><td align="center">Left
+</td></tr><tr><td align="center"><tt>||</tt></td><td align="center">Binary</td><td align="center">Left
+</td></tr></tbody></table>
+</center>
+<p>
+<b>Example:</b>
+</p><pre>   x &lt;= y &amp;&amp; y &lt;= z || a &gt;= b  is equivalent to ((x &lt;= y) &amp;&amp; (y &lt;= z)) || (a &gt;= b).
+   C<sub>1</sub> &amp;&amp; C<sub>2</sub> &amp;&amp; C<sub>3</sub>  is equivalent to (C<sub>1</sub> &amp;&amp; C<sub>2</sub>) &amp;&amp; C<sub>3</sub>.
+   a &gt; b &gt; c  is equivalent to (a &gt; b) &gt; c.
+</pre>
+
+<p>
+Let us now see how we can use conditions to write selective structures in C.
+</p><h2 align="left">The if statement</h2>
+<p>
+Imagine a situation like this:
+</p><pre><code>   Do PDS lab;
+   Have snacks;
+   If it does not rain, play soccer;
+   Solve Maths assignment;
+   Enjoy dinner;
+</code></pre>
+<p>
+In this example, playing soccer is dependent on rain. If it is not rainy,
+play soccer, else skip it and continue with your remaining pending work.
+A situation like this is described in the following figure:
+</p><center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/if.gif" alt="1-way branching">
+</center>
+<p>
+This kind of structure can be rendered in C as follows:
+</p><pre><code>   if (Condition) {
+      Block 1
+   }
+</code></pre>
+<p>
+Here "block" means a sequence of statements. If the block consists of
+a single statement, the braces may be omitted.
+</p><p>
+Suppose you scan an integer x from the user and then replace it with
+its absolute value. if x is bigger than or equal to 0, there is nothing
+to do. If x is negative, replace it by -x.
+</p><pre><code>   scanf("%d",&amp;x);
+   if (x &lt; 0) x = -x;
+</code></pre>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/swf/if.html" id="noul" target="_blank">Animation example : one-way branching</a></h3>
+</td></tr></tbody></table>
+
+</p><h2 align="left">The if-else statement</h2>
+<p>
+Now suppose you are adamant to play something after your PDS lab.
+</p><pre><code>   Do PDS lab;
+   Have snacks;
+   If it does not rain, play soccer,
+   otherwise play table tennis;
+   Solve Maths assignment;
+   Enjoy dinner;
+</code></pre>
+<p>
+This is an example of a situation depicted in the figure below:
+</p><center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/ifelse.gif" alt="2-way branching">
+</center>
+<p>
+This kind of structure can be rendered in C as follows:
+</p><pre><code>   if (Condition) {
+      Block 1
+   } else {
+      Block 2
+   }
+</code></pre>
+<p>
+If a block consists of a single statement, the corresponding braces
+may be omitted.
+</p><p>
+Suppose you scan an integer x from the user and assign to y the absolute
+value of x. if x is bigger than or equal to 0, then simply copy x to y.
+If x is negative, copy -x to y.
+</p><pre><code>   scanf("%d",&amp;x);
+   if (x &gt;= 0) y = x; else y = -x;
+</code></pre>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr><td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/swf/ifelse.html" id="noul" target="_blank">Animation example : two-way branching</a></h3>
+</td><td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/if/" id="noul" target="_blank">Interactive animation : two-way branching</a></h3>
+</td></tr></tbody></table>
+</p><p>
+Consider the following special form of the if-else statement:
+</p><pre>   if (C) v = E<sub>1</sub>; else v = E<sub>2</sub>;
+</pre>
+<p>
+Here depending upon the condition <tt>C</tt>, the variable <tt>v</tt> is
+assigned the value of either the expression <tt>E<sub>1</sub></tt> or
+the expression <tt>E<sub>2</sub></tt>. This can be alternatively described as:
+</p><pre>   v = (C) ? E<sub>1</sub> : E<sub>2</sub>;
+</pre>
+<p>
+Here is an explicit example. Suppose we want to compute the larger of
+two numbers x and y and store the result in z. We can write:
+</p><pre><code>   z = (x &gt;= y) ? x : y;
+</code></pre>
+
+<h2 align="left">Nested if statements</h2>
+<p>
+A block of an if or if-else statement may itself contain one or more if and/or
+if-else statements. Suppose that we want to compute the absolute value
+|xy| of the product of two integers x and y and store the value in z.
+Here is a possible way of doing it:
+</p><pre><code>   if (x &gt;= 0) {
+      z = x;
+      if (y &gt;= 0) z *= y; else z *= -y;
+   } else {
+      z = -x;
+      if (y &gt;= 0) z *= y; else z *= -y;
+   }
+</code></pre>
+<p>
+This can also be implemented as:
+</p><pre><code>   if (x &gt;= 0) z = x; else z = -x;
+   if (y &gt;= 0) z *= y; else z *= -y;
+</code></pre>
+<p>
+Here is a third way of doing the same:
+</p><pre><code>   if ( ((x &gt;= 0)&amp;&amp;(y &gt;= 0)) || ((x &lt; 0)&amp;&amp;(y &lt; 0)) )
+      z = x * y;
+   else
+      z = -x * y;
+</code></pre>
+<p>
+<table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/swf/nestedif.html" id="noul" target="_blank">Animation example : nested branching</a></h3>
+</td><td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/nestIf/" id="noul" target="_blank">Interactive animation : nested branching</a></h3>
+</td></tr><tr>
+<td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/3G/" id="noul" target="_blank">Interactive animation : max of three elements</a></h3>
+</td></tr></tbody></table>
+
+</p><h2 align="left">Multi-way branching</h2>
+Now think of your evening schedule like the following:
+<pre><code>   Do PDS lab;
+   Have snacks;
+   If it does not rain, play soccer,
+   otherwise if the common room is free, play table tennis,
+   otherwise if your friend is available, play Scrabble;
+   otherwise play guitar;
+   Solve Maths assignment;
+   Enjoy dinner;
+</code></pre>
+<p>
+This is generalized in the following figure:
+</p><center>
+<img src="https://cse.iitkgp.ac.in/pds/notes/img/switch.gif" alt="multi-way branching">
+</center>
+
+
+<h3 align="left">Repeated if-else statements</h3>
+<p>
+A structure of the last figure can be translated into C as:
+</p><pre><code>   if (Condition 1) {
+      Block 1
+   } else if (Condition 2) {
+      Block 2
+   } else if ...
+     ...
+   } else if (Condition n) {
+      Block n
+   } else {
+      Block n+1
+   }
+</code></pre>
+<p>
+Here is a possible implementation of the assignment y&nbsp;=&nbsp;|x|:
+</p><pre><code>   scanf("%d",&amp;x);
+   if (x == 0) y = 0;
+   else if (x &gt; 0) y = x;
+   else y = -x;
+</code></pre>
+<p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr><td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/swf/ififelse.html" id="noul" target="_blank">Animation example : three-way branching</a></h3>
+</td></tr></tbody></table>
+
+<p></p><h3 align="left">The switch statement</h3>
+<p>
+If the multi-way branching is dependent on the value of a single expression,
+one can use the switch statement. For example, assume that in the above figure
+Condition&nbsp;i stands for (E&nbsp;==&nbsp;val<sub>i</sub>), where E is an
+expression and val<sub>i</sub> are possible values of the expression for
+i=1,2,...,n. One can write this as:
+</p><pre>   switch (E) {
+      case val<sub>1</sub> :
+         Block 1
+         break;
+      case val<sub>2</sub> :
+         Block 2
+         break;
+      ...
+      case val<sub>n</sub> :
+         Block n
+         break;
+      default:
+         Block n+1
+   }
+</pre>
+<p>
+Suppose you plan to write a multilingual software which prompts a thanking
+message based on the language. Here is an implementation:
+</p><pre><code>   char lang;
+   ...
+   switch (lang) {
+      case 'E' : printf("Thanks\n"); break;
+      case 'F' : printf("Merci\n"); break;
+      case 'G' : printf("Danke\n"); break;
+      case 'H' : printf("Shukriya\n"); break;
+      case 'I' : printf("Grazie\n"); break;
+      case 'J' : printf("Arigato\n"); break;
+      case 'K' : printf("Dhanyabaadagaru\n"); break;
+      default  : printf("Thanks\n");
+   }
+</code></pre>
+<p>
+The switch statement has a queer behavior that necessitates the use of the
+break statements. It keeps on checking if the value of the top expression
+matches the case values. Once a match is found, further comparisons are
+disabled and all following statements before the closing brace are
+executed one by one.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr><td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/swf/switch.html" id="noul" target="_blank">Animation example : switch</a></h3>
+</td></tr></tbody></table>
+<p></p><p>
+In order to avoid this difficulty, you are required to put additional
+break statements as and when required. This statement causes the program
+to leave the switch area without proceeding further down the area.
+</p><p>
+</p><table cellpadding="4" cellspacing="4" border="0">
+<tbody><tr>
+<td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/swf/switchbrk.html" id="noul" target="_blank">Animation example : switch with break</a></h3>
+</td><td><h3><a href="https://cse.iitkgp.ac.in/pds/notes/http://webmail.iitkgp.ac.in/people/chittaranjan.mandal/interactive/switch/" id="noul" target="_blank">Interactive animation : switch with break</a></h3>
+</td></tr></tbody></table>
+<p></p><p>
+There are, however, situations where this odd behavior of switch can be
+exploited. Let us look at an artificial example. Suppose you want to
+compute the sum
+</p><pre><code>   n + (n+1) + ... + 10
+</code></pre>
+<p>
+for n in the range 0&lt;=n&lt;=10. For other values of n, an error message
+need be printed. The following snippet does this.
+</p><pre><code>   sum = 0;
+   switch (n) {
+      case 0  :
+      case 1  : sum += 1;
+      case 2  : sum += 2;
+      case 3  : sum += 3;
+      case 4  : sum += 4;
+      case 5  : sum += 5;
+      case 6  : sum += 6;
+      case 7  : sum += 7;
+      case 8  : sum += 8;
+      case 9  : sum += 9;
+      case 10 : sum += 10;
+                break;
+      default : printf("n = %d is not in the desired range...\n", n);
+   }
+</code></pre>
+
+
+
+  <div class="navigator">
+    <a href="io.html">
+      <div class="prev">
+        <div class="name">Previous</div>
+        <div class="title">Input/Output</div>
+      </div>
+    </a>
+    <a href="./index.html">
+      <div class="home">
+        <div class="name">Home</div>
+      </div>
+    </a>
+    <a href="loop.html">
+      <div class="next">
+        <div class="name">Next</div>
+        <div class="title">Loops and iteration</div>
+      </div>
+    </a>
+  </div>
+  
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>
