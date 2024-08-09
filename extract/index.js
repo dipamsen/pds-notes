@@ -76,7 +76,7 @@ async function main() {
           .join("")}
       </ul>
 
-      Courtesy of IIT Kharagpur
+      Credits: Department of Computer Science and Engineering, IIT Kharagpur
       </main>
     </body>
   </html>
